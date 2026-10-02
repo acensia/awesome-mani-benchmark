@@ -1,0 +1,503 @@
+<title>Real-World Manipulation Benchmarks</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a specimen catalog. A sticky filter bar sits over a grid of plates; each plate is
+   a figure, a label strip, and two readings (what it evaluates, what it improves). */
+:root {
+  --bg: #ECEFF2;
+  --surface: #FFFFFF;
+  --plate: #FFFFFF;
+  --ink: #15202B;
+  --muted: #586775;
+  --line: #D2D9DF;
+  --accent: #1F4FD0;
+  --accent-ink: #FFFFFF;
+  --g-physical: #0B6F68;
+  --g-hosted: #2B4FC7;
+  --g-competition: #A8530A;
+  --g-proxy: #8E2C86;
+  --note: #7A5200;
+  --note-bg: #FBF1D9;
+  --shade: rgba(21, 32, 43, 0.08);
+  --font-display: "IBM Plex Sans Condensed", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Arial Narrow", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E141A; --surface: #172029; --plate: #E8ECEF; --ink: #E5EBF0; --muted: #95A3B0;
+    --line: #2B3743; --accent: #8FAEFF; --accent-ink: #0E141A;
+    --g-physical: #4FC9BE; --g-hosted: #8FAEFF; --g-competition: #F0A552; --g-proxy: #E08AD8;
+    --note: #F1C56B; --note-bg: #332A14; --shade: rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E141A; --surface: #172029; --plate: #E8ECEF; --ink: #E5EBF0; --muted: #95A3B0;
+  --line: #2B3743; --accent: #8FAEFF; --accent-ink: #0E141A;
+  --g-physical: #4FC9BE; --g-hosted: #8FAEFF; --g-competition: #F0A552; --g-proxy: #E08AD8;
+  --note: #F1C56B; --note-bg: #332A14; --shade: rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: 20px; }
+a { color: var(--accent); }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Korean text breaks between words, not inside them */
+:root:lang(ko) body { word-break: keep-all; }
+
+/* Masthead */
+.mast { padding-block: 28px 20px; display: grid; gap: 10px; }
+.mast-top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.lang { display: inline-flex; border: 1px solid var(--line); }
+.lang button { cursor: pointer; background: var(--surface); border: 0; padding: 4px 12px; font-size: 13px; color: var(--muted); }
+.lang button + button { border-left: 1px solid var(--line); }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.mast h1 {
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.05; letter-spacing: -0.01em; margin: 0; text-wrap: balance;
+}
+.mast p { margin: 0; max-width: 68ch; color: var(--muted); }
+.eyebrow {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+
+/* Group filter tiles */
+.groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; padding-block: 8px 20px; }
+.group {
+  text-align: left; cursor: pointer; background: var(--surface); border: 1px solid var(--line);
+  border-top: 4px solid var(--g); padding: 12px 14px; display: grid; gap: 2px; min-width: 0;
+}
+[data-g="physical"] { --g: var(--g-physical); }
+[data-g="hosted"] { --g: var(--g-hosted); }
+[data-g="competition"] { --g: var(--g-competition); }
+[data-g="proxy"] { --g: var(--g-proxy); }
+.group .n { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1; color: var(--g); font-variant-numeric: tabular-nums; }
+.group .t { font-weight: 600; }
+.group .d { color: var(--muted); font-size: 13px; }
+.group[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); border-top-color: var(--g); }
+.group[aria-pressed="true"] .t { color: var(--bg); }
+.group[aria-pressed="true"] .d { color: var(--line); }
+
+/* Sticky toolbar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); border-block: 1px solid var(--line);
+}
+.bar .wrap { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; padding-block: 10px; }
+.search { flex: 1 1 240px; min-width: 0; }
+.search input {
+  width: 100%; padding: 8px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 2px;
+}
+.bar label.sort { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 13px; }
+.bar select { padding: 7px 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 2px; }
+.vla {
+  cursor: pointer; background: transparent; border: 1.5px solid var(--accent); border-radius: 2px;
+  color: var(--accent); padding: 6px 12px; font-weight: 600; font-size: 13.5px; white-space: nowrap;
+}
+.vla[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 100%; min-width: 0; }
+.chip {
+  cursor: pointer; background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  padding: 2px 10px; font-size: 12.5px; color: var(--muted);
+}
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+/* Sections and grid */
+main { padding-block: 22px 40px; display: grid; gap: 30px; }
+.section { display: grid; gap: 12px; }
+.section > header { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 6px; }
+.section h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; margin: 0; }
+.section header .eyebrow { margin-left: auto; }
+.section header .lede { color: var(--muted); font-size: 13.5px; flex: 1 1 100%; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); }
+
+/* Plate */
+.card {
+  background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0;
+}
+.fig {
+  display: block; width: 100%; aspect-ratio: 16 / 10; padding: 0; border: 0; border-bottom: 1px solid var(--line);
+  background: var(--plate); cursor: zoom-in; overflow: hidden;
+}
+.fig img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.fig.none {
+  cursor: pointer; display: grid; place-items: center; color: var(--muted);
+  background: repeating-linear-gradient(135deg, var(--surface) 0 10px, var(--bg) 10px 20px);
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0; }
+.strip { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
+.strip .kind { color: var(--g); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+.card h3 { font-family: var(--font-display); font-weight: 600; font-size: 19px; line-height: 1.2; margin: 0; overflow-wrap: anywhere; }
+.read { margin: 0; font-size: 14px; }
+.read b {
+  display: block; font-family: var(--font-mono); font-weight: 500; font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted);
+}
+.agree { font-family: var(--font-mono); font-size: 12.5px; border-left: 3px solid var(--g); padding-left: 8px; }
+.foot { margin-top: auto; padding-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 13px; }
+.foot .more { margin-left: auto; cursor: pointer; background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; }
+.empty { padding: 40px 0; text-align: center; color: var(--muted); }
+
+/* Detail dialog */
+dialog {
+  width: min(880px, calc(100vw - 24px)); max-height: calc(100vh - 24px); padding: 0;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px var(--shade);
+}
+dialog::backdrop { background: rgba(8, 12, 16, 0.6); }
+.d-fig { background: var(--plate); border-bottom: 1px solid var(--line); }
+.d-fig img { display: block; width: 100%; max-height: 56vh; object-fit: contain; }
+.d-body { padding: 18px 22px 22px; display: grid; gap: 12px; }
+.d-body h2 { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.15; margin: 0; }
+.d-body dl { margin: 0; display: grid; grid-template-columns: minmax(110px, 150px) 1fr; gap: 8px 16px; }
+.d-body dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.d-body dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.d-body dd.note { background: var(--note-bg); color: var(--note); padding: 6px 10px; }
+.d-links { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.close {
+  position: absolute; top: 8px; right: 8px; z-index: 2; cursor: pointer;
+  background: var(--ink); color: var(--bg); border: 0; padding: 4px 12px; font-family: var(--font-mono); font-size: 12px;
+}
+@media (max-width: 560px) {
+  .d-body dl { grid-template-columns: 1fr; gap: 2px 0; }
+  .d-body dd { margin-bottom: 8px; }
+}
+
+footer.fine { border-top: 1px solid var(--line); padding-block: 18px 36px; color: var(--muted); font-size: 13px; }
+footer.fine p { margin: 0 0 6px; max-width: 80ch; }
+@media (prefers-reduced-motion: no-preference) {
+  .card { transition: border-color 0.15s; }
+}
+.card:hover { border-color: var(--g); }
+</style>
+<!--BODY-->
+<div class="wrap mast">
+  <div class="mast-top">
+    <span class="eyebrow" data-i18n="eyebrow">Survey · October 2026</span>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="ko" aria-pressed="false" lang="ko">한국어</button>
+    </div>
+  </div>
+  <h1 data-i18n="title">Real-World Manipulation Benchmarks</h1>
+  <p data-i18n="intro">A catalog of the benchmarks, hosted platforms, competitions and proxy evaluators that measure robot manipulation on real hardware, with what each one evaluates and which evaluation problem it sets out to fix.</p>
+</div>
+
+<div class="wrap groups" id="groups"></div>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="search"><input id="q" type="search" placeholder="Search name, task, robot, venue…" aria-label="Search benchmarks"></div>
+    <button type="button" class="vla" id="vla-toggle" aria-pressed="false"></button>
+    <label class="sort" for="sort"><span data-i18n="order">Order</span>
+      <select id="sort">
+        <option value="grouped" data-i18n="sortGrouped">By category</option>
+        <option value="new" data-i18n="sortNew">Newest first</option>
+        <option value="old" data-i18n="sortOld">Oldest first</option>
+        <option value="az" data-i18n="sortAz">A to Z</option>
+      </select>
+    </label>
+    <span class="count" id="count"></span>
+    <div class="tags" id="tags"></div>
+  </div>
+</div>
+
+<main class="wrap" id="main"></main>
+
+<footer class="wrap fine">
+  <p data-i18n="foot1">Figures come from each work's paper or project page and remain the property of their authors; the detail view links to the source of every image.</p>
+  <p data-i18n="foot2">Descriptions summarize survey notes taken in October 2026. Many 2026 entries are preprints, so check venue and status before citing. Entries without a usable figure show a hatched plate.</p>
+</footer>
+
+<dialog id="detail" aria-labelledby="d-title"></dialog>
+
+<script>
+const DATA = /*__DATA__*/[];
+
+const I18N = {
+  en: {
+    eyebrow: "Survey · October 2026",
+    title: "Real-World Manipulation Benchmarks",
+    intro: "A catalog of the benchmarks, hosted platforms, competitions and proxy evaluators that measure robot manipulation on real hardware, with what each one evaluates and which evaluation problem it sets out to fix.",
+    search: "Search name, task, robot, venue…",
+    searchLabel: "Search benchmarks",
+    vla: "VLA and generalist policies",
+    vlaHint: "Show only benchmarks that target or report results for VLA and other generalist policies",
+    order: "Order", sortGrouped: "By category", sortNew: "Newest first", sortOld: "Oldest first", sortAz: "A to Z",
+    count: (n, all) => `${n} of ${all} shown`,
+    entries: n => `${n} ${n === 1 ? "entry" : "entries"}`,
+    empty: "Nothing matches. Clear the search or pick another category.",
+    evaluates: "Evaluates", targets: "Targets", improves: "Improves",
+    agreementLong: "Agreement with real results", agreement: "Agreement",
+    setup: "Setup", scale: "Scale", caveat: "Caveat", tags: "Tags", links: "Links", figureFrom: "Figure from",
+    details: "Details", close: "Close", noFigure: "No figure",
+    openDetails: name => `Open details for ${name}`,
+    figureAlt: name => `Figure from ${name}`,
+    foot1: "Figures come from each work's paper or project page and remain the property of their authors; the detail view links to the source of every image.",
+    foot2: "Descriptions summarize survey notes taken in October 2026. Many 2026 entries are preprints, so check venue and status before citing. Entries without a usable figure show a hatched plate.",
+    groups: {
+      physical: ["Physical benchmarks", "A lab rebuilds the setup and runs it on its own robot."],
+      hosted: ["Hosted platforms", "Someone else runs the robot; you submit a policy."],
+      competition: ["Competitions", "Events with a real-robot stage."],
+      proxy: ["Proxy evaluation", "Simulators and world models checked against real results."],
+    },
+    subs: {}, tagNames: {}, linkNames: {},
+  },
+  ko: {
+    eyebrow: "서베이 · 2026년 10월",
+    title: "실세계 매니퓰레이션 벤치마크",
+    intro: "실제 로봇에서 매니퓰레이션을 평가하는 벤치마크, 호스팅 플랫폼, 대회, 프록시 평가기를 모은 카탈로그입니다. 항목마다 무엇을 평가하는지, 어떤 평가 문제를 해결하려 하는지 정리했습니다.",
+    search: "이름, 태스크, 로봇, venue 검색…",
+    searchLabel: "벤치마크 검색",
+    vla: "VLA·generalist 정책",
+    vlaHint: "VLA 등 generalist 정책을 대상으로 하거나 그 결과를 보고한 벤치마크만 표시",
+    order: "정렬", sortGrouped: "분류별", sortNew: "최신순", sortOld: "오래된순", sortAz: "이름순",
+    count: (n, all) => `${all}개 중 ${n}개 표시`,
+    entries: n => `${n}개`,
+    empty: "일치하는 항목이 없습니다. 검색어를 지우거나 다른 분류를 선택하세요.",
+    evaluates: "평가 대상", targets: "목표", improves: "개선점",
+    agreementLong: "실세계 결과와의 일치도", agreement: "일치도",
+    setup: "셋업", scale: "규모", caveat: "주의", tags: "태그", links: "링크", figureFrom: "그림 출처",
+    details: "자세히", close: "닫기", noFigure: "그림 없음",
+    openDetails: name => `${name} 상세 보기`,
+    figureAlt: name => `${name}의 그림`,
+    foot1: "그림은 각 연구의 논문이나 project page에서 가져왔으며 저작권은 원저자에게 있습니다. 상세 보기에서 각 그림의 출처로 연결됩니다.",
+    foot2: "설명은 2026년 10월에 작성한 조사 노트를 요약한 것입니다. 2026년 항목은 preprint가 많으므로 인용하기 전에 venue와 상태를 확인하세요. 쓸 만한 그림이 없는 항목은 빗금으로 표시합니다.",
+    groups: {
+      physical: ["물리 재현형 벤치마크", "연구실이 셋업을 직접 재현해 자기 로봇에서 실행합니다."],
+      hosted: ["호스팅 플랫폼", "로봇은 운영 측이 돌리고, 사용자는 정책을 제출합니다."],
+      competition: ["대회", "실로봇 단계가 있는 대회입니다."],
+      proxy: ["프록시 평가", "실세계 결과와 대조해 검증한 시뮬레이터와 world model입니다."],
+    },
+    subs: {
+      "Object sets and protocols": "물체 세트와 프로토콜",
+      "Fixed robot cells": "고정 로봇 셀",
+      "VLA-era benchmarks": "VLA 세대 벤치마크",
+      "Platforms": "플랫폼",
+      "Competitions": "대회",
+      "Simulator twins": "시뮬레이터 digital twin",
+      "Reconstruction-based": "재구성 기반",
+      "Video world models": "Video world model",
+    },
+    tagNames: {
+      "Simulator": "시뮬레이터", "Assembly": "조립", "Deformable": "변형체", "3D-printable": "3D 프린트",
+      "Mobile": "모바일", "Protocol": "프로토콜", "Low-cost": "저가", "Insertion": "삽입", "Humanoid": "휴머노이드",
+      "Cable": "케이블", "Object set": "물체 세트", "Self-scoring": "자동 채점", "Reinforcement learning": "강화학습",
+      "Generalization": "일반화", "Dataset": "데이터셋", "Distributed": "분산형", "Automated": "자동화",
+      "Remote lab": "원격 실험실", "Tactile": "촉각", "Language": "언어", "Ranking": "순위",
+      "Imitation learning": "모방학습", "Planning": "계획", "Throughput": "처리량", "Statistics": "통계",
+      "Human video": "인간 영상", "Caregiving": "돌봄", "Surgical": "수술",
+    },
+    linkNames: {
+      "Paper": "논문", "Site": "사이트", "Project": "프로젝트", "Code": "코드", "Leaderboard": "리더보드",
+      "Introduction": "소개글", "Record": "서지 정보", "Follow-up": "후속 연구", "Firmware": "펌웨어",
+      "Protocol paper": "프로토콜 논문", "Deformable extension": "변형체 확장", "Results": "결과", "Data": "데이터",
+      "Challenge": "대회 페이지", "Lessons": "회고 논문", "Event": "행사 페이지", "Docs": "문서", "Blog": "블로그",
+      "History": "연혁 논문", "Analysis": "분석 논문", "2022 edition": "2022년 대회", "V2 paper": "V2 논문",
+      "2018 paper": "2018년 논문", "2026 report": "2026년 보도", "2025 release": "2025년 보도자료",
+    },
+  },
+};
+
+const GROUP_IDS = ["physical", "hosted", "competition", "proxy"];
+// Cross-cutting lens: entries carrying this tag evaluate VLA / generalist policies, whatever their category.
+const VLA_TAG = "Generalist / VLA";
+const state = { group: "", tag: "", q: "", sort: "grouped", lang: "en", open: "", vla: false };
+try {
+  // ?lang=ko on a plain web link wins over the remembered choice.
+  const asked = new URLSearchParams(location.search).get("lang");
+  const saved = localStorage.getItem("lang");
+  const pick = asked || saved;
+  if (pick === "en" || pick === "ko") state.lang = pick;
+} catch (err) {}
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const $ = id => document.getElementById(id);
+const T = () => I18N[state.lang];
+// Field of an entry in the current language, falling back to English.
+const F = (e, f) => (state.lang === "ko" && e.ko && e.ko[f]) || e[f] || "";
+const subName = s => T().subs[s] || s;
+const tagName = s => T().tagNames[s] || s;
+const groupTitle = id => T().groups[id][0];
+const groupLede = id => T().groups[id][1];
+const linkList = links => links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(T().linkNames[l.label] || l.label)}</a>`).join("");
+
+DATA.forEach(e => {
+  const ko = e.ko || {};
+  e._hay = [e.name, e.venue, e.sub, e.evaluates, e.improves, e.setup, e.scale, e.agreement, e.tags.join(" "),
+    ko.evaluates, ko.improves, ko.setup, ko.scale, ko.agreement, I18N.ko.subs[e.sub],
+    e.tags.map(t => I18N.ko.tagNames[t] || "").join(" ")].join(" ").toLowerCase();
+});
+
+function visible() {
+  const terms = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+  return DATA.filter(e =>
+    (!state.group || e.group === state.group) &&
+    (!state.vla || e.tags.includes(VLA_TAG)) &&
+    (!state.tag || e.tags.includes(state.tag)) &&
+    terms.every(t => e._hay.includes(t)));
+}
+
+function card(e) {
+  const t = T();
+  const label = esc(t.openDetails(e.name));
+  const fig = e.image
+    ? `<button class="fig" data-open="${esc(e.id)}" aria-label="${label}"><img src="${esc(e.image)}" alt="${esc(t.figureAlt(e.name))}" loading="lazy"></button>`
+    : `<button class="fig none" data-open="${esc(e.id)}" aria-label="${label}">${esc(t.noFigure)}</button>`;
+  return `<article class="card" data-g="${e.group}" id="card-${esc(e.id)}">
+    ${fig}
+    <div class="body">
+      <div class="strip"><span class="kind">${esc(subName(e.sub))}</span><span>${esc(F(e, "venue"))}</span></div>
+      <h3>${esc(e.name)}</h3>
+      <p class="read"><b>${e.improves ? t.evaluates : t.targets}</b>${esc(F(e, "evaluates"))}</p>
+      ${e.improves ? `<p class="read"><b>${t.improves}</b>${esc(F(e, "improves"))}</p>` : ""}
+      ${e.agreement ? `<p class="read agree"><b>${t.agreementLong}</b>${esc(F(e, "agreement"))}</p>` : ""}
+      <div class="foot">${linkList(e.links.slice(0, 3))}<button class="more" data-open="${esc(e.id)}">${t.details}</button></div>
+    </div>
+  </article>`;
+}
+
+function render() {
+  const t = T();
+  const list = visible();
+  $("count").textContent = t.count(list.length, DATA.length);
+  const main = $("main");
+  if (!list.length) {
+    main.innerHTML = `<p class="empty">${esc(t.empty)}</p>`;
+    return;
+  }
+  if (state.sort === "grouped") {
+    const sections = [];
+    for (const gid of GROUP_IDS) {
+      const inGroup = list.filter(e => e.group === gid);
+      const subs = [...new Set(inGroup.map(e => e.sub))];
+      for (const sub of subs) {
+        const items = inGroup.filter(e => e.sub === sub);
+        const single = sub === "Platforms" || sub === "Competitions";
+        const title = single ? groupTitle(gid) : `${groupTitle(gid)}: ${subName(sub)}`;
+        sections.push(`<section class="section"><header><h2>${esc(title)}</h2><span class="eyebrow">${esc(t.entries(items.length))}</span><span class="lede">${esc(groupLede(gid))}</span></header><div class="grid">${items.map(card).join("")}</div></section>`);
+      }
+    }
+    main.innerHTML = sections.join("");
+  } else {
+    const sorted = [...list].sort((a, b) =>
+      state.sort === "az" ? a.name.localeCompare(b.name)
+      : state.sort === "new" ? b.year - a.year || a.name.localeCompare(b.name)
+      : a.year - b.year || a.name.localeCompare(b.name));
+    main.innerHTML = `<div class="grid">${sorted.map(card).join("")}</div>`;
+  }
+}
+
+function renderGroups() {
+  $("groups").innerHTML = GROUP_IDS.map(gid => {
+    const n = DATA.filter(e => e.group === gid).length;
+    return `<button class="group" data-g="${gid}" aria-pressed="${state.group === gid}"><span class="n">${n}</span><span class="t">${esc(groupTitle(gid))}</span><span class="d">${esc(groupLede(gid))}</span></button>`;
+  }).join("");
+}
+
+function renderTags() {
+  const counts = {};
+  DATA.forEach(e => e.tags.forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
+  const top = Object.entries(counts).filter(([t, n]) => n >= 4 && t !== VLA_TAG).sort((a, b) => b[1] - a[1]).map(([t]) => t);
+  $("tags").innerHTML = top.map(t => `<button class="chip" data-tag="${esc(t)}" aria-pressed="${state.tag === t}">${esc(tagName(t))}</button>`).join("");
+}
+
+function renderStatic() {
+  const t = T();
+  document.documentElement.lang = state.lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t[el.dataset.i18n]; });
+  const vla = $("vla-toggle");
+  vla.textContent = `${t.vla} · ${DATA.filter(e => e.tags.includes(VLA_TAG)).length}`;
+  vla.title = t.vlaHint;
+  vla.setAttribute("aria-pressed", String(state.vla));
+  $("q").placeholder = t.search;
+  $("q").setAttribute("aria-label", t.searchLabel);
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)));
+}
+
+function renderDetail() {
+  const e = DATA.find(x => x.id === state.open);
+  if (!e) return;
+  const t = T();
+  const row = (k, v, cls = "") => v ? `<dt>${k}</dt><dd${cls ? ` class="${cls}"` : ""}>${v}</dd>` : "";
+  $("detail").innerHTML = `<button class="close" data-close>${t.close}</button>
+    ${e.image ? `<div class="d-fig"><img src="${esc(e.image)}" alt="${esc(t.figureAlt(e.name))}"></div>` : ""}
+    <div class="d-body">
+      <div class="strip" data-g="${e.group}"><span class="kind">${esc(groupTitle(e.group))} · ${esc(subName(e.sub))}</span><span>${esc(F(e, "venue"))}</span></div>
+      <h2 id="d-title">${esc(e.name)}</h2>
+      <dl>
+        ${row(e.improves ? t.evaluates : t.targets, esc(F(e, "evaluates")))}
+        ${row(t.improves, esc(F(e, "improves")))}
+        ${row(t.setup, esc(F(e, "setup")))}
+        ${row(t.scale, esc(F(e, "scale")))}
+        ${row(t.agreement, esc(F(e, "agreement")))}
+        ${row(t.caveat, esc(F(e, "note")), "note")}
+        ${row(t.tags, esc(e.tags.map(tagName).join(" · ")))}
+        ${row(t.links, `<span class="d-links">${linkList(e.links)}</span>`)}
+        ${row(t.figureFrom, e.image_source ? `<a href="${esc(e.image_source)}" target="_blank" rel="noopener">${esc(e.image_source.replace(/^https?:\/\//, ""))}</a>` : "")}
+      </dl>
+    </div>`;
+}
+
+function openDetail(id) {
+  if (!DATA.some(x => x.id === id)) return;
+  state.open = id;
+  renderDetail();
+  const dlg = $("detail");
+  if (!dlg.open) dlg.showModal();
+  dlg.scrollTop = 0;
+  try { history.replaceState(null, "", "#" + id); } catch (err) {}
+}
+
+function setLang(lang) {
+  state.lang = lang;
+  try { localStorage.setItem("lang", lang); } catch (err) {}
+  renderStatic();
+  renderGroups();
+  renderTags();
+  render();
+  if ($("detail").open) renderDetail();
+}
+
+$("detail").addEventListener("close", () => {
+  state.open = "";
+  try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {}
+});
+$("detail").addEventListener("click", ev => {
+  if (ev.target === ev.currentTarget || ev.target.closest("[data-close]")) $("detail").close();
+});
+document.addEventListener("click", ev => {
+  const langBtn = ev.target.closest(".lang button");
+  if (langBtn) { setLang(langBtn.dataset.lang); return; }
+  if (ev.target.closest("#vla-toggle")) { state.vla = !state.vla; renderStatic(); render(); return; }
+  const open = ev.target.closest("[data-open]");
+  if (open) { openDetail(open.dataset.open); return; }
+  const grp = ev.target.closest(".group");
+  if (grp) { state.group = state.group === grp.dataset.g ? "" : grp.dataset.g; renderGroups(); render(); return; }
+  const chip = ev.target.closest(".chip");
+  if (chip) { state.tag = state.tag === chip.dataset.tag ? "" : chip.dataset.tag; renderTags(); render(); }
+});
+$("q").addEventListener("input", ev => { state.q = ev.target.value; render(); });
+$("sort").addEventListener("change", ev => { state.sort = ev.target.value; render(); });
+
+renderStatic();
+renderGroups();
+renderTags();
+render();
+const initial = location.hash.slice(1);
+if (initial === "vla") { state.vla = true; renderStatic(); render(); }
+else if (initial) openDetail(initial);
+</script>

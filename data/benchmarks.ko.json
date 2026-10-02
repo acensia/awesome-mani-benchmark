@@ -1,0 +1,806 @@
+{
+  "ycb": {
+    "evaluates": "모양·크기·질감·무게·강성이 다양한 일상 물체 77종을 대상으로 한 grasping, pick-and-place, in-hand manipulation, bimanual 조작, 조립",
+    "improves": "연구실들이 공유하는 실물 물체 세트와 프로토콜 template을 제공해, 서로 다른 로봇의 결과를 비교할 수 있게 한다",
+    "setup": "구입 가능한 생활 물체 77종과 RGB-D 스캔·모델, 프로토콜 template. 로봇은 고정하지 않는다.",
+    "scale": "물체 77종",
+    "note": "조사 당시 공식 프로토콜 페이지에 접속할 수 없었고, 현재 구입 가능 여부는 확인하지 않았다."
+  },
+  "acrv-apb": {
+    "evaluates": "선반 picking 시스템 전체(인식 + 조작)",
+    "improves": "재현 가능한 scene 구성: 물체 42종, 쉽게 구할 수 있는 선반, 물체 배치를 고정하는 stencil",
+    "setup": "물체 42종, 쉽게 구할 수 있는 선반, 배치용 stencil. 로봇은 고정하지 않는다.",
+    "scale": "물체 42종",
+    "note": "Semantic Scholar에는 연도가 2016으로 표기돼 있다."
+  },
+  "ral-2020-protocols": {
+    "evaluates": "gripper 강도와 반복 정밀도, grasp 복원력, grasp planning, bin picking, Rubik's cube, 소형 부품 조립, bimanual 천 조작, 반변형체, in-hand manipulation, 공중 매니퓰레이션, handover를 각각 다루는 프로토콜",
+    "improves": "널리 채택된 매니퓰레이션 벤치마크가 없다는 문제. 모든 논문이 표준 물체, 공통 프로토콜 template, baseline 결과를 쓰도록 했다",
+    "setup": "표준 물체 세트와 공통 벤치마크 template을 쓰는 문서화된 프로토콜 14개.",
+    "scale": "프로토콜 14개"
+  },
+  "graspa": {
+    "evaluates": "로봇 팔의 grasp planning 파이프라인",
+    "improves": "grasping에 공통 프로토콜과 지표가 없다는 문제. 점수를 각 플랫폼의 workspace와 payload로 정규화해 서로 다른 로봇을 비교할 수 있게 한다",
+    "setup": "출력 가능한 layout과 플랫폼 한계로 정규화한 지표. 처음에는 iCub에서 실행했고 이후 Franka Panda용으로 패키징됐다."
+  },
+  "nist-atb": {
+    "venue": "보드는 2017년부터 · 프로토콜 논문 IEEE RA-L 2020",
+    "evaluates": "소형 부품 조립 시스템: peg 삽입, gear 맞물림, connector, nut 체결, belt, cable routing, wire harness",
+    "improves": "CAD, 채점 기준, 분석 지침이 딸린 제작 가능한 표준 보드로, 산업용 조립 결과를 어디서나 같은 방식으로 측정하게 한다",
+    "setup": "CAD, STL 파일, 제작 지침, 채점 지표가 포함된 task board 4종. 로봇은 고정하지 않는다.",
+    "scale": "보드 4종",
+    "note": "현재 보드를 주문할 수 있는지는 확인하지 않았다."
+  },
+  "box-and-blocks": {
+    "evaluates": "clutter 환경에서의 pick-and-place 속도(단위 시간당 옮긴 블록 수)",
+    "improves": "임상 손 기능 검사를 차용해, 로봇 종류와 무관하고 인간 기준치와 비교되는 점수를 제공한다",
+    "setup": "임상 Box and Blocks Test에 기반한 난이도별 프로토콜 3개. baseline은 Barrett WAM과 Franka Panda.",
+    "scale": "프로토콜 3개"
+  },
+  "in-hand-benchmark": {
+    "evaluates": "손가락, 환경, 또는 둘 다를 이용해 쥐고 있는 물체의 pose를 바꾸는 planning과 control",
+    "improves": "공통 태스크 정의(YCB mesh 위의 초기·목표 pose)와 공유 pose-error 지표",
+    "setup": "YCB mesh 위의 초기·목표 물체 pose와 fingertip 위치. hand 종류는 무관하다."
+  },
+  "bimanual-cloth": {
+    "evaluates": "식탁보 펼치기, 수건 접기, 옷 입히기. 여러 난이도와 품질 척도를 둔다",
+    "improves": "표준화되고 구하기 쉬운 천 물체로 어떤 bimanual 플랫폼에서든 실행할 수 있다",
+    "setup": "표준화되고 구하기 쉬운 천 물체. bimanual 플랫폼이면 무엇이든 가능하다.",
+    "scale": "태스크 3개"
+  },
+  "hcos": {
+    "venue": "IEEE RA-L 2022 · 후속 연구 ICRA 2024",
+    "evaluates": "변형체 조작: 접기, 쌓기, 상 차리기, 침대 정리",
+    "improves": "연구 그룹 간에 배포할 수 있는 천 물체 세트. 강체 물체 세트에 대응하는 천 버전이다",
+    "setup": "RGB-D 및 물체 스캔이 딸린 배포용 가정용 천 물체 세트.",
+    "note": "현재 배포 상태는 확인하지 않았다."
+  },
+  "cloth-competition-dataset": {
+    "venue": "IJRR (2025 온라인 게재)",
+    "evaluates": "의류 펼치기를 위한 grasp 선택",
+    "improves": "일회성 대회를 재사용 가능한 데이터셋과 offline 벤치마크로 바꾼다(시도 679회, 의류 34종)",
+    "setup": "대회 현장에서 공용 로봇으로 기록했다.",
+    "scale": "펼치기 시도 679회, 의류 34종, 11팀"
+  },
+  "cepb": {
+    "evaluates": "순차 bin picking에서의 인식, 계획, 제어, grasping",
+    "improves": "고정된 40종 물체 세트 위에서, 창고형 picking 파이프라인의 단계별로 따로 마련한 프로토콜",
+    "setup": "YCB, ACRV Picking Benchmark, T-LESS에서 고른 물체 40종.",
+    "scale": "물체 40종"
+  },
+  "egad": {
+    "evaluates": "모양 복잡도와 grasp 난이도를 통제한 범위에서의 grasping 시스템",
+    "improves": "3D 프린트 가능한 물체 49종으로, 제품을 구하지 않고도 누구나 테스트 세트를 재현할 수 있다",
+    "setup": "3D 프린트 가능한 평가용 물체 49종.",
+    "scale": "물체 49종",
+    "note": "저자 목록은 기억에 의존했으며 다시 확인하지 않았다."
+  },
+  "scenereplica": {
+    "evaluates": "clutter 속 pick-and-place에서의 grasping 파이프라인 전체(인식, 계획, 실행). 실패를 단계별로 귀속한다",
+    "improves": "marker 없이 재현 가능한 scene: 작업자가 참조 이미지를 실시간 카메라 영상에 겹쳐 보며 scene을 다시 만든다",
+    "setup": "YCB 물체 16종으로 구성한 tabletop scene 20개를 참조 이미지 overlay로 재현한다. Fetch mobile manipulator.",
+    "scale": "scene 20개 × 물체 5개 = pick-and-place 100회"
+  },
+  "drj-task-board": {
+    "evaluates": "electronic task board 하위 과제(e-waste 분해, 기기 점검)의 속도와 완료 여부",
+    "improves": "보드가 내장 전자회로로 스스로 채점해 웹 dashboard에 보고하고, 공유 성능 데이터베이스를 쌓는다",
+    "setup": "200달러 미만의 open-hardware task board. microcontroller가 하위 과제와 시간을 검증한다. 55대 이상 배포됐다.",
+    "note": "실행은 로컬에서 하지만 점수는 웹 dashboard로 보고된다."
+  },
+  "ahap": {
+    "venue": "2019 (venue 미확인)",
+    "evaluates": "10가지 grip pattern에 걸친 anthropomorphic hand의 grasping 능력",
+    "improves": "생활 물체 25종을 쓰는 hand 단위 프로토콜",
+    "setup": "생활 물체 25종, 태스크 26개, grip pattern 10가지.",
+    "scale": "태스크 26개",
+    "note": "venue를 확인하지 못했다."
+  },
+  "multi-object-grasping": {
+    "evaluates": "더미와 평면에 놓인 여러 물체를 한 번에 잡는 grasping",
+    "improves": "단일 물체 grasp 벤치마크가 다루지 않는 능력을 위한 프로토콜 3개",
+    "setup": "더미와 평면 상황을 위한 프로토콜 3개.",
+    "scale": "프로토콜 3개",
+    "note": "저널 심사 중인 preprint."
+  },
+  "grab": {
+    "evaluates": "음식물 쓰레기 분류를 위한 clutter 속 grasping. gripper 3종과 clutter 4단계를 다룬다",
+    "improves": "기존 벤치마크가 다루지 않는 영역에서, grasp 이전 조건을 기술하는 graspability 지표",
+    "setup": "gripper 방식 3종과 무작위 clutter 4단계.",
+    "scale": "grasp 시도 1,750회",
+    "note": "Preprint."
+  },
+  "replab": {
+    "evaluates": "학습 기반 grasping(RL reaching baseline 포함)",
+    "improves": "비용과 재현성: 약 2,000달러에 몇 시간이면 조립되는 자급형 팔·카메라·작업 공간",
+    "setup": "팔, 카메라, 작업 공간을 갖춘 약 2,000달러짜리 자급형 셀. 몇 시간이면 조립된다.",
+    "scale": "grasp 시도 92k회"
+  },
+  "robel": {
+    "evaluates": "실제 하드웨어에서의 dexterous manipulation(D'Claw)과 locomotion(D'Kitty) 강화학습. 하드웨어 안전 지표를 포함한다",
+    "improves": "저가 open-source 로봇으로 기관 간에 결과를 재현할 수 있게 한다",
+    "setup": "저가 open-source 로봇: D'Claw(9-DoF hand)와 D'Kitty(4족).",
+    "note": "기관 간 재현은 저자의 주장이다."
+  },
+  "trifinger": {
+    "evaluates": "제어 및 학습 기법에 의한 dexterous manipulation",
+    "improves": "장시간 자율적으로 안전하게 구동할 수 있는 저렴한 open 플랫폼",
+    "setup": "약 5,000달러의 open-source 세 손가락 플랫폼. 1 kHz 제어.",
+    "note": "호스팅 cluster 버전은 Real Robot Challenge 항목에 있다."
+  },
+  "deepclaw": {
+    "evaluates": "세 가지 하드웨어 구성에서의 Tic-Tac-Toe, bin clearing, jigsaw 태스크",
+    "improves": "여러 제조사의 팔, gripper, 카메라를 수용하는 재구성 가능한 셀과 공유 태스크 계층",
+    "setup": "여러 제조사의 팔, gripper, 카메라를 수용하는 재구성 가능한 셀.",
+    "scale": "하드웨어 구성 3종에서 태스크 3개"
+  },
+  "rb2": {
+    "evaluates": "pouring, scooping, zipping, insertion에서의 학습 알고리즘",
+    "improves": "연구실 간 분산: 같은 실험이 연구실에 따라 20% 달랐으므로, 절대 수치를 비교하지 않고 로컬 결과를 하나의 global ranking으로 모은다",
+    "setup": "임상 손 기능 평가 절차에서 착안한 태스크. 두 연구실에서 실행해 하나의 순위로 통합한다.",
+    "scale": "태스크 군 4개",
+    "note": "정확한 하드웨어 구성은 확인하지 못했다."
+  },
+  "furniturebench": {
+    "evaluates": "long-horizon의 복잡한 가구 조립(잡기, 끼우기, 돌려 조이기)",
+    "improves": "재현 가능한 실세계 셋업: 3D 프린트 가구, 셋업 가이드, 체계적 초기화. 독립 재현 10건으로 확인됐다",
+    "setup": "Franka Panda, RealSense 카메라, 3D 프린트 가구, 세 단계 randomness의 초기화 도구.",
+    "scale": "가구 태스크 8개, 시연 5,100건(219.6시간)",
+    "note": "독립 재현 10건에서 성능 격차 16% 미만(저자 보고)."
+  },
+  "fmb": {
+    "evaluates": "여러 단계의 contact-rich 기능적 조작(grasping, 재배치, 삽입, 조립). held-out 물체를 포함한다",
+    "improves": "공차가 명시된 3D 프린트 물체, 대규모 데이터셋, skill별 시행 프로토콜",
+    "setup": "Franka Panda, RealSense D405 4대, 공차 1–2 mm의 3D 프린트 물체.",
+    "scale": "프린트 가능한 물체 66종, trajectory 22,550건"
+  },
+  "ramp": {
+    "evaluates": "조작과 계획이 모두 필요한 조립(beam을 peg로 결합해 목표 구조물을 만든다)",
+    "improves": "3D 프린트하거나 쉽게 구할 수 있는 부품, CAD, digital twin",
+    "setup": "3D 프린트 beam과 peg, AprilTag, digital twin.",
+    "note": "원 연구실 밖에서의 채택은 확인하지 못했다."
+  },
+  "industreal": {
+    "evaluates": "contact-rich 조립을 위한 RL 정책의 sim-to-real 전이",
+    "improves": "시스템 재현에 필요한 하드웨어·소프트웨어 도구를 공개한다",
+    "setup": "sim-to-real 조립용으로 공개된 하드웨어·소프트웨어 도구.",
+    "note": "kit 구성은 독립적으로 확인하지 않았다."
+  },
+  "reassemble": {
+    "evaluates": "multimodal 데이터로 학습하는 contact-rich 조립과 분해(pick, insert, remove, place)",
+    "improves": "NIST Task Board 1 위에 구축한 데이터셋으로, 그 보드의 물리적 표준을 그대로 물려받는다",
+    "setup": "NIST Task Board 1에서 수집한 multimodal 기록(event camera, force-torque, 오디오, multi-view RGB).",
+    "scale": "시연 4,551건, 물체 17종",
+    "note": "새 프로토콜이 아니라 NIST 표준을 물려받은 데이터셋이다."
+  },
+  "homerobot-ovmm": {
+    "evaluates": "open-vocabulary mobile manipulation: 처음 보는 집에서 임의의 물체를 집어 지시된 위치에 놓는다",
+    "improves": "저가 mobile manipulator 한 종(Hello Robot Stretch) 위에서 시뮬레이션과 실세계를 짝지은 벤치마크",
+    "setup": "Hello Robot Stretch. 시뮬레이션과 실제 가정 환경을 함께 제공한다.",
+    "scale": "실세계 baseline 성공률 20%"
+  },
+  "colosseum": {
+    "evaluates": "색, 질감, 크기, 조명, distractor, 물리 특성, 카메라 pose의 perturbation에 대한 정책 강건성",
+    "improves": "체계적인 일반화 테스트. perturbation을 실제 로봇에서 재현할 수 있는 프린트용 물체를 제공한다",
+    "setup": "시뮬레이션 벤치마크에 더해, 실제 Franka에서 perturbation을 재현하는 3D 프린트 물체.",
+    "scale": "태스크 20개, perturbation 축 14개",
+    "note": "주 artifact는 시뮬레이션이고, 실세계 부분은 검증 연구다(sim–real R² 0.614)."
+  },
+  "lambda": {
+    "evaluates": "언어 지시 기반의 long-horizon, 여러 방에 걸친 mobile pick-and-place. 데이터 효율에 초점을 둔다",
+    "improves": "tabletop 벤치마크가 적용되지 않는 환경을 위한 sim + real 벤치마크",
+    "setup": "시뮬레이션과 실세계 환경. 하드웨어는 abstract에 명시되지 않았다.",
+    "scale": "시연 571건",
+    "note": "Semantic Scholar에는 venue 연도가 2024로 표기돼 있다."
+  },
+  "vla-replica": {
+    "evaluates": "tabletop 태스크 10개에서의 VLA 및 imitation 정책. in-distribution과 out-of-distribution scene을 모두 본다",
+    "improves": "비용과 셋업 간 재현성: 조명 고정, 카메라 보정, overlay 리셋을 갖춘 약 1,050달러 셀로, 원격 평가의 대안을 제시한다",
+    "setup": "SO-101 팔, RealSense D455, 5600 K LED light box, AprilTag 카메라 보정, overlay 리셋. 합계 약 1,050달러.",
+    "scale": "태스크 10개, 시연 500건, ID 50 + OOD 40 scene × 5회",
+    "note": "독립적으로 만든 두 셋업의 점수가 0.49 대 0.48(ID), 0.55 대 0.50(OOD)이었다. Preprint."
+  },
+  "so101-vla-failure": {
+    "evaluates": "태스크 4개에서 VLA 정책이 어떻게 실패하고 복구하는지",
+    "improves": "성공률을 넘어 failure taxonomy와 복구를 반영한 지표를 제시하고, 공통 SO-101 action space를 정의한다",
+    "setup": "공통 action space를 정의한 SO-101 팔.",
+    "scale": "태스크 4개, 모델·태스크당 20회",
+    "note": "Preprint."
+  },
+  "gm-100": {
+    "evaluates": "skill의 폭: 두 bimanual 플랫폼에서의 세밀한 태스크 100개",
+    "improves": "태스크 coverage. 저자들은 \"robot learning Olympics\"를 향한 첫걸음이라고 표현한다",
+    "setup": "Agilex Cobot Magic과 Dobot Xtrainer. 물체 구매 링크와 template 영상을 제공한다.",
+    "scale": "태스크 100개, teleoperation trajectory 13,000건 이상",
+    "note": "결과를 순차적으로 공개 중이다. Preprint."
+  },
+  "atom-bench": {
+    "evaluates": "atomic skill과 그 조합 가능성: atomic 태스크 30개와 held-out compositional 태스크 24개",
+    "improves": "compositional 실패의 원인을 진단한다(Compositional Failure Share). mask-guided 배치와 고정 test seed를 쓴다",
+    "setup": "Franka Panda + Robotiq 2F-85(single-arm), Agilex Cobot Magic(dual-arm). mask-guided 물체 배치.",
+    "scale": "atomic 30 + compositional 24 태스크, 실물 rollout 2,700회",
+    "note": "단일 사이트 결과. Preprint."
+  },
+  "longbench": {
+    "evaluates": "long-horizon 태스크. 이전 맥락의 기억이 필요한 것과 그렇지 않은 것으로 나눈다",
+    "improves": "long-horizon 실패의 메커니즘을 분리하는 단계별 채점",
+    "setup": "ARX-R5 팔과 복제용 문서. 원격 제출을 받는 중앙 플랫폼도 운영한다.",
+    "scale": "태스크 10개, 실세계 episode 1,000건 이상",
+    "note": "Preprint."
+  },
+  "umi-bench": {
+    "evaluates": "UMI 방식의 handheld gripper 데이터로 학습하고 wrist camera만 쓰는 정책",
+    "improves": "데이터 수집, scene 리셋, 실행, 기록, 태스크 요인 분석을 하나로 묶은 로컬 프로토콜",
+    "setup": "FastTouch 팔, wrist RGB만 입력, 5 cm acrylic grid board, scene별 JSON 파일.",
+    "scale": "태스크 10개 × 50 episode",
+    "note": "Preprint."
+  },
+  "vla-benchmarking-experiences": {
+    "evaluates": "공간 및 물체 변화 조건에서 mobile bimanual 로봇의 VLA 정책",
+    "improves": "성공률에 더해 time-to-success와 instruction adherence 지표를 추가한다",
+    "setup": "ALOHA Mobile.",
+    "scale": "태스크 4개",
+    "note": "커뮤니티 벤치마크라기보다 단일 연구실 study에 가깝다."
+  },
+  "duobench": {
+    "evaluates": "네 범주의 bimanual 협응: asymmetric support, 공동 조작, sequential handoff, parallel execution",
+    "improves": "단계 기반 채점과, 프린트 가능한 asset을 쓰는 실세계 태스크 recipe",
+    "setup": "FR3 Duo와 3D 프린트 asset(STL 파일 공개).",
+    "scale": "태스크 11개(실물 재현 4개), 실세계 episode 200건",
+    "note": "단계 추적이 수동이고, 두 번째 사이트 결과가 없다. Preprint."
+  },
+  "busybox": {
+    "evaluates": "affordance 일반화: 모듈 배치가 바뀌어도 정책이 스위치, 슬라이더, 버튼, 다이얼을 조작할 수 있는가",
+    "improves": "스스로 상태를 보고하는 계측형 3D 프린트 박스로, 성공 판정을 자동화한다",
+    "setup": "Raspberry Pi Zero가 구동하는, 재배치 가능한 3D 프린트 모듈 6종. Mobile ALOHA.",
+    "scale": "teleoperation trajectory 1,993건",
+    "note": "두 번째 사이트 결과가 없다. Preprint."
+  },
+  "pomdar": {
+    "evaluates": "조작·grasping 태스크 18개에 걸친 anthropomorphic robot hand의 dexterity. 인간 baseline 대비로 채점한다",
+    "improves": "hand 설계를 비교하기 위한, 전부 3D 프린트로 만든 테스트 장치",
+    "setup": "소비자용 3D 프린터로 만든 테스트 장치. anthropomorphic hand를 teleoperation해 실행한다.",
+    "scale": "태스크 18개(조작 12, grasping 6)",
+    "note": "teleoperation에 의존하므로 hand와 operator를 함께 측정한다."
+  },
+  "tactidex": {
+    "evaluates": "촉각 기반 dexterous manipulation",
+    "improves": "손 전체의 촉각 신호를 동작 및 물체 상태와 정렬한 데이터셋과 표준 지표",
+    "setup": "표준 지표가 딸린 촉각 데이터셋.",
+    "scale": "물체 49종, interaction sequence 757건",
+    "note": "물리 재현 프로토콜은 드러나지 않는다."
+  },
+  "peg-in-bench": {
+    "evaluates": "peg 모양과 clearance(0.1, 1, 3 mm)에 따른 고정밀 삽입",
+    "improves": "공차가 명시된, 모듈식 프린트형 삽입 kit",
+    "setup": "resin 프린트 peg와 hole(해상도 0.05 mm). clearance는 0.1, 1, 3 mm.",
+    "note": "아직 baseline이 없다. Preprint."
+  },
+  "industrial-dexterity": {
+    "evaluates": "산업 태스크: 데이터센터 케이블 연결, cable harness routing, planetary gearbox 조립",
+    "improves": "CAD, BOM, 채점 기준을 공개한 보드 3종",
+    "setup": "CAD, BOM, 채점 기준을 공개한 보드 3종. Franka FR3.",
+    "scale": "보드 3종, 구성당 48회",
+    "note": "Preprint."
+  },
+  "roboarena": {
+    "evaluates": "DROID 셋업에서, 평가자가 고른 open-ended 태스크와 scene에 대한 generalist 정책",
+    "improves": "중앙집중식 평가의 확장성: 여러 연구실의 네트워크가 double-blind pairwise 비교를 수행하고 순위 모델이 이를 집계한다. 모델 weight는 공개되지 않는다",
+    "setup": "8개 기관의 DROID 플랫폼(Franka Panda, Robotiq 2F-85, ZED 카메라). 제출자가 inference server를 직접 호스팅한다.",
+    "scale": "논문 기준 정책 7개에 대한 pairwise 비교 612회(4,284 episode)",
+    "note": "조사 당시 라이브 리더보드를 직접 읽지 못했다."
+  },
+  "autoeval": {
+    "evaluates": "소수의 Bridge tabletop 태스크에서의 generalist 정책",
+    "improves": "사람의 노동: 학습된 성공 판정과 학습된 리셋으로 셀이 거의 감독 없이 24시간 돌아간다",
+    "setup": "Bridge scene의 WidowX 250 셀. VLM success classifier와 학습된 reset policy를 쓴다.",
+    "scale": "셀당 하루 약 500 episode. 공개 태스크 4개",
+    "note": "사이트는 공개 태스크를 2026년 1월 1일까지 제공한다고 안내한다."
+  },
+  "robochallenge": {
+    "venue": "arXiv 2025-10 · V2는 CVPR 2026 workshop",
+    "evaluates": "네 종류 로봇의 tabletop 태스크 30개에서의 VLA 정책. 태스크별 track과 generalist track이 있고, V2는 multi-task, zero-shot, out-of-domain 테스트를 추가한다",
+    "improves": "모델 weight를 넘기지 않고도 대규모 실로봇 fleet에 온라인으로 접근하게 한다",
+    "setup": "UR5, Franka Panda, Cobot Magic ALOHA, ARX-5 로봇 fleet. remote-robot API로 weight는 사용자 쪽에 남는다.",
+    "scale": "태스크 30개 × rollout 10회. 성공률과 0–10 progress score",
+    "note": "V2 baseline 표는 검증하지 못했다."
+  },
+  "manipulationnet": {
+    "evaluates": "임의의 로봇에서의 physical skill(peg-in-hole, cable management, clutter 속 grasping)과 embodied reasoning(언어 지시 tabletop 태스크, block 배열)",
+    "improves": "현실성, 접근성, 진본성을 함께 확보한다: 표준 kit을 우편으로 보내고, 태스크는 로컬에서 실행하며, 서버가 결과를 검증한다",
+    "setup": "표준 kit을 팀에 우편으로 보내 임의의 로봇에서 실행한다. client가 검증 challenge를 내는 서버에 보고한다.",
+    "scale": "track 2개. 참가 팀 30개 이상",
+    "note": "논문의 baseline은 preliminary로 표기돼 있다."
+  },
+  "robodojo": {
+    "evaluates": "bimanual 로봇 3종에서의 long-horizon, 정밀, 기억, 일반화 태스크에 대한 generalist 정책",
+    "improves": "원격 평가와 평가자 3인의 double-blind 채점을 갖춘 sim + real 통합 suite",
+    "setup": "ARX X5, Piper, Piper X bimanual 로봇. policy server 방식이며 로컬 배포와 원격 평가를 모두 지원한다.",
+    "scale": "실세계 태스크 18개 × 10회",
+    "note": "Preprint."
+  },
+  "maniparena": {
+    "evaluates": "tabletop 실행, tabletop semantic reasoning, mobile manipulation. 각각 in-domain, shifted, held-out 시행을 둔다",
+    "improves": "통제된 조건: 조명, 카메라, 작업 공간이 고정된 green-screen 시설",
+    "setup": "조명, 카메라, 작업 공간이 고정된 green-screen 시설.",
+    "scale": "태스크 20개. 각 10회, 10점 만점 partial credit",
+    "note": "Preprint."
+  },
+  "foldex": {
+    "evaluates": "10종 이상의 로봇에 걸친 의류 접기",
+    "improves": "성공, 접힘 품질, 효율을 결합한 점수. held-out 의류와 double-blind 제출을 쓴다",
+    "setup": "로봇 10종 이상. double-blind 제출.",
+    "scale": "태스크 20개 이상. FoldScore = 성공 35% + 품질 35% + 효율 30%",
+    "note": "Preprint."
+  },
+  "armnetbench": {
+    "evaluates": "single-arm과 bimanual 태스크 12개에서의 imitation 및 VLA 정책",
+    "improves": "평가당 비용: 작업자 한 명이 여러 대를 동시에 감독하는 저가 arm 셀",
+    "setup": "약 359달러(single-arm), 477달러(bimanual)의 SO-101 셀.",
+    "scale": "태스크 12개 × 정책 7개, rollout 2,518회",
+    "note": "아직 외부 제출을 받지 않으며, 각 태스크는 한 셀에서만 실행됐다."
+  },
+  "phail": {
+    "evaluates": "order picking에서 VLA 정책의 속도와 처리량. 인간 작업자와 비교한다",
+    "improves": "통계적 보고: time-to-success 분포, 신뢰구간, blind scheduling, 공개 run 감사",
+    "setup": "Franka Research 3 + Robotiq 2F-85. positronic framework를 통해 공개 제출을 받는다.",
+    "scale": "태스크 1개(bin-to-bin order picking), rollout 약 995회",
+    "note": "Preprint."
+  },
+  "humanoid-everyday": {
+    "evaluates": "태스크 범주별 humanoid 로봇의 매니퓰레이션 정책",
+    "improves": "humanoid 하드웨어 접근성: humanoid를 위한 최초의 cloud 평가 플랫폼으로 소개된다",
+    "setup": "Unitree G1과 H1. policy server가 30 Hz로 스트리밍한다.",
+    "scale": "데이터셋: 태스크 260개, trajectory 10.3k건",
+    "note": "자동 scene 리셋이 없다."
+  },
+  "real-robot-challenge": {
+    "venue": "NeurIPS competition 2020–2022",
+    "evaluates": "TriFinger 로봇에서의 dexterous manipulation. 2022년 대회는 push와 lift에서 offline RL을 테스트했다",
+    "improves": "접근성: 참가자가 제출한 코드가 원격 로봇 cluster에서 실행된다",
+    "setup": "MPI-IS의 TriFingerPro 8대. 제출된 코드는 compute cluster의 job처럼 스케줄된다.",
+    "note": "2022년 이후 대회가 없고, cluster 접근은 신청제다."
+  },
+  "ocrtoc": {
+    "evaluates": "table organization(물체를 잡아 목표 배치로 재배열)",
+    "improves": "cloud로 접근하는 동일 사양 로봇 셋업에서의 공정한 비교",
+    "setup": "cloud 업로드로 접근하는 동일 사양 실로봇 셋업. 자동 채점.",
+    "scale": "2020년 59팀",
+    "note": "2022년 이후 대회는 발견되지 않았다."
+  },
+  "cloudgripper": {
+    "evaluates": "소형 원격 셀 32개에서의 planar pushing과 rope 조작",
+    "improves": "대규모 벤치마킹과 데이터 수집을 위한 공유 testbed",
+    "setup": "밀폐형 셀 32개. 각각 저가 5-DoF Cartesian arm, gripper, 카메라를 갖췄다.",
+    "scale": "셀 32개",
+    "note": "RGMC 2026 Cloud Robotics track의 testbed."
+  },
+  "halter": {
+    "evaluates": "long-horizon 매니퓰레이션(벤치마크가 아닌 평가 도구)",
+    "improves": "기존 자동화 셀이 잘 다루지 못한 긴 태스크의 scene 자동 리셋",
+    "setup": "Franka에서의 scene graph + LLM reset planning.",
+    "scale": "long-horizon 태스크 4개. episode의 76%에서 scene을 복원한다",
+    "note": "호스팅 서비스가 아닌 평가 도구. Preprint."
+  },
+  "unibot": {
+    "venue": "2026년 발표",
+    "evaluates": "하나의 모델로 여러 tabletop 태스크(grasping, placing, bimanual 협응)를 수행하는 능력",
+    "improves": "실제 하드웨어 기반 호스팅 리더보드. 아직 열리지 않았다",
+    "setup": "Unitree 하드웨어.",
+    "note": "coming soon 상태이며 공개된 결과가 없다."
+  },
+  "umi-arena": {
+    "evaluates": "handheld 장치 데이터로 학습한 정책. 로봇 팔 3종에서 태스크 8개를 본다",
+    "improves": "held-out 태스크를 포함한 queue 방식 원격 평가",
+    "setup": "Franka, TX-G2, OpenArm. Hugging Face model repository를 queue에 제출한다.",
+    "scale": "태스크 8개(공개 5, held-out 3)",
+    "note": "제출 기간은 2026-11-02까지이며 아직 결과가 없다."
+  },
+  "airoa-mobile": {
+    "evaluates": "Toyota HSR에서의 mobile manipulation용 VLA 파이프라인",
+    "improves": "공용 하드웨어에서 정기적으로 실로봇 평가 round를 연다",
+    "setup": "Toyota HSR.",
+    "scale": "격주 실로봇 round, 36팀"
+  },
+  "rgmc": {
+    "venue": "2016년부터 매년 · 11회 ICRA 2026",
+    "evaluates": "clutter에서의 picking, in-hand manipulation, human-robot handover, mobile manipulation, task board 조립, 원격 cloud-robotics track",
+    "setup": "현장 평가. 2026년에는 CloudGripper 기반 원격 Cloud Robotics track이 추가됐다."
+  },
+  "wbcd": {
+    "evaluates": "물류 picking, 포장, 실험실 작업, pallet 적재에서의 bimanual 시스템(teleoperation + learning from demonstration)",
+    "setup": "teleoperation 및 learning-from-demonstration 시스템을 현장에서 실물로 심사한다.",
+    "note": "자율 정책 단독이 아니라 teleoperation 시스템을 평가한다."
+  },
+  "robothon": {
+    "evaluates": "팀이 우편으로 받는 자동 채점 electronic task board에서의 속도",
+    "setup": "task board를 팀에 우편으로 보낸다. 웹 dashboard와 심사단이 채점하는 30일 원격 프로토콜.",
+    "note": "2025년 우승팀이 결과 repository와 보도자료에서 다르게 적혀 있다."
+  },
+  "eurobin-msvc": {
+    "evaluates": "같은 task board에서의 skill 다양성, 속도, 전이",
+    "setup": "팀 자체 로봇으로 30일 원격 단계를 치른 뒤 상위 3팀이 현장 평가를 받는다.",
+    "scale": "7팀, 기록된 시도 500회 이상"
+  },
+  "cloth-competition": {
+    "evaluates": "공용 로봇에서의 의류 펼치기",
+    "setup": "공용 로봇에서의 현장 평가.",
+    "scale": "11팀, 평가 176회"
+  },
+  "wrs-mrc": {
+    "evaluates": "산업용 조립(2018)과 혼합 물품 상자 포장(2025)",
+    "setup": "현장 평가.",
+    "note": "2025년 우승팀과 점수는 확보하지 못했다."
+  },
+  "robocup": {
+    "venue": "매년 · ARM Challenge 2026",
+    "evaluates": "가정 서비스 태스크. ARM은 실제 UR5e에서의 자율 매니퓰레이션을 테스트한다",
+    "setup": "현장 평가. ARM은 시뮬레이션 예선 뒤 실제 UR5e에서 진행한다.",
+    "note": "@Home은 연도별 매니퓰레이션 점수를 리더보드로 공개하지 않는다."
+  },
+  "amazon-picking-challenge": {
+    "evaluates": "선반과 bin에서의 창고 picking(2017년 중단)",
+    "setup": "현장 평가.",
+    "note": "2017년 이후 중단됐다."
+  },
+  "ovmm-challenge": {
+    "evaluates": "실제 아파트에서의 open-vocabulary mobile manipulation",
+    "setup": "시뮬레이션 예선 뒤 상위 3팀을 실제 아파트의 Stretch 로봇에서 평가한다."
+  },
+  "robotwin-challenge": {
+    "evaluates": "bimanual 협업. 시뮬레이션 2 round 뒤 real round를 치른다",
+    "setup": "시뮬레이션 2 round 뒤 AgileX Cobot Magic에서 real round.",
+    "scale": "64팀"
+  },
+  "maniskill-vitac": {
+    "evaluates": "vision-tactile 매니퓰레이션. 시뮬레이션 상위 팀을 실제 tactile 플랫폼에서 검증한다",
+    "setup": "시뮬레이션 리더보드 뒤 상위 팀을 실제 tactile 플랫폼에서 평가한다."
+  },
+  "agibot-world-challenge": {
+    "evaluates": "AgiBot 로봇에서의 매니퓰레이션(셔츠 접기, conveyor picking, 음식 준비). 2026년에는 슈퍼마켓 mobile manipulation이 추가됐다",
+    "setup": "온라인 시뮬레이션 round 뒤 현장 실로봇 결선. 2026년에는 remote-API track이 추가됐다.",
+    "scale": "431팀(2025), 526팀(2026)",
+    "note": "수치는 보도자료에 근거한다."
+  },
+  "real-i": {
+    "evaluates": "물류형 태스크에서의 dual-arm humanoid 매니퓰레이션. 추가 학습 데이터 사용이 금지된다",
+    "setup": "Leju Kuavo humanoid에서 시뮬레이션, 원격 실로봇, 현장의 3단계로 진행한다. Docker 제출."
+  },
+  "roco": {
+    "evaluates": "dual-arm 조립(gearbox, industrial board, brick)",
+    "setup": "Isaac Sim round 뒤 실제 dual-arm round.",
+    "scale": "60팀 이상(AAAI 2026)"
+  },
+  "lehome": {
+    "evaluates": "저가 SO-ARM101 팔에서의 의류 매니퓰레이션",
+    "setup": "시뮬레이션 단계 뒤 SO-ARM101에서의 현장 real 단계.",
+    "scale": "결선 8팀"
+  },
+  "robosyn": {
+    "evaluates": "synthetic 데이터로 학습한 정책의 일반화를 실세계에서 테스트한다",
+    "setup": "synthetic 데이터로 학습하고 실세계에서 테스트한다."
+  },
+  "atec": {
+    "evaluates": "원격 조종이 금지된 야외 환경에서의 완전 자율 동작",
+    "setup": "야외 실환경."
+  },
+  "phyrc": {
+    "evaluates": "manikin을 대상으로 한 신체 돌봄(옷 입히기, 침상 목욕)",
+    "setup": "시뮬레이션 단계 뒤 manikin을 쓰는 real 단계."
+  },
+  "ebim": {
+    "evaluates": "mobile bimanual 매니퓰레이션: cable routing, thermal pad 부착, 식사 보조",
+    "setup": "주최 측이 세 사이트의 Mobile FR3 Duo 로봇에서 운영하는 real 단계.",
+    "scale": "태스크 3개"
+  },
+  "gigabrain-challenge": {
+    "evaluates": "Table30 V2 preview에서의 generalist 모델",
+    "setup": "Table30 V2 preview를 쓰는 실로봇 track.",
+    "note": "보도된 최고 점수는 기사 snippet에 근거한다."
+  },
+  "intrinsic-challenge": {
+    "evaluates": "산업용 workcell에서의 케이블 삽입. 성공, 정밀도, 안전, cycle time으로 채점한다",
+    "setup": "상위 10팀이 Intrinsic의 UR5e workcell에 원격 배포한다.",
+    "scale": "약 160팀",
+    "note": "Phase 2 결과는 찾지 못했다."
+  },
+  "origami-challenge": {
+    "evaluates": "원격 실험실에서 bimanual 팔과 dexterous hand로 하는 종이접기",
+    "setup": "원격 실세계 lab에 정책을 업로드하고 평가를 queue에 등록한다.",
+    "note": "조사 시점에 하드웨어와 팀 수가 공개되지 않았다."
+  },
+  "simpler": {
+    "evaluates": "Google Robot과 WidowX 셋업용 generalist 정책(RT-1, RT-1-X, RT-2-X, Octo)",
+    "improves": "방법론을 확립했다: system identification으로 control gap을, 맞춘 배경과 texture로 visual gap을 줄인다. MMRV 순위 지표를 도입했다",
+    "setup": "visual matching과 system identification을 적용한 수작업 SAPIEN twin. Google Robot과 WidowX(Bridge V2)를 모사한다.",
+    "scale": "sim–real paired episode 약 1,500건",
+    "agreement": "Google Robot 평균: MMRV 0.056, Pearson r 0.924",
+    "note": "DROID 방식 태스크에서의 독립 재측정은 Spearman ρ 0.40이었다."
+  },
+  "maniskill3-twins": {
+    "evaluates": "SIMPLER와 같은 환경",
+    "improves": "속도: GPU 병렬 버전이 약 10배 빠르다",
+    "setup": "SIMPLER 환경 4개의 GPU port.",
+    "agreement": "새 상관 연구 없음"
+  },
+  "droid-sim-evals": {
+    "evaluates": "실제 DROID 데이터셋으로 학습한 정책(zero-shot)",
+    "improves": "별도의 시뮬레이션 학습 데이터가 필요 없는 시뮬레이션 scene",
+    "setup": "DROID 셋업을 수작업으로 구성한 Isaac Sim scene.",
+    "agreement": "공개된 수치 없음",
+    "note": "PolaRiS의 전신."
+  },
+  "realm": {
+    "venue": "arXiv 2025-12 · project page 기준 RA-L / IROS 2026",
+    "evaluates": "DROID 셋업에서 visual, semantic, behavioral perturbation 15종에 대한 VLA 정책의 일반화",
+    "improves": "시뮬레이터를 paired real rollout으로 검증한 일반화 벤치마크",
+    "setup": "CMA-ES system identification을 적용한 Isaac Sim. DROID Franka를 모사한다.",
+    "scale": "paired rollout 약 800쌍",
+    "agreement": "논문: p < 0.001. 독립 재측정: r 0.785, ρ 0.700, MMRV 0.030",
+    "note": "논문 자체의 r과 MMRV는 figure에만 있다."
+  },
+  "robotarena-inf": {
+    "evaluates": "여러 실세계 데이터셋의 scene에서 perturbation을 준 VLA 정책",
+    "improves": "규모: 이미지 한 장에서 환경을 자동 생성하고, VLM과 crowdsourced preference로 채점한다",
+    "setup": "단일 프레임에서 Genesis 시뮬레이터로 옮기는 생성형 real-to-sim. VLM과 crowdsourced preference로 채점한다.",
+    "scale": "환경 약 100개 + perturbation",
+    "agreement": "정량적 상관 없음(태스크 1개, 정책 3개)"
+  },
+  "robolab": {
+    "evaluates": "난이도와 visual, procedural, relational 요구에 따라 등급을 매긴 pick-and-place 태스크 120개에서의 generalist 정책",
+    "improves": "generalist 정책이 어디서 실패하는지에 대한 세밀한 분석",
+    "setup": "DROID 셋업을 모사한 수작업 IsaacLab 태스크.",
+    "scale": "태스크 120개",
+    "agreement": "RoboArena 대비: Spearman ρ 1.00, Pearson r 0.68(정책 4개)",
+    "note": "Preprint."
+  },
+  "x2real": {
+    "evaluates": "10개 능력 차원과 로봇 4종에 걸친 long-horizon 태스크 44개. in-distribution과 out-of-distribution을 모두 본다",
+    "improves": "시뮬레이션 로봇과 실제 로봇을 하드웨어 수준에서 맞추는 calibration",
+    "setup": "하드웨어 calibration을 적용한 Isaac Lab-Arena. Franka, ArtiXon, ARX R5, Quanta X1.",
+    "scale": "태스크 44개",
+    "agreement": "선형 상관 0.84",
+    "note": "실세계 episode 수가 명시되지 않았다."
+  },
+  "viser": {
+    "evaluates": "물리 기반 ray-traced 렌더링에서의 매니퓰레이션 정책",
+    "improves": "visual gap: highlight와 그림자가 측정 성공률을 어떻게 바꾸는지 보인다",
+    "setup": "PBR asset을 쓰는 SAPIEN ray tracing. WidowX와 Google Robot.",
+    "agreement": "평균 Pearson r 0.92",
+    "note": "Preprint."
+  },
+  "molmospaces": {
+    "evaluates": "procedural로 생성한 환경 230,000개에서의 pick, open, close skill",
+    "improves": "평가 환경의 규모와 다양성",
+    "setup": "procedural로 만든 환경 230k개. 실세계 비교는 DROID FR3에서 한다.",
+    "scale": "환경 230k개",
+    "agreement": "pick 태스크 0.96, Spearman ρ 0.98",
+    "note": "0.96이 Pearson R인지 R²인지 불분명하다. 실세계 수치는 RoboArena에서 가져왔다."
+  },
+  "genie-sim-3": {
+    "evaluates": "AgiBot G1, G2 로봇용 정책",
+    "improves": "스캔한 실제 scene을 물리 시뮬레이터 안에 넣는다",
+    "setup": "3D Gaussian Splatting으로 스캔한 scene을 쓰는 Isaac Sim. AgiBot G1과 G2.",
+    "scale": "태스크 8개 × 50회",
+    "agreement": "R² 0.94, 기울기 약 1.025",
+    "note": "Preprint."
+  },
+  "colosseum-v2": {
+    "evaluates": "single-arm과 bimanual 정책의 perturbation 19종에 대한 강건성",
+    "improves": "perturbation 테스트를 위한 더 빠른 GPU 시뮬레이터. 실세계 시행과 대조했다",
+    "setup": "ManiSkill GPU 시뮬레이션. Franka single-arm과 bimanual.",
+    "scale": "실세계 태스크 5개 × perturbation 7종 × 20회",
+    "agreement": "R² 0.49. 시뮬레이션이 평균 12.3%p 벗어난다",
+    "note": "조사 노트에 venue가 일관되지 않게 기록돼 있다."
+  },
+  "h2rbench": {
+    "evaluates": "인간 영상의 skill을 로봇으로 전이하는 방법",
+    "improves": "실세계 결과를 예측하는 human-to-robot 전이 벤치마크",
+    "setup": "실제 인간 영상으로 만든 real-to-sim 환경.",
+    "scale": "태스크 4개",
+    "agreement": "r 0.89, ρ 0.85, MMRV 0.06"
+  },
+  "r2s-eval": {
+    "evaluates": "dexterous hand를 갖춘 dual-arm humanoid에서의 VLA 정책",
+    "improves": "pairwise preference를 내는 VLM이 채점하는 calibrated twin",
+    "setup": "SharpaNorth dual-arm humanoid의 calibrated Isaac Lab-Arena twin. VLM pairwise judge를 쓴다.",
+    "scale": "태스크 7개. 실세계 trajectory 3,525건, 시뮬레이션 3,445건",
+    "agreement": "ρ 0.957, r 0.978, MMRV 0.005",
+    "note": "로봇 1종만 대상으로 했다. Preprint."
+  },
+  "practical-recipe": {
+    "evaluates": "같은 실세계 태스크에서 비교한 기존 시뮬레이터(VLA-Arena, SIMPLER, REALM)",
+    "improves": "소량의 시뮬레이션 adaptation처럼, 실세계 결과와의 일치도를 높이는 방법",
+    "setup": "VLA-Arena, SIMPLER, REALM을 같은 DROID 실세계 태스크와 비교한다.",
+    "agreement": "태스크당 시연 10개로 REALM ρ가 0.700에서 0.875로 상승. SIMPLER ρ 0.400",
+    "note": "Preprint."
+  },
+  "suresim": {
+    "evaluates": "소수의 real rollout과 다수의 시뮬레이션 rollout을 가진 임의의 정책",
+    "improves": "통계: 두 출처를 결합해 더 적은 로봇 시간으로 유효한 신뢰구간을 낸다",
+    "setup": "소수의 paired real rollout과 다수의 시뮬레이션 rollout에 prediction-powered inference를 적용한다.",
+    "agreement": "같은 구간 폭에서 하드웨어 노력 20–25% 절감",
+    "note": "ICRA 2026 게재는 확인되지 않았다."
+  },
+  "polaris": {
+    "evaluates": "새로 촬영한 환경에서의 generalist DROID 정책",
+    "improves": "scene 구축 비용(짧은 휴대폰 영상이면 충분하다)과 wrist camera 지원",
+    "setup": "휴대폰 영상에서 2D Gaussian Splatting으로 재구성해 Isaac Sim에 넣고, 가벼운 시뮬레이션 co-training을 더한다. DROID Franka.",
+    "scale": "두 기관의 paired 환경 6개",
+    "agreement": "평균 r 0.90(최저 0.81). RoboArena 순위 대비 r 0.98",
+    "note": "후속 논문은 co-training 단계를 빼면 0.32라고 측정했다."
+  },
+  "real2sim-softbody": {
+    "venue": "ICRA 2026 (project page 기준)",
+    "evaluates": "변형체 정책: rope routing, 봉제 인형 packing, 그리고 T-block pushing",
+    "improves": "강체 시뮬레이터와 world model이 잘 다루지 못하는 변형체",
+    "setup": "3D Gaussian Splatting 렌더링과 PhysTwin spring-mass 모델. xArm 7.",
+    "scale": "태스크 3개",
+    "agreement": "태스크별 r 0.944 / 0.901 / 0.915. MMRV 0.076–0.174"
+  },
+  "simfoundry": {
+    "evaluates": "single-arm과 bimanual 셋업에서의 generalist 정책",
+    "improves": "영상 하나로 simulation-ready twin을 만들고, 정책 adaptation 없이 동작한다",
+    "setup": "영상 하나에서 simulation-ready twin과 변형을 생성한다. DROID Franka와 bimanual YAM.",
+    "agreement": "정책 adaptation 없이 평균 r 0.911, MMRV 0.018",
+    "note": "Preprint."
+  },
+  "reveal": {
+    "evaluates": "humanoid에서의 VLA 정책",
+    "improves": "재구성 품질이 실세계 결과와의 일치도를 어떻게 좌우하는지 보인다",
+    "setup": "Genesis에서의 2DGS, PGSR, depth-guided PGSR 재구성. Dexmate Vega humanoid.",
+    "scale": "태스크 8개",
+    "agreement": "최고 파이프라인: r 0.960, MMRV 0.102. 기본 2DGS: r 0.773",
+    "note": "단일 플랫폼. Preprint."
+  },
+  "gsworld": {
+    "evaluates": "여러 로봇 팔에서의 imitation 정책",
+    "improves": "재현 가능한 벤치마킹을 위한 photo-realistic closed-loop 시뮬레이션",
+    "setup": "ManiSkill3 물리 엔진과 Gaussian-on-mesh asset. FR3, xArm6, Galaxea R1.",
+    "agreement": "태스크별 성공률 표만 제시. r 미보고"
+  },
+  "real-is-sim": {
+    "evaluates": "pushing 태스크에서의 정책 checkpoint",
+    "improves": "계속 보정되는 twin으로, checkpoint를 몇 분 만에 offline 평가할 수 있다",
+    "setup": "카메라로 보정되는 dynamic Gaussian twin. 실제 로봇이 시뮬레이션 로봇을 따라 움직인다.",
+    "scale": "태스크 1개(PushT)",
+    "agreement": "checkpoint 4개에서 정성적으로 일치. r 없음",
+    "note": "ICRA 2026 venue는 파일명에서 추론한 것일 뿐이다."
+  },
+  "worldeval": {
+    "evaluates": "bimanual 로봇에서의 imitation 및 VLA 정책",
+    "improves": "video model을 정책 자신의 latent action에 조건화한다. checkpoint 순위를 매기고 위험한 동작도 표시한다",
+    "setup": "정책의 latent action에 조건화한 Wan 2.1 video model. AgileX bimanual.",
+    "scale": "태스크 5개",
+    "agreement": "MMRV 0.044, r 0.942",
+    "note": "Preprint."
+  },
+  "worldgym": {
+    "evaluates": "Bridge와 Google Robot 태스크에서의 generalist 정책",
+    "improves": "world model을 환경으로 쓰고, VLM이 채점하며, 이미지 편집으로 out-of-distribution probe를 만든다",
+    "setup": "GPT-4o judge를 쓰는 autoregressive video model. Bridge WidowX와 Google Robot.",
+    "scale": "Bridge 태스크 17개",
+    "agreement": "r 0.78",
+    "note": "실세계 수치는 OpenVLA 논문에서 재사용했다. ICLR 2026 게재는 확인되지 않았다."
+  },
+  "ctrl-world": {
+    "evaluates": "generalist DROID 정책",
+    "improves": "더 긴 rollout을 위한 memory 기반 multi-view 예측. 정책 개선용 데이터도 생성한다",
+    "setup": "DROID로 학습한, memory를 갖춘 multi-view video model.",
+    "scale": "태스크 7개",
+    "agreement": "instruction following: 실제 0.90 대 예측 0.80. 성공률을 과소평가한다",
+    "note": "제3자 측정에서는 MMRV 0.22였다."
+  },
+  "veo-world-simulator": {
+    "evaluates": "bimanual 로봇에서의 Gemini Robotics 정책. 일반 scene과 out-of-distribution scene을 모두 본다",
+    "improves": "일반화 테스트와 safety red teaming을 위한 편집된 scene",
+    "setup": "Veo 2를 fine-tuning한 4-view action-conditioned 시뮬레이터. ALOHA 2.",
+    "scale": "실세계 시행 1,600회 이상",
+    "agreement": "out-of-distribution: r 0.86, MMRV 0.06",
+    "note": "nominal scene 수치(0.88 / 0.03)는 2차 요약에서 온 것이다."
+  },
+  "1x-world-model": {
+    "venue": "블로그 2025-06",
+    "evaluates": "NEO humanoid용 정책 checkpoint",
+    "improves": "실제 테스트 전에 checkpoint를 선별하고 architecture를 비교한다",
+    "setup": "미래 프레임과 태스크 성공을 예측하는 latent world model. 1X NEO.",
+    "agreement": "태스크별 상관 미공개",
+    "note": "회사의 주장이며 peer review를 거치지 않았다."
+  },
+  "dreamdojo": {
+    "evaluates": "과일 packing 태스크의 정책(정책 평가는 여러 응용 중 하나다)",
+    "improves": "대규모 인간 영상으로 사전학습한 범용 world model",
+    "setup": "인간 영상 44.7k시간으로 사전학습한 Cosmos-Predict2.5. AgiBot.",
+    "scale": "정책 1개, scene 20개",
+    "agreement": "r 0.995, MMRV 0.003",
+    "note": "실제 성공률을 과대평가한다."
+  },
+  "playworld": {
+    "evaluates": "DROID 셋업의 정책 18개",
+    "improves": "실패가 포함된 autonomous play로 학습해, 잘못 예측되는 성공을 줄인다",
+    "setup": "autonomous play 데이터로 학습한 world model. DROID.",
+    "scale": "정책 18개",
+    "agreement": "r 0.8766",
+    "note": "Preprint."
+  },
+  "interactive-world-simulator": {
+    "evaluates": "bimanual 태스크에서의 imitation 및 VLA 정책",
+    "improves": "학습과 평가 모두에 쓸 수 있는 10분 이상의 안정적인 rollout",
+    "setup": "consistency model 기반 latent dynamics. ALOHA bimanual.",
+    "scale": "태스크 6개",
+    "agreement": "강한 상관을 plot으로만 제시. 약한 양의 편향이 있다",
+    "note": "Preprint."
+  },
+  "dworldeval": {
+    "evaluates": "bimanual 로봇 한 종과 시뮬레이터 두 종에서의 정책",
+    "improves": "성공을 자동 판정하는 progress token과 일관성을 위한 memory",
+    "setup": "progress token을 쓰는 discrete diffusion world model. AgileX bimanual, LIBERO, RoboTwin.",
+    "agreement": "실로봇 r 0.918",
+    "note": "Preprint."
+  },
+  "pil-world": {
+    "evaluates": "dual-arm 태스크에서의 VLA checkpoint",
+    "improves": "정책 추론과 생성을 번갈아 수행해 hallucination과 실제 성공률과의 격차를 줄인다",
+    "setup": "chunk 단위 policy-in-the-loop world model. dual-arm 로봇.",
+    "scale": "태스크 3개",
+    "agreement": "r 0.94",
+    "note": "Preprint."
+  },
+  "sc3-eval": {
+    "evaluates": "table bussing에서 한 정책의 여러 checkpoint",
+    "improves": "drift를 감지하고 실제 실패 유형을 재현하는 self-consistency 검사",
+    "setup": "self-consistency 검사를 더한 Cosmos3-Nano. table-bussing 로봇 팔.",
+    "scale": "checkpoint 7개",
+    "agreement": "r 0.929, MMRV 0.119",
+    "note": "단일 workspace. Preprint."
+  },
+  "roboworld": {
+    "evaluates": "RoboArena 리더보드의 공개 정책",
+    "improves": "속도: 약 100 GPU-hour로 리더보드 전체를 재현할 만큼 빠르다",
+    "setup": "DROID로 학습한 autoregressive Wan 2.1 모델.",
+    "scale": "정책 8개, rollout 4,186회",
+    "agreement": "RoboArena 대비: r 0.989, ρ 0.970",
+    "note": "정답으로 삼은 것이 기존 리더보드다."
+  },
+  "ge-sim": {
+    "venue": "arXiv 2025-08 · 2.0은 2026-05",
+    "evaluates": "AgiBot dual-arm 로봇의 정책",
+    "improves": "학습된 success classifier를 갖춘 closed-loop video 시뮬레이션",
+    "setup": "학습된 성공 판정기를 갖춘 closed-loop video world model. AgiBot dual-arm.",
+    "agreement": "2.0: episode 단위 accuracy 0.81, recall 0.82. r과 MMRV 없음"
+  },
+  "enerverse-ac": {
+    "evaluates": "AgiBot 로봇의 정책",
+    "improves": "평가기와 데이터 생성기를 겸하는 하나의 world model",
+    "setup": "action-conditioned world model. AgiBot.",
+    "agreement": "정성적 추세 일치만 제시"
+  },
+  "scalable-wm-eval": {
+    "evaluates": "Bridge와 RoboMimic 태스크에서의 generalist 정책",
+    "improves": "대형 사전학습 video model을 이용한 정책 평가. 실패 사례를 문서화했다",
+    "setup": "action conditioning을 더한 Cosmos-Predict2. Bridge V2와 RoboMimic.",
+    "agreement": "RoboMimic(정답이 시뮬레이션): r 0.83–0.88",
+    "note": "Bridge 실세계 상관 수치는 추출하지 못했다."
+  },
+  "gigaworld-wmbench": {
+    "evaluates": "paired real trajectory 2,989건을 기준으로, 평가기로서 비교한 world model 7종",
+    "improves": "어떤 모델 설계와 지표가 world model을 믿을 만한 평가기로 만드는지 밝힌다",
+    "setup": "humanoid, dual-arm, single-arm 데이터에서 world model 7종을 평가기로 비교한다.",
+    "scale": "paired real trajectory 2,989건",
+    "agreement": "VLM 평가기가 사람의 판정과 87.8% 정확히 일치",
+    "note": "Preprint."
+  },
+  "irasim": {
+    "evaluates": "LIBERO에서의 정책(기준이 실로봇이 아니라 시뮬레이터다)",
+    "improves": "세밀한 trajectory-conditioned video 예측",
+    "setup": "trajectory-conditioned video world model.",
+    "agreement": "시뮬레이션 대비 r 0.99",
+    "note": "정답이 실로봇이 아닌 LIBERO 시뮬레이터다."
+  },
+  "cosmos-surg-dvrk": {
+    "evaluates": "dVRK 로봇의 수술 정책",
+    "improves": "video classifier로 결과를 판정해 world model 평가를 수술 로봇으로 확장한다",
+    "setup": "video classifier를 쓰는 Cosmos world model. dVRK 수술 로봇.",
+    "agreement": "정성적 주장만 제시"
+  }
+}
