@@ -1,0 +1,640 @@
+[
+  {
+    "name": "RoboTwin (1.0)",
+    "year": 2024,
+    "venue": "CVPR 2025 (Highlight); early version at ECCV 2024 workshop",
+    "evaluates": "Dual-arm coordination on tabletop tool-use and pick-and-place tasks, with expert data produced by LLM-generated code over generative digital twins of objects",
+    "improves": "Lack of standardized dual-arm benchmarks and of scalable expert data for bimanual tasks aligned with a real dual-arm platform",
+    "setup": "SAPIEN-based simulation (the arXiv HTML names ManiSkill3); AgileX COBOT Magic dual-arm platform with four RealSense D435 RGB-D cameras; image or point-cloud observations",
+    "scale": "15 tasks (two with easy/hard variants); policies trained with 20, 50 or 100 generated expert demonstrations per task",
+    "real_validation": "Sim-to-real transfer only: policies pretrained on 300 simulated samples and fine-tuned on 20 real samples on a COBOT Magic improved over real-only training (about 70% single-arm, 40% dual-arm); no sim-real correlation reported.",
+    "vla_results": "",
+    "status": "Superseded by RoboTwin 2.0; basis of the CVPR 2025 MEIS dual-arm collaboration challenge. No separate leaderboard.",
+    "note": "Paper baselines are Diffusion Policy and DP3 only. Year refers to the early arXiv version (2409.02920), which was not opened in this session; details come from arXiv 2504.13059.",
+    "tags": ["Bimanual", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2504.13059"},
+      {"label": "Code", "url": "https://github.com/RoboTwin-Platform/RoboTwin"}
+    ]
+  },
+  {
+    "name": "RoboTwin 2.0",
+    "year": 2025,
+    "venue": "ICML 2026 (arXiv 2025-06)",
+    "evaluates": "Bimanual tabletop manipulation across 50 tasks, reported separately for clean scenes and scenes randomized in clutter, lighting, background, table height and language",
+    "improves": "Earlier bimanual simulation suites had few tasks, one embodiment and little visual or language variation, so policies overfit to clean scenes",
+    "setup": "SAPIEN; five dual-arm embodiments (Aloha-AgileX, ARX-X5, Piper, Franka, UR5); leaderboard protocol uses Aloha-AgileX with head and two wrist RGB cameras and 14-D joint actions",
+    "scale": "50 tasks; 731 objects in 147 categories (RoboTwin-OD); 100,000+ expert trajectories; 50 clean demos per task for training and 100 evaluation episodes per task per setting (Easy/Hard)",
+    "real_validation": "Sim-to-real transfer only: on a COBOT-Magic robot (4 tasks), adding 1,000 randomized synthetic trajectories to 10 real demos, or training on synthetic data alone, raised real success; no sim-real policy-ranking correlation reported.",
+    "vla_results": "π0, RDT (paper); π0.5, X-VLA, GR00T N1.6, OpenVLA-OFT, InternVLA-A1, StarVLA-α, FastWAM, Spatial Forcing, X-WAM (later papers and XPolicyLab)",
+    "status": "Widely adopted outside the originating lab (LeRobot, StarVLA, vla-eval, XPolicyLab with 42 integrated policies). Leaderboard: https://robotwin-platform.github.io/leaderboard",
+    "note": "Two training protocols circulate (50 clean demos per task vs. 50 clean + 500 randomized demos per task), so scores across papers are not directly comparable. The leaderboard table did not render when fetched.",
+    "tags": ["Generalist / VLA", "Bimanual", "Robustness", "Generalization"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2506.18088"},
+      {"label": "Project", "url": "https://robotwin-platform.github.io/"},
+      {"label": "Code", "url": "https://github.com/RoboTwin-Platform/RoboTwin"},
+      {"label": "Leaderboard", "url": "https://robotwin-platform.github.io/leaderboard"},
+      {"label": "Dataset", "url": "https://huggingface.co/datasets/TianxingChen/RoboTwin2.0"}
+    ]
+  },
+  {
+    "name": "RoboCasa365",
+    "year": 2026,
+    "venue": "ICLR 2026",
+    "evaluates": "Multi-task household mobile manipulation in kitchens: atomic skills, seen composite tasks and unseen composite tasks, under multi-task, foundation-model fine-tuning and lifelong-learning protocols",
+    "improves": "Original RoboCasa had about 100 tasks and 120 scenes with a small evaluated subset; larger task and scene diversity was needed to study generalist training at scale",
+    "setup": "MuJoCo (robosuite/RoboCasa); Franka Panda on an Omron mobile base; three 256x256 RGB cameras plus proprioception; 12-D actions (arm end-effector, gripper, base and torso)",
+    "scale": "365 tasks (65 atomic, 300 composite); 2,500 kitchen scenes; 600+ h human and 1,600+ h MimicGen-generated demonstrations; leaderboard evaluates 50 tasks (18 atomic, 16 composite-seen, 16 composite-unseen)",
+    "real_validation": "Sim-and-real co-training only: on a DROID-style Franka in a real kitchen (4 tasks, 20 trials each), co-training with simulation data reached 79.8% vs 61.8% for real-only; no sim-real correlation reported.",
+    "vla_results": "π0, π0.5, GR00T N1.5, GR00T N1.6, Xiaomi-Robotics-1, ABot-M0.5/M0.6, RLDX-1, PRTS, GigaWorld-Policy 0.1, Paimon-0, Phasor-m7, WorldDreamer",
+    "status": "Growing adoption: 15 leaderboard entries by 2026-09, most from outside the originating lab. Leaderboard: https://robocasa.ai/leaderboard.html",
+    "note": "Baseline numbers on the leaderboard (e.g. GR00T N1.5 23.9 average) differ from the values extracted from the arXiv paper (20.0); the leaderboard appears to carry updated runs.",
+    "tags": ["Generalist / VLA", "Mobile", "Long-horizon", "Generalization"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2603.04356"},
+      {"label": "Project", "url": "https://robocasa.ai/"},
+      {"label": "Code", "url": "https://github.com/robocasa/robocasa"},
+      {"label": "Leaderboard", "url": "https://robocasa.ai/leaderboard.html"}
+    ]
+  },
+  {
+    "name": "RoboCasa GR-1 Tabletop Tasks",
+    "year": 2025,
+    "venue": "arXiv 2025-03 (introduced in the GR00T N1 paper)",
+    "evaluates": "Language-conditioned tabletop rearrangement and articulated-object tasks performed by a humanoid upper body with dexterous hands from an egocentric camera",
+    "improves": "No simulated counterpart existed for real humanoid tabletop data, so humanoid foundation models could not be compared reproducibly in simulation",
+    "setup": "MuJoCo via RoboCasa/robosuite; Fourier GR-1 humanoid with Fourier dexterous hands; egocentric head camera; joint-space actions for arms, hands, waist and neck",
+    "scale": "24 tasks (18 pick-and-place rearrangement, 6 articulated-object); 1,000 demonstrations per task; a 240k-trajectory tabletop dataset is also released",
+    "real_validation": "",
+    "vla_results": "GR00T N1, N1.5, N1.6, N1.7; StarVLA-α; TwinBrainVLA; π0, π0.5 and OpenVLA-OFT as baselines in third-party papers",
+    "status": "Common humanoid row in 2026 VLA result tables (StarVLA-α, TwinBrainVLA, ABot-M0, VP-VLA, DIAL). No official leaderboard found.",
+    "note": "The GR00T N1 paper describes the suite as a digital counterpart to real humanoid data but reports no paired sim-real evaluation. The repo README could only be read via the raw file.",
+    "tags": ["Generalist / VLA", "Humanoid", "Dexterous hand", "Language"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2503.14734"},
+      {"label": "Code", "url": "https://github.com/robocasa/robocasa-gr1-tabletop-tasks"}
+    ]
+  },
+  {
+    "name": "DexMimicGen",
+    "year": 2024,
+    "venue": "ICRA 2025",
+    "evaluates": "Bimanual manipulation with grippers and dexterous hands (assembly, threading, transport, pouring, packing, sorting) learned from automatically generated demonstrations",
+    "improves": "MimicGen-style data generation and its task suites covered only single-arm gripper robots, leaving bimanual dexterous and humanoid setups without scalable data or benchmarks",
+    "setup": "MuJoCo via robosuite; three embodiments: bimanual Panda with parallel grippers, bimanual Panda with dexterous hands, GR-1 humanoid with dexterous hands",
+    "scale": "9 tasks (3 per embodiment); 21K generated demonstrations from 60 human demonstrations",
+    "real_validation": "Real-to-sim-to-real transfer only: a can-sorting policy for a real GR-1 trained on generated data reached 90% vs 0% with source demos alone; no sim-real correlation reported.",
+    "vla_results": "GR00T N1 (the 9-task set is the 'DexMimicGen Cross-Embodiment Suite' in the GR00T N1 paper)",
+    "status": "Used mainly by NVIDIA GEAR-affiliated work as a cross-embodiment benchmark. No leaderboard.",
+    "note": "Paper baselines are BC-RNN and Diffusion Policy; the GR00T N1 result (66.5% at 100 demos per task) comes from the GR00T N1 paper.",
+    "tags": ["Bimanual", "Dexterous hand", "Humanoid", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2410.24185"},
+      {"label": "Project", "url": "https://dexmimicgen.github.io/"}
+    ]
+  },
+  {
+    "name": "RoboVerse",
+    "year": 2025,
+    "venue": "RSS 2025",
+    "evaluates": "Imitation and reinforcement learning policies on tasks unified from many existing suites, at four generalization levels (task space, environment, camera, lighting and reflection)",
+    "improves": "Fragmentation across simulators and benchmarks, which prevents shared data formats, cross-simulator evaluation and consistent protocols",
+    "setup": "MetaSim layer over Isaac Sim/Lab, Isaac Gym, MuJoCo, SAPIEN, PyBullet and Genesis (CoppeliaSim via PyRep per README); multiple arms, hands and humanoids; unified Gym-style interface",
+    "scale": "About 1,000 tasks (276 manipulation task categories), about 500k trajectories, about 5.5k assets",
+    "real_validation": "Sim-to-real transfer only: the paper reports direct sim-to-real transfer of imitation policies and sim-to-sim-to-real transfer of RL policies; no sim-real correlation reported.",
+    "vla_results": "",
+    "status": "Used as infrastructure rather than as a standard results table; no leaderboard found.",
+    "note": "Baseline names and real-robot numbers could not be extracted from the arXiv HTML in this session; VLA baselines in the paper are therefore unverified.",
+    "tags": ["Generalization", "Imitation learning", "Reinforcement learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2504.18904"},
+      {"label": "Project", "url": "https://roboverseorg.github.io/"},
+      {"label": "Code", "url": "https://github.com/RoboVerseOrg/RoboVerse"},
+      {"label": "Dataset", "url": "https://huggingface.co/datasets/RoboVerseOrg/roboverse_data"}
+    ]
+  },
+  {
+    "name": "PerAct2 bimanual benchmark (RLBench2)",
+    "year": 2024,
+    "venue": "arXiv 2024-06",
+    "evaluates": "Language-conditioned bimanual 6-DoF manipulation requiring spatial and temporal coordination of two arms",
+    "improves": "RLBench had no bimanual tasks, and no simulated benchmark existed for language-conditioned two-arm manipulation",
+    "setup": "Extension of RLBench to two arms; language-conditioned 6-DoF bimanual actions (robot model and camera setup not captured)",
+    "scale": "13 tasks with 23 variations",
+    "real_validation": "The project page states the method also runs on a real robot, with minimal detail; no sim-real correlation reported.",
+    "vla_results": "",
+    "status": "Used by later 3D bimanual policy papers (e.g. AnyBimanual); less common in VLA result tables. No leaderboard.",
+    "note": "A search summary describes it as a CoRL 2024 workshop paper, but neither arXiv nor the repo README states a venue. Robot model and demo counts were not captured.",
+    "tags": ["Bimanual", "Language", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2407.00278"},
+      {"label": "Project", "url": "https://bimanual.github.io/"},
+      {"label": "Code", "url": "https://github.com/markusgrotz/peract_bimanual"}
+    ]
+  },
+  {
+    "name": "BiGym",
+    "year": 2024,
+    "venue": "CoRL 2024",
+    "evaluates": "Mobile bimanual manipulation by a humanoid in home scenes, from reaching to kitchen cleaning, learned from human-collected demonstrations",
+    "improves": "Existing benchmarks relied on planner-generated demonstrations and fixed-base arms; human-teleoperated, multimodal demonstrations for mobile bimanual tasks were missing",
+    "setup": "MuJoCo; Unitree H1 with two Robotiq 2F-85 grippers; proprioception plus RGB-D from head and two wrist cameras; whole-body (23-D) or bimanual floating-base (16-D) action modes",
+    "scale": "40 tasks; 50 VR-teleoperated human demonstrations per task",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Limited adoption in VLA papers; baselines are ACT, Diffusion Policy, BC and demo-driven RL. No leaderboard.",
+    "note": "Venue taken from the CoRL 2024 proceedings listing; the arXiv page lists no venue.",
+    "tags": ["Bimanual", "Humanoid", "Mobile", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2407.07788"},
+      {"label": "Project", "url": "https://chernyadev.github.io/bigym/"},
+      {"label": "Code", "url": "https://github.com/chernyadev/bigym"}
+    ]
+  },
+  {
+    "name": "HumanoidBench",
+    "year": 2024,
+    "venue": "RSS 2024",
+    "evaluates": "Whole-body humanoid control with dexterous hands on locomotion tasks and manipulation tasks such as shelf rearrangement, package unloading and window wiping",
+    "improves": "Humanoid learning research lacked a shared simulated benchmark combining locomotion with dexterous whole-body manipulation",
+    "setup": "MuJoCo; Unitree H1 with two Shadow Hands (Digit and gripper variants supported); proprioceptive, egocentric visual and tactile observations",
+    "scale": "27 tasks (15 whole-body manipulation, 12 locomotion)",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Adopted mainly as a reinforcement-learning benchmark; no VLA results found. No leaderboard.",
+    "note": "Reward-based RL benchmark without demonstrations; included because the brief names it. The manipulation/locomotion split comes from the RSS 2024 paper listing.",
+    "tags": ["Humanoid", "Dexterous hand", "Reinforcement learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2403.10506"},
+      {"label": "Project", "url": "https://humanoid-bench.github.io/"},
+      {"label": "Code", "url": "https://github.com/carlosferrazza/humanoid-bench"}
+    ]
+  },
+  {
+    "name": "ManiSkill-HAB",
+    "year": 2024,
+    "venue": "ICLR 2025",
+    "evaluates": "Low-level whole-body control for long-horizon home rearrangement (TidyHouse, PrepareGroceries, SetTable), decomposed into Pick, Place, Open and Close subtasks",
+    "improves": "Home Assistant Benchmark implementations were slow and used magical grasping; realistic contact and fast GPU simulation were needed for low-level manipulation research",
+    "setup": "GPU-parallel ManiSkill3 (SAPIEN) port of the Home Assistant Benchmark; mobile manipulator with whole-body control (robot model not captured)",
+    "scale": "3 long-horizon tasks; released datasets of 18K, 18K and 8K episodes (8.8M transitions) generated by RL policies with rule-based filtering",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Used for RL and IL research on mobile manipulation; no VLA results found. No leaderboard.",
+    "note": "Robot model was not captured in this session. Baselines in the paper are RL and imitation-learning policies that do not solve the tasks.",
+    "tags": ["Mobile", "Long-horizon", "Reinforcement learning", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2412.13211"},
+      {"label": "Project", "url": "https://arth-shukla.github.io/mshab/"},
+      {"label": "Code", "url": "https://github.com/arth-shukla/mshab"}
+    ]
+  },
+  {
+    "name": "BEHAVIOR Challenge (2025, 2026)",
+    "year": 2025,
+    "venue": "NeurIPS 2025 challenge (second edition in 2026)",
+    "evaluates": "Full-length household activities requiring navigation, bimanual manipulation and long-horizon sequencing, scored by partial credit over BDDL goal predicates",
+    "improves": "BEHAVIOR-1K had no demonstration data or standardized learning protocol; the challenge adds teleoperated demonstrations, baselines and a held-out evaluation",
+    "setup": "OmniGibson on Isaac Sim; mobile-base bimanual robot with two 7-DoF arms and parallel grippers; RGB, depth and proprioception (2025 also had a privileged-information track)",
+    "scale": "2025: 50 tasks, 10,000 teleoperated demonstrations (1,200+ h). 2026: 100 tasks, 20,000 demonstrations (1,950 h), 7 scenes",
+    "real_validation": "",
+    "vla_results": "π0.5-based entries placed 1st (q-score 0.2599) and 2nd (0.2514) in 2025; organizer baselines include OpenVLA and π0 (2025), π0.5 and GR00T N1.7 (2026)",
+    "status": "Active competition; 2025 results announced at NeurIPS 2025, 2026 submissions close 2026-10-16. Leaderboard: https://huggingface.co/spaces/behavior-1k/2026-challenge-leaderboard",
+    "note": "No organizer report paper was found; 2025 scores come from the 1st-place solution report (arXiv 2512.06951). The robot name was not stated on the pages opened.",
+    "tags": ["Generalist / VLA", "Mobile", "Long-horizon", "Bimanual"],
+    "links": [
+      {"label": "Project", "url": "https://behavior.stanford.edu/challenge"},
+      {"label": "Code", "url": "https://github.com/StanfordVL/BEHAVIOR-1K"},
+      {"label": "Leaderboard", "url": "https://huggingface.co/spaces/behavior-1k/2026-challenge-leaderboard"}
+    ]
+  },
+  {
+    "name": "RoboDojo (simulation suite)",
+    "year": 2026,
+    "venue": "arXiv 2026-07",
+    "evaluates": "Bimanual policies along five capability dimensions: generalization, memory, long-horizon execution, precision and open (unseen task specifications)",
+    "improves": "Existing simulation suites were close to saturated and reported one success number; a harder, capability-structured suite paired with a real-robot counterpart was missing",
+    "setup": "Isaac Sim / Isaac Lab with heterogeneous parallel simulation; ARX X5 bimanual platform; policies connected through XPolicyLab",
+    "scale": "42 tasks (12 generalization, 6 memory, 8 long-horizon, 8 precision, 8 open); 3,500 training trajectories (20.66 h); 50 evaluation episodes per task",
+    "real_validation": "Paired with 18 real-world tasks on three bimanual platforms (RoboDojo-RealEval); the paper reports partial but not complete agreement between simulation and real leaderboards, without a correlation coefficient in the text captured.",
+    "vla_results": "30 policies including π0, π0.5, X-VLA, GR00T N1.7, OpenVLA-OFT, RDT-1B, H-RDT, SmolVLA, InternVLA-A1, GO-1, MolmoAct2, Xiaomi-Robotics-0, StarVLA-α, Hy-Embodied-0.5-VLA",
+    "status": "New; best policy reaches 8.80% average success against 76.03% for human teleoperation. Leaderboard: https://robodojo-benchmark.com/leaderboard",
+    "note": "The real-robot half (RoboDojo-RealEval) is already catalogued separately. Scores are from the paper; the leaderboard page was not opened.",
+    "tags": ["Generalist / VLA", "Bimanual", "Generalization", "Memory"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2607.04434"},
+      {"label": "Project", "url": "https://robodojo-benchmark.com/"},
+      {"label": "Code", "url": "https://github.com/RoboDojo-Benchmark/RoboDojo"},
+      {"label": "Leaderboard", "url": "https://robodojo-benchmark.com/leaderboard"}
+    ]
+  },
+  {
+    "name": "EBench",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "Generalist mobile manipulation policies profiled by scene, atomic skill, horizon, precision and operating mode, and by generalization to unseen backgrounds, objects, instructions and their combination",
+    "improves": "A single overall success rate hides which capabilities a policy has and where it overfits to training assets",
+    "setup": "Isaac Sim (60 Hz); dual-arm robot on a mobile base; three 224x224 RGB views plus proprioception and language; per-arm joint or end-effector actions plus base velocity",
+    "scale": "26 tasks (10 mobile pick-and-place, 9 mobile long-horizon, 7 tabletop dexterous/precise) in 9 scene categories; 6,600 demonstration episodes (91.4 h); 510 test episodes",
+    "real_validation": "",
+    "vla_results": "π0 (34.4% test success), π0.5 (41.0%), X-VLA (24.7%), InternVLA-A1 (27.6%)",
+    "status": "New; hosted leaderboard at https://internrobotics.shlab.org.cn/eval/evaluation-list. Adoption outside the originating lab not verified.",
+    "note": "Authors state they do not claim simulation scores predict real-robot performance. Scores are from arXiv v3 as extracted.",
+    "tags": ["Generalist / VLA", "Mobile", "Bimanual", "Generalization"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2606.18239"},
+      {"label": "Project", "url": "https://internrobotics.github.io/EBench-home/"},
+      {"label": "Code", "url": "https://github.com/InternRobotics/EBench"},
+      {"label": "Leaderboard", "url": "https://internrobotics.shlab.org.cn/eval/evaluation-list"}
+    ]
+  },
+  {
+    "name": "RoboEval",
+    "year": 2025,
+    "venue": "arXiv 2025-07 (v2 2026-05)",
+    "evaluates": "Bimanual manipulation with behavioral metrics for efficiency, coordination and safety/stability, plus stage-wise progress, alongside binary success",
+    "improves": "Binary success hides failure modes such as poor coordination, object slip and asymmetric arm use",
+    "setup": "MuJoCo; bimanual Franka Panda with parallel grippers; proprioceptive and visual observations; joint-position or end-effector-delta actions",
+    "scale": "8 base tasks with 28 variations (static, position, rotation, position+rotation); 3,000+ human VR demonstrations",
+    "real_validation": "",
+    "vla_results": "GR00T N1.6, X-VLA, π0.5 (v2 of the paper), alongside ACT and Diffusion Policy",
+    "status": "Early adoption; code repo marked 'In Submission'; leaderboard section on the project page https://robo-eval.github.io",
+    "note": "The project page mentions a CoRL 2026 workshop, which may be a presentation rather than the publication venue. Per-policy numbers were only captured as ranges.",
+    "tags": ["Bimanual", "Generalist / VLA", "Safety", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2507.00435"},
+      {"label": "Project", "url": "https://robo-eval.github.io"},
+      {"label": "Code", "url": "https://github.com/Robo-Eval/RoboEval"}
+    ]
+  },
+  {
+    "name": "SIMPLE",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "Humanoid whole-body loco-manipulation with dexterous hands in indoor scenes, at three domain-randomization levels",
+    "improves": "Humanoid VLA evaluation lacked a simulator combining reliable contact physics for locomotion with photorealistic rendering and many whole-body tasks",
+    "setup": "MuJoCo physics coupled with Isaac Sim rendering; Unitree G1 with dexterous hands; 32-D proprioceptive state and 36-D actions (upper-body targets plus locomotion commands)",
+    "scale": "60 tasks, 50 indoor scenes, 1,000+ object assets; 6,000+ episodes rendered for benchmarking (project page states 100,000+ demonstrations)",
+    "real_validation": "Zero-shot sim-to-real transfer on two tasks (pick-and-place 90% sim vs 80% real; handover 100% vs 80%); the authors claim strong sim-real agreement from this limited test, without a correlation statistic.",
+    "vla_results": "Ψ0, π0.5, GR00T N1.6, InternVLA, H-RDT, EgoVLA, DreamZero, plus Diffusion Policy and ACT",
+    "status": "New; project page mentions a hosted leaderboard. Adoption outside the originating lab not verified.",
+    "note": "A search result associates the paper with CoRL 2026, not confirmed on arXiv or the project page. Demonstration counts differ between paper and project page.",
+    "tags": ["Generalist / VLA", "Humanoid", "Mobile", "Dexterous hand"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2606.08278"},
+      {"label": "Project", "url": "https://psi-lab.ai/SIMPLE"},
+      {"label": "Code", "url": "https://github.com/physical-superintelligence-lab/SIMPLE"}
+    ]
+  },
+  {
+    "name": "MobileManiBench",
+    "year": 2026,
+    "venue": "ECCV 2026",
+    "evaluates": "VLA policies for mobile manipulation of articulated and rigid objects (open, close, pull, push, pick) on unseen objects and unseen scenes",
+    "improves": "VLA architectures were verified mainly on fixed-base tabletop data; a simulation-first testbed for mobile bases and dexterous hands was missing",
+    "setup": "Isaac Sim; two mobile robots (AgiBot G1 with parallel gripper, XHand robot with 12-DoF dexterous hand); head and wrist RGB-D; 6-D wrist pose delta plus end-effector joints",
+    "scale": "630 objects in 20 categories, 5 skills, 100+ tasks, 100 scenes, 300K trajectories generated by RL policies",
+    "real_validation": "",
+    "vla_results": "OpenVLA (4.5%), CogACT (6.8%), π0 (11.2%), π0.5 (18.8%), MobileManiVLA (28.2%)",
+    "status": "New; code and dataset released. Adoption outside the originating lab not verified. No leaderboard.",
+    "note": "The arXiv text refers to real-robot results in an appendix, but none were visible in the HTML or on the project page; treated as simulation only.",
+    "tags": ["Generalist / VLA", "Mobile", "Dexterous hand", "Generalization"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2602.05233"},
+      {"label": "Project", "url": "https://dexhand.github.io/MobileManiBench/"},
+      {"label": "Code", "url": "https://github.com/DexHand/MobileManiBench"},
+      {"label": "Dataset", "url": "https://huggingface.co/datasets/arnoldland/MobileManiBench"}
+    ]
+  },
+  {
+    "name": "DexVerse",
+    "year": 2026,
+    "venue": "arXiv 2026-07",
+    "evaluates": "Multi-task, multi-embodiment dexterous-hand manipulation: grasping, functional tool use, articulated objects, non-prehensile and contact-rich skills, bimanual and long-horizon tasks",
+    "improves": "Dexterous benchmarks covered isolated tasks and single hands, preventing systematic comparison across interaction modes, sensing conditions and embodiments",
+    "setup": "Isaac Lab; 3 arms (Franka Research 3, UR10e, xArm 7) and 6 hands (Sharpa Wave, WUJI, Shadow, Inspire, Allegro, LEAP); proprioception, RGB, depth, point cloud, contact forces; absolute joint targets",
+    "scale": "100 tasks in 8 categories; 3,180 teleoperated demonstrations; baselines run on 19 tasks with 50 episodes per task",
+    "real_validation": "",
+    "vla_results": "π0.5 (34%), OpenVLA (19%), alongside DP3 (34%) and Diffusion Policy (32%)",
+    "status": "New; no adoption outside the originating lab verified. No leaderboard.",
+    "note": "Baselines cover 19 of the 100 tasks. A code repository link was not found on the pages opened.",
+    "tags": ["Dexterous hand", "Generalist / VLA", "Bimanual", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2607.08751"},
+      {"label": "Project", "url": "https://ycyao216.github.io/DexVerse.site/"}
+    ]
+  },
+  {
+    "name": "DexJoCo",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "Task-oriented dexterous-hand manipulation: tool use, bimanual coordination, long-horizon execution and reasoning tasks such as Hanoi and unlocking a tablet",
+    "improves": "Dexterous benchmarks focused on grasping or in-hand reorientation rather than functional tasks, and lacked low-cost demonstration tooling on MuJoCo",
+    "setup": "MuJoCo; Franka Panda arm(s) with Allegro Hand; visual, placement and dynamics domain randomization; glove-and-tracker teleoperation toolkit",
+    "scale": "11 tasks; 1.1K teleoperated trajectories (100 per task)",
+    "real_validation": "",
+    "vla_results": "π0.5 (40.2%), GR00T N1.5 (40.2%), alongside ACT (54.1%) and Diffusion Policy (47.6-50.4%)",
+    "status": "New; no adoption outside the originating lab verified. No leaderboard.",
+    "note": "Success rates are for the randomized-object condition as extracted from arXiv v2.",
+    "tags": ["Dexterous hand", "Generalist / VLA", "Bimanual", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2605.16257"},
+      {"label": "Project", "url": "https://dexjoco.github.io"}
+    ]
+  },
+  {
+    "name": "BiCoord",
+    "year": 2026,
+    "venue": "arXiv 2026-04",
+    "evaluates": "Long-horizon bimanual tasks with tight spatial-temporal coupling between arms, measured with stage-wise success and coordination metrics",
+    "improves": "Existing bimanual suites contain many tasks where the arms act independently or sequentially over short horizons",
+    "setup": "Built on RoboTwin 2.0 (SAPIEN); dual-arm robot with end-effector pose and gripper control",
+    "scale": "18 tasks; 100 trajectories per task (1,800 total)",
+    "real_validation": "",
+    "vla_results": "π0 (46.4%), OpenVLA-OFT (40.5%), RDT (39.5%), alongside Diffusion Policy (33.1%)",
+    "status": "New; no adoption outside the originating lab verified. No leaderboard.",
+    "note": "The π0 figure coincides with RoboTwin 2.0's reported π0 Easy score and should be re-checked against the paper table.",
+    "tags": ["Bimanual", "Long-horizon", "Generalist / VLA"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2604.05831"},
+      {"label": "Project", "url": "https://buaa-colalab.github.io/BiCoord/"}
+    ]
+  },
+  {
+    "name": "LBM Eval (lbm_eval)",
+    "year": 2025,
+    "venue": "arXiv 2025-07",
+    "evaluates": "Multitask language-conditioned bimanual manipulation by large behavior models on seen and unseen tasks, with statistical testing over many rollouts",
+    "improves": "Multitask policy comparisons often lacked enough rollouts and statistical analysis to support conclusions about pretraining",
+    "setup": "Drake; bimanual station with two Franka FR3 arms and parallel grippers; policies connect through a gRPC wrapper",
+    "scale": "49 tasks in the open-source release across four scenarios; the paper evaluates 16 seen and 8 unseen simulated tasks with 200 rollouts per task per policy",
+    "real_validation": "Three seen tasks were evaluated in both simulation and the real world; the authors note discrepancies and do not report a systematic sim-real correlation.",
+    "vla_results": "TRI LBM (diffusion transformer); Foundry-VLA-1.7B and Foundry-Qwen3VLA-2.1B (VLA Foundry)",
+    "status": "Open source (124 GitHub stars) but results found only from Toyota Research Institute. No leaderboard.",
+    "note": "Scenario task counts in the paper sum to 48 while the repo states 49. No third-party results were found.",
+    "tags": ["Generalist / VLA", "Bimanual", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2507.05331"},
+      {"label": "Project", "url": "https://toyotaresearchinstitute.github.io/lbm1/"},
+      {"label": "Code", "url": "https://github.com/ToyotaResearchInstitute/lbm_eval"}
+    ]
+  },
+  {
+    "name": "GenManip (GenManip-Bench)",
+    "year": 2025,
+    "venue": "CVPR 2025",
+    "evaluates": "Instruction-following tabletop manipulation requiring spatial, appearance, common-sense and long-horizon reasoning, comparing modular foundation-model systems with end-to-end policies",
+    "improves": "Simulation platforms offered limited instruction and scenario diversity for studying policy generalization",
+    "setup": "Isaac Sim; single Franka arm on a tabletop; LLM-driven task-oriented scene-graph generation over about 10K annotated 3D assets",
+    "scale": "200 human-refined benchmark scenarios (a CVPR listing states 250)",
+    "real_validation": "",
+    "vla_results": "GR-1 and ACT as end-to-end policies; CoPA and MOKA as modular systems; later included in the InternManip suite alongside GR00T N1/N1.5 and π0",
+    "status": "Used mainly within InternRobotics (Shanghai AI Lab) tooling; no leaderboard found.",
+    "note": "Scenario count differs between the arXiv abstract (200) and a conference listing seen in search results (250).",
+    "tags": ["Generalization", "Language", "Reasoning", "Generalist / VLA"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2506.10966"},
+      {"label": "Project", "url": "https://genmanip.axi404.top/"}
+    ]
+  },
+  {
+    "name": "RoboFactory",
+    "year": 2025,
+    "venue": "ICCV 2025",
+    "evaluates": "Multi-arm collaborative manipulation with one to four agents under logical, spatial and temporal compositional constraints",
+    "improves": "Embodied multi-agent manipulation lacked benchmarks and automated data collection that enforce safe and efficient collaboration",
+    "setup": "ManiSkill (SAPIEN); one to four Franka Panda arms; RGB observations and joint actions",
+    "scale": "11 tasks (3 one-agent, 4 two-agent, 2 three-agent, 2 four-agent); 150 demonstrations per task",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Limited adoption; baseline is Diffusion Policy (49% one-agent to 10% four-agent average). No leaderboard.",
+    "note": "Venue taken from the repository title and CVF open-access listing seen in search results.",
+    "tags": ["Bimanual", "Imitation learning", "Safety"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2503.16408"},
+      {"label": "Project", "url": "https://iranqin.github.io/robofactory/"},
+      {"label": "Code", "url": "https://github.com/MARS-EAI/RoboFactory"}
+    ]
+  },
+  {
+    "name": "HumanoidGen (HGen-Bench)",
+    "year": 2025,
+    "venue": "arXiv 2025-07",
+    "evaluates": "Bimanual dexterous manipulation by a humanoid with five-finger hands on tasks created and solved through LLM-planned spatial constraints",
+    "improves": "Simulation tasks and demonstrations existed mostly for gripper arms; humanoids with dual arms and dexterous hands lacked both",
+    "setup": "SAPIEN; Unitree H1-2 with Inspire hands (26-D action space); RGB-D from six camera views",
+    "scale": "20 tasks; 100 generated demonstrations per task",
+    "real_validation": "The paper reports real-robot experiments in an appendix; details were not captured and no sim-real correlation is reported in the main text.",
+    "vla_results": "",
+    "status": "Limited adoption; baselines are Diffusion Policy and DP3. No leaderboard.",
+    "note": "An OpenReview copy exists, but the venue was not confirmed in this session.",
+    "tags": ["Humanoid", "Dexterous hand", "Bimanual", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2507.00833"},
+      {"label": "Project", "url": "https://openhumanoidgen.github.io"}
+    ]
+  },
+  {
+    "name": "AgentWorld",
+    "year": 2025,
+    "venue": "CoRL 2025",
+    "evaluates": "Household mobile manipulation on basic skills and multistage living-room, kitchen and bedroom tasks in procedurally constructed scenes",
+    "improves": "Scene construction and mobile teleoperated data collection for household tasks were not available in one platform",
+    "setup": "Isaac Sim (PhysX 5); Unitree G1 and H1, Franka Panda on a wheeled base, DOBOT X-Trainer; parallel gripper or dexterous hand",
+    "scale": "150 procedurally generated household scenes, 9,000+ assets, 1,000+ teleoperated trajectories; 3 basic and 9 multistage task types",
+    "real_validation": "Sim-and-real co-training only: 100 simulated plus 9 real demonstrations gave 29.3% real success on pick-and-place; no sim-real correlation reported.",
+    "vla_results": "π0 (64-82% basic, 18-30% multistage), alongside BC, ACT and Diffusion Policy",
+    "status": "Limited adoption outside the originating lab. No leaderboard.",
+    "note": "Success ranges are as extracted from arXiv v2.",
+    "tags": ["Mobile", "Humanoid", "Long-horizon", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2508.07770"},
+      {"label": "Project", "url": "https://yizhengzhang1.github.io/agent_world/"}
+    ]
+  },
+  {
+    "name": "RoboBenchMart",
+    "year": 2025,
+    "venue": "arXiv 2025-11",
+    "evaluates": "Mobile manipulation of grocery items in dark-store retail scenes with dense shelves and fridges, on seen and unseen scenes and items",
+    "improves": "Manipulation benchmarks centre on tabletop and household scenes; cluttered multi-level retail shelves were not covered",
+    "setup": "ManiSkill3; Fetch mobile manipulator (differential-drive base, 7-DoF arm, torso, parallel gripper); procedurally generated store layouts",
+    "scale": "5 atomic and 2 composite tasks; 370 product assets in 21 categories; 2,976 motion-planned trajectories",
+    "real_validation": "",
+    "vla_results": "Octo, SmolVLA, π0, π0.5 (best: π0.5 55% in-domain on pick-to-basket; all models 0% on composite tasks)",
+    "status": "Limited adoption. No leaderboard.",
+    "note": "Per-task numbers are as extracted from arXiv v2.",
+    "tags": ["Generalist / VLA", "Mobile", "Generalization"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2511.10276"},
+      {"label": "Project", "url": "https://emb-ai.github.io/RoboBenchMart/"},
+      {"label": "Code", "url": "https://github.com/emb-ai/RoboBenchMart"}
+    ]
+  },
+  {
+    "name": "AutoBio",
+    "year": 2025,
+    "venue": "ICLR 2026 (arXiv 2025-05)",
+    "evaluates": "Language-guided manipulation of biology-lab instruments (tube caps, thermal cyclers, mixers) at three difficulty levels requiring precision, visual reasoning and protocol following",
+    "improves": "General simulators lacked lab instruments, threaded and detent mechanisms, liquids, transparent materials and dynamic instrument displays",
+    "setup": "MuJoCo with custom physics plugins and optional Blender rendering; ALOHA and UR5e (Robotiq gripper or dexterous hand)",
+    "scale": "16 tasks across 3 difficulty levels; 100 demonstrations per task",
+    "real_validation": "",
+    "vla_results": "π0 and RDT (about 83-86% on easy tasks, 1-21% on medium, 4-8% on hard)",
+    "status": "Domain-specific; cited by later lab-automation benchmarks. No leaderboard.",
+    "note": "ICLR 2026 venue comes from an ICLR proceedings listing seen in search results, not from the arXiv page.",
+    "tags": ["Generalist / VLA", "Language", "Long-horizon"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2505.14030"},
+      {"label": "Code", "url": "https://github.com/autobio-bench/AutoBio"}
+    ]
+  },
+  {
+    "name": "LabUtopia",
+    "year": 2025,
+    "venue": "NeurIPS 2025",
+    "evaluates": "Scientific-lab manipulation at hierarchical levels from atomic actions through combined and generalization tasks to long-horizon mobile manipulation",
+    "improves": "Embodied benchmarks lacked chemistry-lab scenes, multi-physics (liquids, heating) and a task hierarchy for scientific procedures",
+    "setup": "Isaac Sim; Franka arm (mobile robot for navigation tasks); procedurally generated laboratory scenes",
+    "scale": "24 tasks across 4 levels per the repository README (10 basic, 6 combined, 6 generalization, 2 long-sequence)",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Domain-specific; baselines are ACT and Diffusion Policy. No leaderboard.",
+    "note": "Task and level counts come from the repository README; the paper itself was not opened and may state different totals.",
+    "tags": ["Long-horizon", "Mobile", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2505.22634"},
+      {"label": "Project", "url": "https://rui-li023.github.io/labutopia-site/"},
+      {"label": "Code", "url": "https://github.com/Rui-li023/LabUtopia"},
+      {"label": "Dataset", "url": "https://huggingface.co/datasets/Ruinwalker/Labutopia-Dataset"}
+    ]
+  },
+  {
+    "name": "Labimus",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "Humanoid dexterous manipulation in a chemistry lab, including powder scooping and weighing checked against quantitative tolerances from instrument readouts",
+    "improves": "Lab benchmarks scored task completion only and lacked powder physics and closed-loop instrument feedback for protocol-level accuracy",
+    "setup": "Isaac Sim (PhysX, particle-based powder); Tianyi 2.0 humanoid upper body with BrainCo Revo 2 dexterous hands",
+    "scale": "7 tasks (6 atomic operations and one seven-step solid-weighing workflow); 100 teleoperated demonstrations per task; 30+ lab assets",
+    "real_validation": "",
+    "vla_results": "π0, alongside ACT and Diffusion Policy",
+    "status": "New, domain-specific. No leaderboard.",
+    "note": "Authors state all experiments are in simulation and real-world validation is planned.",
+    "tags": ["Humanoid", "Dexterous hand", "Generalist / VLA"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2606.31037"},
+      {"label": "Project", "url": "https://labimus.github.io/"}
+    ]
+  },
+  {
+    "name": "Pipette",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "Wet-lab manipulation covering sample and culture-ware handling, equipment hatch control and instrument placement, with and without simulation data augmentation",
+    "improves": "Wet-lab robot learning lacked open editable lab assets, customizable simulation and pipelines that expand a few demonstrations into training data",
+    "setup": "Isaac Sim 5.1 / Isaac Lab 2.3; three arm embodiments including Franka Panda and an AgileX arm",
+    "scale": "12 tasks; 100+ wet-lab assets; 30 human demonstrations per task as the base data budget",
+    "real_validation": "",
+    "vla_results": "π0, SmolVLA, alongside ACT",
+    "status": "New, domain-specific. No leaderboard.",
+    "note": "Success rates were not captured; the third embodiment was not named in the text extracted.",
+    "tags": ["Generalist / VLA", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2606.12936"},
+      {"label": "Code", "url": "https://github.com/hbhuiyou/Pipette"}
+    ]
+  },
+  {
+    "name": "Assemble Bench",
+    "year": 2026,
+    "venue": "HUD technical blog 2026-07",
+    "evaluates": "Contact-rich assembly by VLA and world-action models: round and square peg insertion, gear meshing and nut threading at several sizes",
+    "improves": "VLA simulation benchmarks rarely include tight-clearance assembly, and lacked a training and evaluation loop for it on a common platform",
+    "setup": "Isaac Lab-Arena; DROID platform (7-DoF Franka arm with Robotiq gripper); tasks modelled on NIST Assembly Task Boards",
+    "scale": "14 tasks in 4 suites (4 round peg, 4 square peg, 3 gear, 3 nut); 1,355 scripted-expert demonstrations",
+    "real_validation": "One real-robot video of a 4 mm round-peg insertion with π0.5 is shown; no systematic real evaluation or sim-real correlation.",
+    "vla_results": "π0.5 (DROID-finetuned; behavior cloning and CG-DAgger variants)",
+    "status": "New; released by a company (HUD) without a paper. No leaderboard found.",
+    "note": "No arXiv paper; all details come from the HUD blog page.",
+    "tags": ["Assembly", "Generalist / VLA", "Imitation learning"],
+    "links": [
+      {"label": "Project", "url": "https://www.hud.ai/research/assemble-benchmark"},
+      {"label": "Code", "url": "https://github.com/hud-evals/assemble-bench"},
+      {"label": "Dataset", "url": "https://huggingface.co/datasets/hud-evals/AssembleBench"}
+    ]
+  },
+  {
+    "name": "Isaac Lab-Arena (Lightwheel RoboCasa and LIBERO task suites)",
+    "year": 2026,
+    "venue": "NVIDIA technical blog 2026-01",
+    "evaluates": "Generalist policies on GPU-parallel re-implementations of RoboCasa and LIBERO tasks, composed from separate object, scene, embodiment and task blocks",
+    "improves": "Benchmark authoring in simulation was slow and suites were tied to one simulator; large-scale parallel evaluation of one policy across many environments was hard",
+    "setup": "Isaac Lab / Isaac Sim; GR1 humanoid and Franka arm; integrated with the LeRobot Environment Hub",
+    "scale": "250+ tasks across the Lightwheel-RoboCasa-Tasks and Lightwheel-LIBERO-Tasks suites",
+    "real_validation": "",
+    "vla_results": "GR00T N1.5, π0 and SmolVLA are listed as supported policies; no result table was found",
+    "status": "Framework used by later suites (X2Real, RoboFinals, Assemble Bench). No leaderboard.",
+    "note": "A framework rather than a single benchmark; no published scores were found. Year is the date of the blog post opened; an earlier pre-release may exist.",
+    "tags": ["Generalist / VLA", "Humanoid", "Imitation learning"],
+    "links": [
+      {"label": "Project", "url": "https://developer.nvidia.com/blog/simplify-generalist-robot-policy-evaluation-in-simulation-with-nvidia-isaac-lab-arena/"},
+      {"label": "Code", "url": "https://github.com/isaac-sim/IsaacLab-Arena"}
+    ]
+  },
+  {
+    "name": "RoboFinals-100",
+    "year": 2025,
+    "venue": "Lightwheel announcement 2025-12",
+    "evaluates": "Frontier robot foundation models on household, factory and retail tasks with rigid, articulated and deformable objects at graded difficulty",
+    "improves": "Developers report that academic simulation benchmarks are saturated by frontier models, pushing evaluation back to slow real-world testing",
+    "setup": "Isaac Lab-Arena with Newton or PhysX physics, also MuJoCo and Genesis; tabletop arms, mobile manipulators and loco-manipulation robots",
+    "scale": "100 tasks",
+    "real_validation": "The vendor states that assets are Real2Sim-calibrated; no real-robot evaluation or sim-real correlation is published.",
+    "vla_results": "",
+    "status": "Commercial and not publicly released; Qwen is the only named user. No public leaderboard.",
+    "note": "All information comes from the vendor's product page; no paper and no public results.",
+    "tags": ["Generalist / VLA", "Mobile", "Deformable"],
+    "links": [
+      {"label": "Project", "url": "https://lightwheel.ai/robofinals"}
+    ]
+  },
+  {
+    "name": "GarmentLab",
+    "year": 2024,
+    "venue": "NeurIPS 2024",
+    "evaluates": "Garment and deformable-object manipulation involving interactions among garments, rigid bodies, fluids and human bodies",
+    "improves": "Garment manipulation lacked a unified simulation with diverse garment types, multiple physics methods and sim-to-real support",
+    "setup": "Simulation combining FEM and PBD methods with multiple robots and manipulators (simulator name not captured)",
+    "scale": "20 tasks in 5 groups",
+    "real_validation": "The abstract describes sim-to-real algorithms and a real-world benchmark; no sim-real correlation was captured.",
+    "vla_results": "",
+    "status": "Used in garment-manipulation research; no VLA results found. No leaderboard.",
+    "note": "Only the arXiv abstract page was opened; the task count comes from a search snippet of the NeurIPS paper.",
+    "tags": ["Deformable", "Reinforcement learning", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2411.01200"},
+      {"label": "Project", "url": "https://garmentlab.github.io/"},
+      {"label": "Code", "url": "https://github.com/GarmentLab/GarmentLab"}
+    ]
+  },
+  {
+    "name": "DexGarmentLab",
+    "year": 2025,
+    "venue": "NeurIPS 2025 (Spotlight)",
+    "evaluates": "Bimanual dexterous-hand garment manipulation and generalization to unseen garment shapes and deformations",
+    "improves": "Garment simulation environments targeted grippers; dexterous bimanual garment tasks lacked an environment and automatic data collection",
+    "setup": "Garment simulation with dexterous hands (simulator name not captured)",
+    "scale": "15 task scenarios; trajectories generated from a single demonstration per task",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Domain-specific; no VLA results found. No leaderboard.",
+    "note": "Only the arXiv abstract page was opened; real-robot content, simulator and baselines were not verified.",
+    "tags": ["Deformable", "Dexterous hand", "Bimanual"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2505.11032"},
+      {"label": "Project", "url": "https://wayrise.github.io/DexGarmentLab/"}
+    ]
+  }
+]

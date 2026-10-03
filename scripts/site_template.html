@@ -1,4 +1,4 @@
-<title>Real-World Manipulation Benchmarks</title>
+<title>Robot Manipulation Benchmarks</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: a specimen catalog. A sticky filter bar sits over a grid of plates; each plate is
@@ -16,6 +16,7 @@
   --g-hosted: #2B4FC7;
   --g-competition: #A8530A;
   --g-proxy: #8E2C86;
+  --g-simulation: #4A5568;
   --note: #7A5200;
   --note-bg: #FBF1D9;
   --shade: rgba(21, 32, 43, 0.08);
@@ -27,7 +28,7 @@
   :root:not([data-theme="light"]) {
     --bg: #0E141A; --surface: #172029; --plate: #E8ECEF; --ink: #E5EBF0; --muted: #95A3B0;
     --line: #2B3743; --accent: #8FAEFF; --accent-ink: #0E141A;
-    --g-physical: #4FC9BE; --g-hosted: #8FAEFF; --g-competition: #F0A552; --g-proxy: #E08AD8;
+    --g-physical: #4FC9BE; --g-hosted: #8FAEFF; --g-competition: #F0A552; --g-proxy: #E08AD8; --g-simulation: #AEB9C6;
     --note: #F1C56B; --note-bg: #332A14; --shade: rgba(0, 0, 0, 0.35);
     color-scheme: dark;
   }
@@ -35,7 +36,7 @@
 :root[data-theme="dark"] {
   --bg: #0E141A; --surface: #172029; --plate: #E8ECEF; --ink: #E5EBF0; --muted: #95A3B0;
   --line: #2B3743; --accent: #8FAEFF; --accent-ink: #0E141A;
-  --g-physical: #4FC9BE; --g-hosted: #8FAEFF; --g-competition: #F0A552; --g-proxy: #E08AD8;
+  --g-physical: #4FC9BE; --g-hosted: #8FAEFF; --g-competition: #F0A552; --g-proxy: #E08AD8; --g-simulation: #AEB9C6;
   --note: #F1C56B; --note-bg: #332A14; --shade: rgba(0, 0, 0, 0.35);
   color-scheme: dark;
 }
@@ -74,7 +75,7 @@ button, input, select { font: inherit; color: inherit; }
 }
 
 /* Group filter tiles */
-.groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; padding-block: 8px 20px; }
+.groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; padding-block: 8px 20px; }
 .group {
   text-align: left; cursor: pointer; background: var(--surface); border: 1px solid var(--line);
   border-top: 4px solid var(--g); padding: 12px 14px; display: grid; gap: 2px; min-width: 0;
@@ -83,6 +84,7 @@ button, input, select { font: inherit; color: inherit; }
 [data-g="hosted"] { --g: var(--g-hosted); }
 [data-g="competition"] { --g: var(--g-competition); }
 [data-g="proxy"] { --g: var(--g-proxy); }
+[data-g="simulation"] { --g: var(--g-simulation); }
 .group .n { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1; color: var(--g); font-variant-numeric: tabular-nums; }
 .group .t { font-weight: 600; }
 .group .d { color: var(--muted); font-size: 13px; }
@@ -104,9 +106,11 @@ button, input, select { font: inherit; color: inherit; }
 .bar select { padding: 7px 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 2px; }
 .vla {
   cursor: pointer; background: transparent; border: 1.5px solid var(--accent); border-radius: 2px;
-  color: var(--accent); padding: 6px 12px; font-weight: 600; font-size: 13.5px; white-space: nowrap;
+  color: var(--accent); padding: 4px 11px; font-weight: 600; font-size: 13px; white-space: nowrap;
 }
 .vla[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.lenses { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; flex: 1 1 100%; min-width: 0; }
+.lenses .lab { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
 .count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 100%; min-width: 0; }
 .chip {
@@ -192,8 +196,8 @@ footer.fine p { margin: 0 0 6px; max-width: 80ch; }
       <button type="button" data-lang="ko" aria-pressed="false" lang="ko">한국어</button>
     </div>
   </div>
-  <h1 data-i18n="title">Real-World Manipulation Benchmarks</h1>
-  <p data-i18n="intro">A catalog of the benchmarks, hosted platforms, competitions and proxy evaluators that measure robot manipulation on real hardware, with what each one evaluates and which evaluation problem it sets out to fix.</p>
+  <h1 data-i18n="title">Robot Manipulation Benchmarks</h1>
+  <p data-i18n="intro">A catalog of benchmarks for robot manipulation: physical benchmarks, hosted platforms, competitions, proxy evaluators checked against real robots, and the simulation benchmarks that VLA papers report on. Each entry says what it evaluates and which evaluation problem it sets out to fix.</p>
 </div>
 
 <div class="wrap groups" id="groups"></div>
@@ -201,7 +205,6 @@ footer.fine p { margin: 0 0 6px; max-width: 80ch; }
 <div class="bar">
   <div class="wrap">
     <div class="search"><input id="q" type="search" placeholder="Search name, task, robot, venue…" aria-label="Search benchmarks"></div>
-    <button type="button" class="vla" id="vla-toggle" aria-pressed="false"></button>
     <label class="sort" for="sort"><span data-i18n="order">Order</span>
       <select id="sort">
         <option value="grouped" data-i18n="sortGrouped">By category</option>
@@ -211,6 +214,7 @@ footer.fine p { margin: 0 0 6px; max-width: 80ch; }
       </select>
     </label>
     <span class="count" id="count"></span>
+    <div class="lenses" id="lenses"></div>
     <div class="tags" id="tags"></div>
   </div>
 </div>
@@ -219,7 +223,7 @@ footer.fine p { margin: 0 0 6px; max-width: 80ch; }
 
 <footer class="wrap fine">
   <p data-i18n="foot1">Figures come from each work's paper or project page and remain the property of their authors; the detail view links to the source of every image.</p>
-  <p data-i18n="foot2">Descriptions summarize survey notes taken in October 2026. Many 2026 entries are preprints, so check venue and status before citing. Entries without a usable figure show a hatched plate.</p>
+  <p data-i18n="foot2">Descriptions summarize survey notes taken in October 2026. Many 2026 entries are preprints, so check venue and status before citing. Simulation entries and policy results were compiled from automated reading of papers; check numbers against the paper before quoting them. Entries without a usable figure show a hatched plate.</p>
 </footer>
 
 <dialog id="detail" aria-labelledby="d-title"></dialog>
@@ -230,12 +234,17 @@ const DATA = /*__DATA__*/[];
 const I18N = {
   en: {
     eyebrow: "Survey · October 2026",
-    title: "Real-World Manipulation Benchmarks",
-    intro: "A catalog of the benchmarks, hosted platforms, competitions and proxy evaluators that measure robot manipulation on real hardware, with what each one evaluates and which evaluation problem it sets out to fix.",
+    title: "Robot Manipulation Benchmarks",
+    intro: "A catalog of benchmarks for robot manipulation: physical benchmarks, hosted platforms, competitions, proxy evaluators checked against real robots, and the simulation benchmarks that VLA papers report on. Each entry says what it evaluates and which evaluation problem it sets out to fix.",
     search: "Search name, task, robot, venue…",
     searchLabel: "Search benchmarks",
-    vla: "VLA and generalist policies",
-    vlaHint: "Show only benchmarks that target or report results for VLA and other generalist policies",
+    focus: "Focus",
+    lenses: {
+      vla: ["VLA policies", "Targets or reports results for VLA and other generalist policies"],
+      dexterity: ["Precise action", "Tests dexterity: tight tolerance, contact-rich, fine or multi-fingered manipulation"],
+      dynamism: ["Fast reaction", "Tests dynamism: moving targets, changes during execution, latency, speed or throughput"],
+      real: ["Real robot", "Evaluated on a physical robot: physical benchmarks, hosted platforms and competitions"],
+    },
     order: "Order", sortGrouped: "By category", sortNew: "Newest first", sortOld: "Oldest first", sortAz: "A to Z",
     count: (n, all) => `${n} of ${all} shown`,
     entries: n => `${n} ${n === 1 ? "entry" : "entries"}`,
@@ -243,27 +252,35 @@ const I18N = {
     evaluates: "Evaluates", targets: "Targets", improves: "Improves",
     agreementLong: "Agreement with real results", agreement: "Agreement",
     setup: "Setup", scale: "Scale", caveat: "Caveat", tags: "Tags", links: "Links", figureFrom: "Figure from",
+    policies: "Policies evaluated", realCheck: "Real-robot check", status: "Status", timing: "Inference latency",
+    realYes: "Included; see details", realNo: "None; simulation only",
     details: "Details", close: "Close", noFigure: "No figure",
     openDetails: name => `Open details for ${name}`,
     figureAlt: name => `Figure from ${name}`,
     foot1: "Figures come from each work's paper or project page and remain the property of their authors; the detail view links to the source of every image.",
-    foot2: "Descriptions summarize survey notes taken in October 2026. Many 2026 entries are preprints, so check venue and status before citing. Entries without a usable figure show a hatched plate.",
+    foot2: "Descriptions summarize survey notes taken in October 2026. Many 2026 entries are preprints, so check venue and status before citing. Simulation entries and policy results were compiled from automated reading of papers; check numbers against the paper before quoting them. Entries without a usable figure show a hatched plate.",
     groups: {
       physical: ["Physical benchmarks", "A lab rebuilds the setup and runs it on its own robot."],
       hosted: ["Hosted platforms", "Someone else runs the robot; you submit a policy."],
       competition: ["Competitions", "Events with a real-robot stage."],
       proxy: ["Proxy evaluation", "Simulators and world models checked against real results."],
+      simulation: ["Simulation benchmarks", "Runs entirely in a simulator; no real robot needed."],
     },
     subs: {}, tagNames: {}, linkNames: {},
   },
   ko: {
     eyebrow: "서베이 · 2026년 10월",
-    title: "실세계 매니퓰레이션 벤치마크",
-    intro: "실제 로봇에서 매니퓰레이션을 평가하는 벤치마크, 호스팅 플랫폼, 대회, 프록시 평가기를 모은 카탈로그입니다. 항목마다 무엇을 평가하는지, 어떤 평가 문제를 해결하려 하는지 정리했습니다.",
+    title: "로봇 매니퓰레이션 벤치마크",
+    intro: "로봇 매니퓰레이션 벤치마크 카탈로그입니다. 물리 재현형 벤치마크, 호스팅 플랫폼, 대회, 실로봇 결과로 검증한 프록시 평가기, 그리고 VLA 논문이 결과를 보고하는 시뮬레이션 벤치마크를 모았습니다. 항목마다 무엇을 평가하는지, 어떤 평가 문제를 해결하려 하는지 정리했습니다.",
     search: "이름, 태스크, 로봇, venue 검색…",
     searchLabel: "벤치마크 검색",
-    vla: "VLA·generalist 정책",
-    vlaHint: "VLA 등 generalist 정책을 대상으로 하거나 그 결과를 보고한 벤치마크만 표시",
+    focus: "초점",
+    lenses: {
+      vla: ["VLA 정책", "VLA 등 generalist 정책을 대상으로 하거나 그 결과를 보고한 항목"],
+      dexterity: ["정밀 조작", "dexterity 평가: 좁은 공차, contact-rich, 미세 조작, multi-fingered hand"],
+      dynamism: ["빠른 반응", "dynamism 평가: 움직이는 목표, 실행 중 변화, latency, 속도와 처리량"],
+      real: ["실로봇", "실제 로봇에서 평가: 물리 재현형 벤치마크, 호스팅 플랫폼, 대회"],
+    },
     order: "정렬", sortGrouped: "분류별", sortNew: "최신순", sortOld: "오래된순", sortAz: "이름순",
     count: (n, all) => `${all}개 중 ${n}개 표시`,
     entries: n => `${n}개`,
@@ -271,16 +288,19 @@ const I18N = {
     evaluates: "평가 대상", targets: "목표", improves: "개선점",
     agreementLong: "실세계 결과와의 일치도", agreement: "일치도",
     setup: "셋업", scale: "규모", caveat: "주의", tags: "태그", links: "링크", figureFrom: "그림 출처",
+    policies: "평가된 정책", realCheck: "실로봇 검증", status: "현황", timing: "추론 latency 처리",
+    realYes: "있음. 자세히 보기 참고", realNo: "없음. 시뮬레이션만",
     details: "자세히", close: "닫기", noFigure: "그림 없음",
     openDetails: name => `${name} 상세 보기`,
     figureAlt: name => `${name}의 그림`,
     foot1: "그림은 각 연구의 논문이나 project page에서 가져왔으며 저작권은 원저자에게 있습니다. 상세 보기에서 각 그림의 출처로 연결됩니다.",
-    foot2: "설명은 2026년 10월에 작성한 조사 노트를 요약한 것입니다. 2026년 항목은 preprint가 많으므로 인용하기 전에 venue와 상태를 확인하세요. 쓸 만한 그림이 없는 항목은 빗금으로 표시합니다.",
+    foot2: "설명은 2026년 10월에 작성한 조사 노트를 요약한 것입니다. 2026년 항목은 preprint가 많으므로 인용하기 전에 venue와 상태를 확인하세요. 시뮬레이션 항목과 정책별 결과는 논문을 자동으로 읽어 정리한 것이므로, 수치를 인용하기 전에 논문과 대조하세요. 쓸 만한 그림이 없는 항목은 빗금으로 표시합니다.",
     groups: {
       physical: ["물리 재현형 벤치마크", "연구실이 셋업을 직접 재현해 자기 로봇에서 실행합니다."],
       hosted: ["호스팅 플랫폼", "로봇은 운영 측이 돌리고, 사용자는 정책을 제출합니다."],
       competition: ["대회", "실로봇 단계가 있는 대회입니다."],
       proxy: ["프록시 평가", "실세계 결과와 대조해 검증한 시뮬레이터와 world model입니다."],
+      simulation: ["시뮬레이션 벤치마크", "시뮬레이터에서만 실행하며 실로봇이 필요 없습니다."],
     },
     subs: {
       "Object sets and protocols": "물체 세트와 프로토콜",
@@ -291,6 +311,10 @@ const I18N = {
       "Simulator twins": "시뮬레이터 digital twin",
       "Reconstruction-based": "재구성 기반",
       "Video world models": "Video world model",
+      "Domain and task-specific benchmarks": "도메인·태스크 특화 벤치마크", "Evaluation tooling": "평가 도구",
+      "Precision and dexterity": "정밀 조작과 dexterity", "Established benchmarks": "기존 표준 벤치마크", "Broad suites": "범용 태스크 suite", "Dynamic scenes": "동적 환경",
+      "Robustness": "강건성", "Generalization": "일반화", "Memory and long horizon": "기억과 long-horizon",
+      "Language and reasoning": "언어와 추론", "Safety": "안전",
     },
     tagNames: {
       "Simulator": "시뮬레이터", "Assembly": "조립", "Deformable": "변형체", "3D-printable": "3D 프린트",
@@ -300,9 +324,10 @@ const I18N = {
       "Remote lab": "원격 실험실", "Tactile": "촉각", "Language": "언어", "Ranking": "순위",
       "Imitation learning": "모방학습", "Planning": "계획", "Throughput": "처리량", "Statistics": "통계",
       "Human video": "인간 영상", "Caregiving": "돌봄", "Surgical": "수술",
+      "Robustness": "강건성", "Memory": "기억", "Dynamic": "동적 환경", "Reasoning": "추론", "Safety": "안전",
     },
     linkNames: {
-      "Paper": "논문", "Site": "사이트", "Project": "프로젝트", "Code": "코드", "Leaderboard": "리더보드",
+      "Paper": "논문", "Site": "사이트", "Project": "프로젝트", "Code": "코드", "Leaderboard": "리더보드", "Dataset": "데이터셋",
       "Introduction": "소개글", "Record": "서지 정보", "Follow-up": "후속 연구", "Firmware": "펌웨어",
       "Protocol paper": "프로토콜 논문", "Deformable extension": "변형체 확장", "Results": "결과", "Data": "데이터",
       "Challenge": "대회 페이지", "Lessons": "회고 논문", "Event": "행사 페이지", "Docs": "문서", "Blog": "블로그",
@@ -312,10 +337,22 @@ const I18N = {
   },
 };
 
-const GROUP_IDS = ["physical", "hosted", "competition", "proxy"];
+const GROUP_IDS = ["physical", "hosted", "competition", "proxy", "simulation"];
+// Sections inside a category follow this order; anything unlisted keeps its data order after these.
+const SUB_ORDER = ["Precision and dexterity", "Dynamic scenes", "Established benchmarks", "Broad suites", "Robustness",
+  "Generalization", "Memory and long horizon", "Language and reasoning", "Safety"];
+const subRank = s => { const i = SUB_ORDER.indexOf(s); return i < 0 ? SUB_ORDER.length : i; };
 // Cross-cutting lens: entries carrying this tag evaluate VLA / generalist policies, whatever their category.
 const VLA_TAG = "Generalist / VLA";
-const state = { group: "", tag: "", q: "", sort: "grouped", lang: "en", open: "", vla: false };
+const REAL_GROUPS = ["physical", "hosted", "competition"];
+// Lenses cut across categories and combine with each other (all active lenses must match).
+const LENSES = {
+  vla: e => e.tags.includes(VLA_TAG),
+  dexterity: e => (e.focus || []).includes("dexterity"),
+  dynamism: e => (e.focus || []).includes("dynamism"),
+  real: e => REAL_GROUPS.includes(e.group),
+};
+const state = { group: "", tag: "", q: "", sort: "grouped", lang: "en", open: "", lenses: [] };
 try {
   // ?lang=ko on a plain web link wins over the remembered choice.
   const asked = new URLSearchParams(location.search).get("lang");
@@ -337,8 +374,8 @@ const linkList = links => links.map(l => `<a href="${esc(l.url)}" target="_blank
 
 DATA.forEach(e => {
   const ko = e.ko || {};
-  e._hay = [e.name, e.venue, e.sub, e.evaluates, e.improves, e.setup, e.scale, e.agreement, e.tags.join(" "),
-    ko.evaluates, ko.improves, ko.setup, ko.scale, ko.agreement, I18N.ko.subs[e.sub],
+  e._hay = [e.name, e.venue, e.sub, e.evaluates, e.improves, e.setup, e.scale, e.agreement, e.policies, e.real_check, e.status, e.timing, ko.timing,
+    e.tags.join(" "), ko.evaluates, ko.improves, ko.setup, ko.scale, ko.agreement, ko.policies, ko.real_check, I18N.ko.subs[e.sub],
     e.tags.map(t => I18N.ko.tagNames[t] || "").join(" ")].join(" ").toLowerCase();
 });
 
@@ -346,7 +383,7 @@ function visible() {
   const terms = state.q.toLowerCase().split(/\s+/).filter(Boolean);
   return DATA.filter(e =>
     (!state.group || e.group === state.group) &&
-    (!state.vla || e.tags.includes(VLA_TAG)) &&
+    state.lenses.every(id => LENSES[id](e)) &&
     (!state.tag || e.tags.includes(state.tag)) &&
     terms.every(t => e._hay.includes(t)));
 }
@@ -365,6 +402,7 @@ function card(e) {
       <p class="read"><b>${e.improves ? t.evaluates : t.targets}</b>${esc(F(e, "evaluates"))}</p>
       ${e.improves ? `<p class="read"><b>${t.improves}</b>${esc(F(e, "improves"))}</p>` : ""}
       ${e.agreement ? `<p class="read agree"><b>${t.agreementLong}</b>${esc(F(e, "agreement"))}</p>` : ""}
+      ${e.group === "simulation" ? `<p class="read agree"><b>${t.realCheck}</b>${e.real_check ? t.realYes : t.realNo}</p>` : ""}
       <div class="foot">${linkList(e.links.slice(0, 3))}<button class="more" data-open="${esc(e.id)}">${t.details}</button></div>
     </div>
   </article>`;
@@ -383,7 +421,7 @@ function render() {
     const sections = [];
     for (const gid of GROUP_IDS) {
       const inGroup = list.filter(e => e.group === gid);
-      const subs = [...new Set(inGroup.map(e => e.sub))];
+      const subs = [...new Set(inGroup.map(e => e.sub))].sort((a, b) => subRank(a) - subRank(b));
       for (const sub of subs) {
         const items = inGroup.filter(e => e.sub === sub);
         const single = sub === "Platforms" || sub === "Competitions";
@@ -419,10 +457,8 @@ function renderStatic() {
   const t = T();
   document.documentElement.lang = state.lang;
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t[el.dataset.i18n]; });
-  const vla = $("vla-toggle");
-  vla.textContent = `${t.vla} · ${DATA.filter(e => e.tags.includes(VLA_TAG)).length}`;
-  vla.title = t.vlaHint;
-  vla.setAttribute("aria-pressed", String(state.vla));
+  $("lenses").innerHTML = `<span class="lab">${esc(t.focus)}</span>` + Object.keys(LENSES).map(id =>
+    `<button type="button" class="vla" data-lens="${id}" title="${esc(t.lenses[id][1])}" aria-pressed="${state.lenses.includes(id)}">${esc(t.lenses[id][0])} · ${DATA.filter(LENSES[id]).length}</button>`).join("");
   $("q").placeholder = t.search;
   $("q").setAttribute("aria-label", t.searchLabel);
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)));
@@ -444,8 +480,12 @@ function renderDetail() {
         ${row(t.setup, esc(F(e, "setup")))}
         ${row(t.scale, esc(F(e, "scale")))}
         ${row(t.agreement, esc(F(e, "agreement")))}
+        ${row(t.timing, esc(F(e, "timing")))}
+        ${row(t.policies, esc(F(e, "policies")))}
+        ${row(t.realCheck, esc(F(e, "real_check")))}
+        ${row(t.status, esc(F(e, "status")))}
         ${row(t.caveat, esc(F(e, "note")), "note")}
-        ${row(t.tags, esc(e.tags.map(tagName).join(" · ")))}
+        ${row(t.tags, esc([...(e.focus || []).map(id => t.lenses[id][0]), ...e.tags.map(tagName)].join(" · ")))}
         ${row(t.links, `<span class="d-links">${linkList(e.links)}</span>`)}
         ${row(t.figureFrom, e.image_source ? `<a href="${esc(e.image_source)}" target="_blank" rel="noopener">${esc(e.image_source.replace(/^https?:\/\//, ""))}</a>` : "")}
       </dl>
@@ -482,7 +522,12 @@ $("detail").addEventListener("click", ev => {
 document.addEventListener("click", ev => {
   const langBtn = ev.target.closest(".lang button");
   if (langBtn) { setLang(langBtn.dataset.lang); return; }
-  if (ev.target.closest("#vla-toggle")) { state.vla = !state.vla; renderStatic(); render(); return; }
+  const lens = ev.target.closest("[data-lens]");
+  if (lens) {
+    const id = lens.dataset.lens;
+    state.lenses = state.lenses.includes(id) ? state.lenses.filter(x => x !== id) : [...state.lenses, id];
+    renderStatic(); render(); return;
+  }
   const open = ev.target.closest("[data-open]");
   if (open) { openDetail(open.dataset.open); return; }
   const grp = ev.target.closest(".group");
@@ -498,6 +543,6 @@ renderGroups();
 renderTags();
 render();
 const initial = location.hash.slice(1);
-if (initial === "vla") { state.vla = true; renderStatic(); render(); }
+if (LENSES[initial]) { state.lenses = [initial]; renderStatic(); render(); }
 else if (initial) openDetail(initial);
 </script>

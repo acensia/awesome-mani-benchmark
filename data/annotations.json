@@ -1,0 +1,75 @@
+{
+  "_comment": "Extra facts attached to entries at build time, each in English and Korean. policies = published VLA / generalist-policy results (appended to any existing text). timing = how a dynamic benchmark treats the policy's inference time. Sources: research_notes/simulation-benchmarks-for-vla-evaluation/focus_dexterity.md and focus_dynamism.md.",
+  "policies": {
+    "nist-atb": {
+      "en": "M1 peg insertion on a real robot at 3 mm clearance: π0.5 20%, ACT 40%, Diffusion Policy 20%, ReTac-ACT 90%. At 0.1 mm: ACT 15%, Diffusion Policy 0%, no π0.5 number (arXiv 2603.09565)",
+      "ko": "실로봇 M1 peg 삽입, clearance 3 mm: π0.5 20%, ACT 40%, Diffusion Policy 20%, ReTac-ACT 90%. 0.1 mm: ACT 15%, Diffusion Policy 0%, π0.5 수치 없음 (arXiv 2603.09565)"
+    },
+    "furniturebench": {
+      "en": "One-Leg task in simulation, success through steps 1–5: OpenVLA 96 / 94 / 78 / 53 / 29%. CogACT ends at 42% and DAM-VLA at 56% (arXiv 2603.00926)",
+      "ko": "시뮬레이션 One-Leg 태스크의 1–5단계 누적 성공률: OpenVLA 96 / 94 / 78 / 53 / 29%. 마지막 단계에서 CogACT 42%, DAM-VLA 56% (arXiv 2603.00926)"
+    },
+    "gm-100": {
+      "en": "Tasks 1–10, full success: π0.5 24.9%, π0 4.4%, Diffusion Policy 1.6%",
+      "ko": "태스크 1–10의 완전 성공률: π0.5 24.9%, π0 4.4%, Diffusion Policy 1.6%"
+    },
+    "roco": {
+      "en": "Winner ARC-VLA (π0.5 backbone) scored 0.279 in the final; second place 0.109",
+      "ko": "우승팀 ARC-VLA(π0.5 backbone)의 결선 점수 0.279, 2위 0.109"
+    },
+    "intrinsic-challenge": {
+      "en": "One participant's π0.5 made no insertion in the qualifier; the qualifier winner used step-specific policies, not a VLA",
+      "ko": "한 참가팀의 π0.5는 예선에서 삽입에 한 번도 성공하지 못했고, 예선 1위는 VLA가 아닌 단계별 전용 정책을 사용"
+    },
+    "robodojo-simulation-suite": {
+      "en": "Precision dimension: X-VLA 12.00%, π0.5 5.50%, π0 0.75%, GR00T N1.7 0.67%; human 64%",
+      "ko": "Precision 차원: X-VLA 12.00%, π0.5 5.50%, π0 0.75%, GR00T N1.7 0.67%. 인간 64%"
+    }
+  },
+  "timing": {
+    "motionforge": {
+      "en": "The world keeps running on a fixed 120 Hz clock while the model infers at its own speed. Freezing the world raises success by 21.7–27.5 points.",
+      "ko": "모델이 자체 속도로 추론하는 동안 세계는 고정 120 Hz clock으로 계속 진행한다. 세계를 멈추면 성공률이 21.7–27.5%p 오른다."
+    },
+    "reflexbench": {
+      "en": "The world keeps running. Latency is configurable or converted from latency measured on real hardware.",
+      "ko": "세계가 계속 진행한다. latency는 설정할 수 있고, 실제 하드웨어에서 측정한 값을 환산해 넣을 수도 있다."
+    },
+    "dom": {
+      "en": "The world keeps running. Latency is measured at runtime.",
+      "ko": "세계가 계속 진행한다. latency는 실행 중에 측정한다."
+    },
+    "phail": {
+      "en": "Real robot, so inference time counts, but the task is static picking.",
+      "ko": "실로봇이므로 추론 시간이 그대로 반영되지만, 태스크 자체는 정적인 picking이다."
+    },
+    "domino": {
+      "en": "The simulator waits for the policy, according to the MotionForge and DynamicWAM papers; DOMINO's own paper does not say.",
+      "ko": "MotionForge와 DynamicWAM 논문에 따르면 시뮬레이터가 정책의 추론을 기다린다. DOMINO 논문 자체에는 언급이 없다."
+    },
+    "domino-long": {
+      "en": "Presumably the simulator waits, since it shares DOMINO's platform; the paper does not say.",
+      "ko": "DOMINO와 플랫폼을 공유하므로 시뮬레이터가 기다리는 것으로 추정된다. 논문에는 언급이 없다."
+    },
+    "physmani-bench": {
+      "en": "The simulator waits for the policy, according to the MotionForge paper; its own paper does not say.",
+      "ko": "MotionForge 논문에 따르면 시뮬레이터가 정책의 추론을 기다린다. 해당 논문 자체에는 언급이 없다."
+    },
+    "libero-max": {
+      "en": "The simulator waits. Timing is counted in policy steps, with no wall-clock model.",
+      "ko": "시뮬레이터가 기다린다. 시간은 policy step 단위로 세며 wall-clock 모델이 없다."
+    },
+    "dynbench": {
+      "en": "Not stated. Delay injection is described only for the paper's Kinetix experiments.",
+      "ko": "명시되지 않았다. delay 주입은 논문의 Kinetix 실험에 대해서만 기술돼 있다."
+    },
+    "nebula": {
+      "en": "Not stated. Latency and control frequency are reported as standalone indicators.",
+      "ko": "명시되지 않았다. latency와 제어 주파수는 독립된 지표로만 보고된다."
+    },
+    "agibot-world-challenge": {
+      "en": "Could not be verified: no scoring, speed or latency rules appear on the public pages.",
+      "ko": "확인할 수 없었다. 공개 페이지에 채점, 속도, latency 규칙이 없다."
+    }
+  }
+}

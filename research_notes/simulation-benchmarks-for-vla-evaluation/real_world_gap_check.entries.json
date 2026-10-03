@@ -1,0 +1,1089 @@
+[
+  {
+    "name": "RADAR",
+    "group": "hosted",
+    "year": 2026,
+    "venue": "arXiv 2026-02",
+    "evaluates": "VLA generalization on a physical arm under changes in lighting, background and sensor noise, across block-placement and spatial-reasoning task splits",
+    "improves": "Real-world VLA tests that are static, human-reset and human-judged; replaces binary manual scoring with 3D-IoU-based automatic success measurement and automatic scene reset",
+    "setup": "Self-contained robot cell: collaborative arm (example given: UR5e with Robotiq 2F-85), wrist RealSense D435, two fixed RealSense D415 cameras for 3D reconstruction, actuated task platform on a mechanical stage for automatic reset; client-server-worker architecture separates policy submission from execution",
+    "scale": "4 task splits (SingleBlock, TwoBlock, ThreeBlock, Spatial), 32 trials per model; 5 policies (pi0, pi0-FAST, pi0.5, RDT, OpenVLA); best pi0.5 17/32, pi0 and pi0-FAST 2/32, RDT and OpenVLA 0/32",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML). No project page, code or public submission endpoint was found, so whether outside groups can submit is unverified; grouped as hosted because of the submission architecture.",
+    "tags": [
+      "Generalist / VLA",
+      "Generalization",
+      "Automated"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2602.10980"
+      }
+    ]
+  },
+  {
+    "name": "LabDex",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "dexterous-hand manipulation of chemistry-laboratory objects at three levels: atomic skills, compositional skills and a long-horizon laboratory workflow",
+    "improves": "Lack of a real-world dexterous benchmark for laboratory automation with shared task definitions across real and simulated platforms",
+    "setup": "Franka Research 3 with XHand, three RealSense D435i cameras (wrist, left-front, head); teleoperation with Manus Quantum glove and VIVE tracker; matched simulation platform under the same task definitions",
+    "scale": "7 atomic-skill categories instantiated as 30+ atomic skills over 20+ objects, 10+ compositional skills, 1 long-horizon workflow; 200 demonstrations per task by default; 26 atomic skill instances evaluated with 50 real trials each; overall average pi0.5 0.57, ACT 0.34, DP 0.02",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML). Dataset homepage is named in the paper but release status of code and data was not checked.",
+    "tags": [
+      "Dexterous hand",
+      "Long-horizon",
+      "Dataset"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.18618"
+      },
+      {
+        "label": "Project",
+        "url": "https://zhipeng-tang.github.io/LabDex/"
+      }
+    ]
+  },
+  {
+    "name": "CEBench",
+    "group": "physical",
+    "year": 2026,
+    "venue": "ICRA 2026",
+    "evaluates": "cross-embodiment practicality of VLA models on single-arm (CALVIN), bimanual (RoboTwin) and a real bimanual mobile robot, with and without domain randomization",
+    "improves": "VLA evaluations that cover one embodiment at a time and omit domain-randomized real-world tests",
+    "setup": "Real part: Cobot-Magic dual-arm mobile robot with Piper arms; 8 fixed-base tasks and 2 mobile manipulation tasks; domain randomization over color/texture, distractors and workspace layout. Simulation part: CALVIN and RoboTwin",
+    "scale": "1.6k real expert trajectories (200 per fixed-base task); 100 evaluation episodes per fixed-base task, 10 per mobile task; LLaVA-VLA 44.2% seen, 30.7% domain-randomized",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML); benchmark is introduced inside a method paper (LLaVA-VLA). Release of the real-world dataset was promised upon acceptance and not checked.",
+    "tags": [
+      "Generalist / VLA",
+      "Bimanual",
+      "Mobile",
+      "Generalization"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2602.22663"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/OpenHelix-Team/LLaVA-VLA"
+      }
+    ]
+  },
+  {
+    "name": "RoboChess Challenge",
+    "group": "competition",
+    "year": 2026,
+    "venue": "CoRL 2026 workshop",
+    "evaluates": "single-arm policies that perceive a chess board, choose legal moves and move physical chess pieces, in GPU-accelerated simulators and on real robots",
+    "improves": "",
+    "setup": "Simulation track (MuJoCo, Isaac Lab, Genesis) and real-world track (LeRobot SO-101, Franka, UR, Piper, Yam/Rebot); baselines include pi, GR00T and Cosmos-based policies; hosted by the CoRL 2026 Workshop on GPU-Accelerated Simulation to Scalable and Generalizable Robot Policy Learning",
+    "scale": "Two tracks; winners to be announced 9 November 2026 in Austin; team count not stated",
+    "agreement": "",
+    "note": "Workshop page opened. Submission deadline is a placeholder and the page does not say who runs the real robots or how real-track runs are scored.",
+    "tags": [
+      "Generalist / VLA",
+      "Pick-and-place",
+      "Low-cost"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://sites.google.com/view/corl-workshop-robochess"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/yizhouzhao-nvidia/RoboChess-Challenge"
+      }
+    ]
+  },
+  {
+    "name": "SutureBot",
+    "group": "physical",
+    "year": 2025,
+    "venue": "NeurIPS 2025",
+    "evaluates": "end-to-end autonomous suturing on a surgical robot: needle pickup, tissue insertion with pull-through, and knot tying, scored by success, insertion-point error and time",
+    "improves": "No repeatable physical benchmark existed for long-horizon, millimetre-precision surgical manipulation by imitation-learning and VLA policies",
+    "setup": "da Vinci Research Kit (dVRK) Si with DeBakey forceps and large needle driver, wrist cameras; insertion and exit error measured with UV markers; dataset and fixture STL files released",
+    "scale": "1,890 demonstrations (628 needle pickup, 310 needle throw, 952 knot tying; 454 recovery examples); 10 full suture procedures per policy; pi0, GR00T N1, OpenVLA-OFT, multitask ACT; best 3/10 end-to-end",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML). The arXiv comment gives NeurIPS 2025; the Datasets & Benchmarks track attribution comes from a third-party list and was not confirmed on the proceedings page.",
+    "tags": [
+      "Long-horizon",
+      "Bimanual",
+      "Dataset",
+      "Insertion"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2510.20965"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/jchen396/suturebot"
+      }
+    ]
+  },
+  {
+    "name": "HumanoidToolBench",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-10",
+    "evaluates": "humanoid tool use from choosing a suitable tool among candidates and decoys to using it while stationary or walking",
+    "improves": "Existing benchmarks do not test tool selection, manipulation and locomotion jointly on a humanoid",
+    "setup": "Unitree G1 with Dex3 hands and head camera in the real world; MuJoCo simulation counterpart; 55 tool assets; ToolBook demonstration dataset",
+    "scale": "18 tasks over 3 scenarios, 3 execution levels and 2 tool-set modes; 3,003 simulation and 91 real demonstrations; 7 policies in simulation, 3 on the real robot",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML, posted 2026-10-01). Real-robot evaluation covers only a small subset of the tasks (level-1 ball tasks); most results are simulation.",
+    "tags": [
+      "Humanoid",
+      "Dexterous hand",
+      "Mobile",
+      "Dataset"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2610.02089"
+      },
+      {
+        "label": "Project",
+        "url": "https://snu-pi.github.io/HumanoidToolBench/"
+      }
+    ]
+  },
+  {
+    "name": "TacO",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "which tactile sensor modality (resistive, magnetic, vision-based, acoustic) helps imitation-learned policies on pick-and-place with unknown mass, object reorientation and occluded plug insertion",
+    "improves": "No empirical, task-driven comparison of tactile sensors under one hardware setup and policy pipeline",
+    "setup": "Franka Panda arms with fin-ray fingers at two institutions over 2,000 miles apart; six sensors (FSR, FlexiTac, eGaIn, eFlesh, Daimon, contact microphone); ACT policies trained per sensor; open-source repeatability test kit",
+    "scale": "3 tasks; 50-60 demonstrations per task; examples: pick-and-place with FlexiTac 0.85 vs 0.75 vision-only; plug insertion 0.70 with contact microphone vs 0.2 vision-only",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML). Benchmarks sensors rather than policies; release of hardware, code and data is promised on a project website whose URL was not found.",
+    "tags": [
+      "Tactile",
+      "Insertion",
+      "Pick-and-place"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2605.21976"
+      }
+    ]
+  },
+  {
+    "name": "Eval-Actions",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-01",
+    "evaluates": "execution quality of real-robot manipulation episodes beyond binary success, using expert grades, rank-guided labels and diagnostic explanations, plus a learned evaluator (AutoEval) that predicts them",
+    "improves": "Binary success rates hide process-level differences among executions that complete the same task; human grading does not scale",
+    "setup": "Offline benchmark of teleoperated and policy-generated episodes on ARX R5 and UR5 arms (single-arm and bimanual) with RGB-D video and robot states; AutoEval takes RGB frames and kinematic summaries",
+    "scale": "13K+ episodes, 150+ tasks, about 52 hours; annotated subset 6K+ episodes over 50+ tasks; AutoEval-S Spearman 0.81 (expert grading) and 0.84 (rank-guided), success detection 90.6-91.0%",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML v2). This is an evaluation-tooling entry: it scores recorded real episodes and does not run policies. Earlier title: 'Trustworthy Evaluation of Robotic Manipulation: A New Benchmark and AutoEval Methods'.",
+    "tags": [
+      "Automated",
+      "Dataset",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2601.18723"
+      },
+      {
+        "label": "Project",
+        "url": "https://eval-actions.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "WorldComposer",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-04",
+    "evaluates": "manipulation policies in simulation scenes generated from real-world panoramas, plus edited 'digital cousin' scenes for unseen-scene and unseen-object generalization",
+    "improves": "Building simulation evaluation scenes by hand is slow, and real-world generalization tests need new physical assets and room reconfiguration",
+    "setup": "Panorama-to-scene generation (Marble) into NVIDIA Isaac Sim; validation on bimanual LeRobot SO-101 follower arms with a top-down RGB camera",
+    "scale": "3 tasks (Set Tableware, Open Microwave, Fold Cloth); 4 policies (ACT, Diffusion Policy, SmolVLA, pi0); 4 generalization levels; 100 simulated and 20 real trials per configuration",
+    "agreement": "Pearson r = 0.91 between simulated and real success rates",
+    "note": "Paper opened (arXiv HTML; title 'From Seeing to Simulating: Generative High-Fidelity Simulation with Digital Cousins for Generalizable Robot Learning and Evaluation'; Peking University and Lightwheel). Code repository URL not confirmed.",
+    "tags": [
+      "Simulator",
+      "Generalization",
+      "Low-cost",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2604.15805"
+      },
+      {
+        "label": "Project",
+        "url": "https://stubborn111.github.io/WorldComposer/"
+      }
+    ]
+  },
+  {
+    "name": "TOTO (Train Offline, Test Online)",
+    "group": "hosted",
+    "year": 2023,
+    "venue": "ICRA 2023",
+    "evaluates": "offline imitation and offline-RL policies and pretrained visual representations on scooping and pouring with unseen objects, positions and lighting",
+    "improves": "Few labs own robots and every lab uses a different one; a shared remote robot plus a common offline dataset gives like-for-like comparison without hardware",
+    "setup": "One Franka Emika Panda with a RealSense D435 at the organizers' lab; users train on the released dataset and submit policies via a form; an engineer supervises runs and returns video, reward and success rate (about 12 h turnaround)",
+    "scale": "2 tasks; 1,000-2,000 trajectories per task in the initial release; 18 trials per method for seen and for unseen locations (2 objects x 3 locations x 3 seeds); initial baselines from 5 institutions; later run as a NeurIPS 2023 competition",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML). Whether the remote evaluation service is still accepting submissions in 2026 was not checked.",
+    "tags": [
+      "Pick-and-place",
+      "Dataset",
+      "Generalization"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2306.00942"
+      },
+      {
+        "label": "Project",
+        "url": "https://vdean.github.io/toto-benchmark.html"
+      }
+    ]
+  },
+  {
+    "name": "ABC-Sim / ABC-Eval (ABC stack)",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "behavior-cloning policy checkpoints (DiT and VLA) in MuJoCo tasks built to mirror real bimanual tasks, alongside a released set of scored real-world rollouts",
+    "improves": "Real-world ablations of model and training choices are costly; groups without hardware cannot evaluate at all",
+    "setup": "MuJoCo tasks with 400 hours of VR sim-teleoperation data co-trained with the real ABC-130K dataset; ABC-Eval releases about 100 hours of real policy rollouts with rubric scores; hardware design, training and simulation code announced as open-source",
+    "scale": "12 checkpoints compared on 3 tasks (bottles into bin, plates into dishrack, turning mugs upright), 50 trials per task; ABC-130K: 3,500 hours, 130K episodes, 195 tasks; ABC-Sim: 20 tasks",
+    "agreement": "Pearson r = 0.85 for strict success (p = 4.2e-4, n = 12) and r = 0.91 for task progress (p = 5.0e-5, n = 12)",
+    "note": "Paper opened (arXiv HTML; title 'Scalable Behavior Cloning with Open Data, Training, and Evaluation'; UC Berkeley, MIT, Amazon FAR, XDOF, CMU). Correlation holds for policies co-trained with the sim data; release status not checked.",
+    "tags": [
+      "Simulator",
+      "Bimanual",
+      "Dataset"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.27375"
+      },
+      {
+        "label": "Project",
+        "url": "https://abc.bot"
+      }
+    ]
+  },
+  {
+    "name": "OSCAR",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "DROID generalist policies from the RoboArena leaderboard by rolling them out in a skeleton-conditioned video world model that covers several robot embodiments",
+    "improves": "Video world models used as evaluators follow actions imprecisely and are tied to one embodiment",
+    "setup": "Cosmos-Predict2.5-2B fine-tuned on curated robot and egocentric human data with 2D kinematic-skeleton conditioning; rollouts start from recorded RoboArena first frames with estimated camera calibration",
+    "scale": "7 policies (pi0-flow, pi0-FAST, and five PaliGemma variants); 65 RoboArena sessions retained",
+    "agreement": "Against the RoboArena ranking: Pearson r = 0.852, Spearman 0.750, MMRV 0.571 (skeleton conditioning)",
+    "note": "Paper opened (arXiv HTML v2). The 65 sessions were hand-selected for good camera-calibration estimates, which may favour agreement.",
+    "tags": [
+      "World model",
+      "DROID",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.04463"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/wuzy2115/oscar-public"
+      }
+    ]
+  },
+  {
+    "name": "ICRA 2026 AI for Robotic Surgery Competition",
+    "group": "competition",
+    "year": 2026,
+    "venue": "ICRA 2026",
+    "evaluates": "peg transfer on a surgical robot in two challenges: human teleoperation and autonomous execution by a learned or programmed algorithm",
+    "improves": "",
+    "setup": "da Vinci Research Kit (dVRK) on site at ICRA 2026, with AMBF simulation for preparation; autonomous entries interface through ROS 2; score is pegs transferred within the time limit",
+    "scale": "2-4 June 2026; 21 participants in real-dVRK teleoperation, 18 in simulated teleoperation, 5 teams registered for the autonomous challenge; EUR 2,100 total prizes",
+    "agreement": "",
+    "note": "Competition page opened. Results of the autonomous challenge were not found on the page.",
+    "tags": [
+      "Pick-and-place",
+      "Bimanual",
+      "Insertion"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://surgical-robotics-ai.github.io/icra-competition-2026/index.html"
+      }
+    ]
+  },
+  {
+    "name": "World Humanoid Robot Games (scenario events)",
+    "group": "competition",
+    "year": 2025,
+    "venue": "Beijing, August 2025 and August 2026",
+    "evaluates": "humanoid robots on scenario events such as factory material handling, medicine sorting and dispensing, and hotel-room cleaning, next to athletic events",
+    "improves": "",
+    "setup": "On-site events in Beijing with teams bringing their own humanoids; in 2026 fully autonomous runs earn full points in scenario events and teleoperated runs half",
+    "scale": "2025: 280 teams, 500+ robots, 26 events; 2026: 666 teams, 2,056 robots, 51 events of which 21 are scenario-based",
+    "agreement": "",
+    "note": "Verified from Wikipedia and a Sixth Tone report only; official per-event rules and manipulation-event results were not found, and the 2025 autonomy rules are unverified.",
+    "tags": [
+      "Humanoid",
+      "Mobile",
+      "Pick-and-place"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://en.wikipedia.org/wiki/World_Humanoid_Robot_Games"
+      }
+    ]
+  },
+  {
+    "name": "Robocurve / Inspect Robots",
+    "group": "hosted",
+    "year": 2026,
+    "venue": "Company site, 2026",
+    "evaluates": "frontier models (VLAs, LLM agents, coding agents) on physical arms and bimanual stations in tasks such as block stacking, Tower of Hanoi, Jenga and bimanual manipulation, graded with staged rubrics",
+    "improves": "No continuous, independent, standardized real-world measurement of robot capability; published demos are cherry-picked",
+    "setup": "Independent evaluator (Public Benefit Corporation, Y Combinator-backed) running its own robot stations, including I2RT YAM bimanual cells; commissioned evaluations under benchmarking agreements; open-source MIT framework Inspect Robots with adapters for YAM, Franka, SO-100/101, WidowX, Unitree G1 arms, AgiBot A2, ROS arms",
+    "scale": "Results published as reports and per-trial result pages rather than one leaderboard; one commissioned study: 5 tasks x 2 policies (pi0.5, MolmoAct2) x 20 real trials = 200 graded trials; USD 10M seed announced 14 September 2026",
+    "agreement": "",
+    "note": "Company site, GitHub repository and a third-party paper that used its trials were opened. Individual evaluation reports were not opened, so per-report task counts and model lists are unverified.",
+    "tags": [
+      "Generalist / VLA",
+      "Bimanual",
+      "Language"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://robocurve.org/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/robocurve/inspect-robots"
+      }
+    ]
+  },
+  {
+    "name": "Kaedim real-to-sim reconstruction study (yam-sim-harness)",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "how object and scene reconstruction quality (metric-scale geometry, authored physics, scene splat) changes agreement between simulated and real scores of manipulation policies on one bimanual cell",
+    "improves": "Real-to-sim evaluation pipelines leave object geometry and physics at generative or engine defaults without measuring the effect on sim-real agreement",
+    "setup": "Two simulated twins of an I2RT YAM bimanual cell (authored vs default open-source recipe) scored against the same real trials, which were run and graded by the third-party evaluator Robocurve with staged rubrics; harness, per-trial scores, assets and scenes released",
+    "scale": "5 tasks x 2 policies (pi0.5, MolmoAct2) = 10 cells; 20 trials per cell in each reconstruction; 200 paired real trials",
+    "agreement": "Pearson r = 0.90 (authored reconstruction) vs 0.51 (default); mean score error 6.97 vs 17.54 percentage points",
+    "note": "Paper opened (arXiv HTML; 'Measuring Asset and Scene Reconstruction Effects in Real-to-Sim Robot Evaluation'). Authors work for Kaedim, which sells the authored asset pipeline and paid for the real trials; with ten cells the correlation difference is not statistically separated.",
+    "tags": [
+      "Simulator",
+      "Gaussian splatting",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2610.00731"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/Kaedim/yam-sim-harness-oss"
+      }
+    ]
+  },
+  {
+    "name": "RoboART (Predictive Red Teaming)",
+    "group": "proxy",
+    "year": 2025,
+    "venue": "arXiv 2025-02",
+    "evaluates": "how much a visuomotor policy's success rate will drop under off-nominal lighting, distractors, backgrounds and object placement, predicted without running the robot",
+    "improves": "Exposing a policy's vulnerabilities to environmental factors needs many hardware trials per condition",
+    "setup": "Generative image editing alters nominal observations per environmental factor; a policy-specific anomaly detector on the edited observations predicts success; validated on visuomotor diffusion policies on real hardware",
+    "scale": "500+ hardware trials across 12 off-nominal conditions",
+    "agreement": "Less than 0.19 average absolute difference between predicted and real success rates",
+    "note": "Abstract page opened (Google DeepMind and Princeton). Robot platform, task count and any peer-reviewed venue were not checked.",
+    "tags": [
+      "Generalization",
+      "Safety",
+      "Automated"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2502.06575"
+      }
+    ]
+  },
+  {
+    "name": "GeniWorld",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "fine-tuned pi0 policy checkpoints in a URDF-rendered, action-conditioned video world model, including scenes with visual distractors",
+    "improves": "Action-conditioned world models used as evaluators lose action controllability and break down in out-of-distribution scenes",
+    "setup": "Autoregressive video model conditioned on rendered robot motion; each rollout starts from the same first frame as the real trial; humans judge success and a VLM judges plausibility",
+    "scale": "Real comparison over several manipulation tasks in in-domain and distractor settings; separate data-generation study with 4 tasks x 5 settings x 20 real trials",
+    "agreement": "Scatter plot of real vs world-model success rates described as a strong positive correlation; no coefficient given in the text",
+    "note": "Paper opened (arXiv HTML). Agreement is shown only as a figure; number of policies and tasks in the correlation study was not extracted.",
+    "tags": [
+      "World model",
+      "Generalist / VLA",
+      "Generalization"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.06332"
+      }
+    ]
+  },
+  {
+    "name": "BiAssemble real-world benchmark",
+    "group": "physical",
+    "year": 2025,
+    "venue": "ICML 2025",
+    "evaluates": "bimanual geometric assembly: picking up two fragments of a broken object, aligning them and joining them into the original shape",
+    "improves": "Broken parts differ every time an object breaks, so real-world results on fracture assembly cannot be compared across labs",
+    "setup": "Object set of commercially available items (wine glass, plate, beer bottle, bowl, mug, teapot) with reproducible broken parts and scanned 3D meshes usable in simulation; two Franka Panda arms and an Azure Kinect",
+    "scale": "Six object categories; real-robot results in the paper are mostly qualitative",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML); the benchmark is one section of a method paper. How the broken parts are reproduced and how many objects are included were not extracted.",
+    "tags": [
+      "Bimanual",
+      "Assembly",
+      "Long-horizon"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2506.06221"
+      },
+      {
+        "label": "Project",
+        "url": "https://sites.google.com/view/biassembly/"
+      }
+    ]
+  },
+  {
+    "name": "The Imitator Game (IG-10K, Imitator Arena)",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "whether a policy shown a human demonstration video reproduces the demonstrated intent as the robot's scene diverges from the demonstration across four levels, up to substituting a different object",
+    "improves": "Learning-from-human-video evaluations test trajectory replay in near-identical scenes and do not separate motion copying from task understanding",
+    "setup": "Real domain on a dual-arm Realman robot with ZED2i camera and a separate ManiSkill3 simulation domain; paired human-robot dataset; Imitator Arena gives automated scoring in simulation and blind A/B human rating of rollouts",
+    "scale": "20,000+ paired episodes, 50+ tasks, 6 domains; 10 evaluation tasks (5 seen, 5 unseen) at 4 levels; 9 models (15 trained variants); every model below 13% zero-shot success on unseen tasks",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML). Number of real trials per task-level pair and public availability of the Arena were not extracted.",
+    "tags": [
+      "Bimanual",
+      "Generalization",
+      "Dataset"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.22301"
+      }
+    ]
+  },
+  {
+    "name": "Perception Challenge for Bin-Picking (BPC)",
+    "group": "competition",
+    "year": 2025,
+    "venue": "CVPR 2025 workshop",
+    "evaluates": "6-DoF object pose estimation for industrial bin picking, judged in the final by whether a robot cell completes pick-and-place using the submitted estimates",
+    "improves": "",
+    "setup": "Organized by OpenCV with Intrinsic and partners; open industrial datasets for the first phase; real hardware made remotely usable through the Intrinsic platform, with finalists' code run on a real robot cell",
+    "scale": "More than 450 teams; winners announced at CVPR 2025; prize pool reported as USD 60,000",
+    "agreement": "",
+    "note": "Intrinsic blog post opened; the OpenCV results page returned HTTP 403, so the prize figure and phase structure come from search snippets. Entries are perception modules, not manipulation policies.",
+    "tags": [
+      "Grasping",
+      "Pick-and-place",
+      "Automated"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://www.intrinsic.ai/blog/posts/accelerating-advances-in-ai-driven-perception-to-unlock-new-value-for-industry"
+      },
+      {
+        "label": "Site",
+        "url": "https://bpc.opencv.org/web/challenges/challenge-page/1/overview"
+      }
+    ]
+  },
+  {
+    "name": "Food Topping Challenge (FTC)",
+    "group": "competition",
+    "year": 2024,
+    "venue": "ICRA 2024",
+    "evaluates": "robot handling of real food: serving salmon roe on rice bowls and picking pieces of fried chicken from a pile, scored on quantity and presentation",
+    "improves": "",
+    "setup": "On-site at ICRA 2024 in Yokohama, supported by a Robotics Society of Japan working group; teams bring their own approach, with the Foodly Type R dual-arm robot recommended",
+    "scale": "Practice 14-15 May 2024, competition 16 May 2024; team count not found",
+    "agreement": "",
+    "note": "ICRA 2024 competitions page and one participant paper abstract opened; the competition website no longer resolves, and whether later editions took place is unverified.",
+    "tags": [
+      "Deformable",
+      "Pick-and-place",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://2024.ieee-icra.org/program/competitions/"
+      },
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2504.19498"
+      }
+    ]
+  },
+  {
+    "name": "Robotic Sim2Real Challenge (AgileX Sim2Real / RMUS)",
+    "group": "competition",
+    "year": 2024,
+    "venue": "ICRA 2022-2025",
+    "evaluates": "transfer of simulation-developed mobile manipulation to real robots: plate arranging with an AgileX mobile manipulator and mineral-cube search and grasping with a RoboMaster platform",
+    "improves": "",
+    "setup": "Organized by Tsinghua AIR at ICRA; teams develop in a provided simulator and their solutions are then run on the organizers' real robots; the 2025 edition kept a mobile manipulation track and added a flying-robot track",
+    "scale": "Fourth edition at ICRA 2025; team counts not found",
+    "agreement": "",
+    "note": "ICRA 2024 and ICRA 2025 competition pages opened; the challenge site sim2real.net refused connections, so stage structure and results are unverified.",
+    "tags": [
+      "Mobile",
+      "Grasping",
+      "Pick-and-place"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://2025.ieee-icra.org/event/the-4th-robotic-sim2real-challenges/"
+      },
+      {
+        "label": "Site",
+        "url": "http://sim2real.net/"
+      }
+    ]
+  },
+  {
+    "name": "DexHoldem",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "dexterous-hand manipulation of playing cards and chips (pickup, placement, pushing, pulling), plus perception of game state and closed-loop agent play",
+    "improves": "Dexterous evaluations test isolated motor skills and ignore whether the scene stays usable for the next decision",
+    "setup": "ShadowHand with top-down, third-person and wrist cameras in a fixed tabletop setup; teleoperated demonstrations; metrics include task completion rate and scene-preserving success rate",
+    "scale": "1,470 demonstrations over 14 primitives; 9 policies x 80 trials = 720 trials; best task completion 61.2% (pi0.5), best scene-preserving success 47.5%; 33 closed-loop hand-level rollouts with 12.1% completion",
+    "agreement": "",
+    "note": "Abstract page opened; trial schedule and policy count come from a search summary of the paper HTML. Also recorded by a parallel researcher in focus_dexterity.entries.json; keep one copy.",
+    "tags": [
+      "Dexterous hand",
+      "Dataset",
+      "Language"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2605.18727"
+      },
+      {
+        "label": "Project",
+        "url": "https://dexholdem.github.io/Dexholdem/"
+      }
+    ]
+  },
+  {
+    "name": "Benjie's Humanoid Olympic Games",
+    "group": "competition",
+    "year": 2025,
+    "venue": "Open challenge (Substack), September 2025 and January 2026",
+    "evaluates": "autonomous general-purpose mobile manipulators on household feats in five events: doors, laundry, tool use, fingertip manipulation and wet manipulation, each with bronze, silver and gold tasks",
+    "improves": "",
+    "setup": "Open, self-reported challenge posted by Benjie Holson: entrants submit an uncut 1x-speed video of an autonomous run; a robot may take up to 10x the author's own time; first to complete a task takes the medal, later claims must be 25% faster",
+    "scale": "Round 1: 5 events x 3 medal tasks (15 tasks); Part II (27 January 2026) adds new events including eggs, tool use, bedroom skills, fingertip challenges and full body; first medal claimed by IHMC Robotics on 16 October 2025",
+    "agreement": "",
+    "note": "Both Substack posts opened. Verification is by video only; the claim that Physical Intelligence completed 11 tasks within three months comes from press search snippets, not from the posts.",
+    "tags": [
+      "Humanoid",
+      "Mobile",
+      "Deformable",
+      "Dexterous hand"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://generalrobots.substack.com/p/benjies-humanoid-olympic-games"
+      },
+      {
+        "label": "Site",
+        "url": "https://generalrobots.substack.com/p/benjies-humanoid-olympics-part-ii"
+      }
+    ]
+  },
+  {
+    "name": "Robotic Construction Challenge (RCC)",
+    "group": "competition",
+    "year": 2024,
+    "venue": "IROS 2024",
+    "evaluates": "autonomous identification, grasping and stacking of building blocks by one or two arms to reproduce a leaning tower (Abu Dhabi's Capital Gate) under construction rules",
+    "improves": "",
+    "setup": "Real robots only, for both practice and the on-site final; teams bring single- or dual-arm systems; each game lasts ten minutes and teams are ranked by points for placed blocks; organizers from Tsinghua, SYSU/MBZUAI, QIYUAN Lab, DISCOVER Robotics and RIT Dubai",
+    "scale": "Practice 1 August - 14 October 2024, final 15-16 October 2024; awards for 16 ranked teams (USD 2,000 / 1,000 / 500 for the top three)",
+    "agreement": "",
+    "note": "Competition page opened. Number of participating teams and winners were not on the page; described there as the first edition.",
+    "tags": [
+      "Assembly",
+      "Pick-and-place",
+      "Grasping"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://air.tsinghua.edu.cn/en/robochallenge/construction/iros2024.html"
+      }
+    ]
+  },
+  {
+    "name": "ASTM F45 mobile manipulator test method (WK92144)",
+    "group": "physical",
+    "year": 2024,
+    "venue": "ASTM work item, proposed 2024",
+    "evaluates": "positioning precision and accuracy of a mobile manipulator's arm and base on pose-constrained tasks such as tracing an S-shaped path and inserting pegs",
+    "improves": "Lack of a quantifiable, reproducible in-situ test for mobile manipulator performance that vendors and users can share",
+    "setup": "Standard test table developed from NIST research, built from low-cost components; the tabletop can lie flat, tilt to 45 degrees or stand vertical, with an optional shaker to add motion and vibration",
+    "scale": "One apparatus with path-tracking and peg-insertion tasks; still under committee consensus when reported on 30 November 2024",
+    "agreement": "",
+    "note": "Verified from a trade-press article only (the ASTM press release returned HTTP 403). The standard targets system accuracy rather than learned-policy evaluation, and its approval status in 2026 is unknown.",
+    "tags": [
+      "Mobile",
+      "Insertion",
+      "Low-cost"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://www.therobotreport.com/astm-developing-testing-standards-for-mobile-manipulators/"
+      }
+    ]
+  },
+  {
+    "name": "CT benchmark (human-robot collaborative assembly)",
+    "group": "physical",
+    "year": 2024,
+    "venue": "arXiv 2024-02",
+    "evaluates": "assembly of a standard model set performed manually, fully automatically and in human-robot collaboration, measured by assembly time and human workload (NASA-TLX)",
+    "improves": "No shared, replicable model set for comparing human-robot collaborative assembly setups against manual and automatic baselines",
+    "setup": "Physical model set whose components cover common assembly operations at several difficulty levels; three experimental setups (manual, automatic, collaborative)",
+    "scale": "Collaborative assembly took 70.8% longer than manual assembly while lowering reported workload",
+    "agreement": "",
+    "note": "Abstract page only was opened; robot hardware, number of parts and participant count were not extracted, and a journal version exists that was not opened.",
+    "tags": [
+      "Assembly",
+      "Insertion",
+      "Safety"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2402.00708"
+      }
+    ]
+  },
+  {
+    "name": "RoboReward",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-01",
+    "evaluates": "how well vision-language models assign end-of-episode progress scores (1-5) to real-robot rollout videos, and trained 4B/8B reward models for that purpose",
+    "improves": "Human success labelling of real rollouts is slow, and it was unknown how reliable off-the-shelf VLMs are as automatic judges on real robot data",
+    "setup": "Dataset and benchmark built from Open X-Embodiment and RoboArena real-robot videos, with negative and near-miss examples generated by counterfactual relabelling and temporal clipping; dataset, models and evaluation suite released",
+    "scale": "Covers many tasks and embodiments from the two source corpora (exact counts not extracted); the 8B model was also used as the reward in real-robot reinforcement learning",
+    "agreement": "",
+    "note": "Abstract page opened. Evaluation-tooling entry: it scores recorded real episodes and does not run policies. Dataset size and accuracy figures were not extracted.",
+    "tags": [
+      "Automated",
+      "Dataset",
+      "DROID"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2601.00675"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/teetone/RoboReward"
+      }
+    ]
+  },
+  {
+    "name": "FailBench",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "reliability of VLM-based judges at deciding whether a robot manipulation attempt succeeded, across many data sources",
+    "improves": "VLM success detectors are adopted for evaluation with little evidence that they generalize across domains or handle naturally occurring failures",
+    "setup": "Offline benchmark of manipulation attempts drawn from 14 public sources (12 real-world, 2 simulated); 75% of failures occur naturally; 13 VLM-based detectors compared by balanced accuracy",
+    "scale": "2,197 attempts; best detector 0.77 mean balanced accuracy; below 0.60 on contact-intensive assembly tasks",
+    "agreement": "",
+    "note": "Abstract page only was opened; release location of the benchmark was not found. Evaluation-tooling entry that tests judges, not policies.",
+    "tags": [
+      "Automated",
+      "Dataset",
+      "Assembly"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.03611"
+      }
+    ]
+  },
+  {
+    "name": "PRM-as-a-Judge 1.5",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "manipulation rollouts at the process level: a process reward model turns rollout videos into progress curves, from which failure-side progress, recovery and success-side quality metrics are computed",
+    "improves": "Binary success rates and hand-written stage scores do not show how far failed runs got or how cleanly successful runs were executed",
+    "setup": "Open-source toolkit with metric implementations and visualization; applied to rollout videos from the RoboDojo real-world and simulation leaderboards; RoboPulse++ benchmark checks the process reward model on rollout intervals",
+    "scale": "Applied to models on the RoboDojo leaderboard frozen on 3 July 2026; counts of videos and models not extracted",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML). Evaluation-tooling entry; project URL and the accuracy of the process reward model were not extracted.",
+    "tags": [
+      "Automated",
+      "Generalist / VLA",
+      "Long-horizon"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.14284"
+      }
+    ]
+  },
+  {
+    "name": "WEAVER",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "manipulation policies (base and fine-tuned pi0.5) by rolling them out in a multi-view latent world model that also predicts reward, on long-horizon tasks lasting up to 40 seconds",
+    "improves": "World models used as evaluators lack fidelity, long-horizon consistency or speed, and pretrained ones underestimate policy performance",
+    "setup": "Multi-view world model trained with flow matching to predict future latents and reward; human-labelled success on imagined rollouts compared with real success rates averaged over 20 trials per task; compared with Ctrl-World",
+    "scale": "Several real tasks including pouring and pick-and-place stacking; 20 real trials per task; exact task and policy counts not extracted",
+    "agreement": "Pearson correlation 0.87 with real-world success rate after fine-tuning; higher correlation and lower MMRV than Ctrl-World",
+    "note": "Paper opened (arXiv HTML). Policy evaluation is one of three applications in a method paper; MMRV values and the robot platform were not extracted.",
+    "tags": [
+      "World model",
+      "Long-horizon",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.13672"
+      },
+      {
+        "label": "Project",
+        "url": "https://arnavkj1995.github.io/WEAVER/"
+      }
+    ]
+  },
+  {
+    "name": "Hi-WM",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-04",
+    "evaluates": "task success of generalist policies rolled out in closed loop inside an action-conditioned world model, used to decide where human corrections are needed",
+    "improves": "Human-in-the-loop post-training and its evaluation both consume robot time, scene setup and resets",
+    "setup": "Closed-loop policy rollouts in a learned world model with human intervention, rollback and branching; world-model success rates compared with real success rates on the same tasks",
+    "scale": "3 real-world tasks covering rigid and deformable objects; 2 policy backbones",
+    "agreement": "Pearson r = 0.953 between world-model and real-world success rates",
+    "note": "Paper opened (arXiv HTML). Evaluation is a sub-experiment of a post-training method paper; number of points in the correlation and the robot platform were not extracted.",
+    "tags": [
+      "World model",
+      "Deformable",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2604.21741"
+      }
+    ]
+  },
+  {
+    "name": "Mem-World",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "CoRL 2026",
+    "evaluates": "manipulation policies in a memory-augmented multi-view world model built to stay consistent under end-effector occlusion and wrist-camera motion on long-horizon tasks",
+    "improves": "World-model evaluators forget or hallucinate scene details over long rollouts, which degrades agreement on long-horizon tasks",
+    "setup": "Multi-view action-conditioned video model with a wrist-view surfel-indexed memory; post-trained models are used for policy evaluation and compared with Ctrl-World",
+    "scale": "5 real tasks in the correlation study",
+    "agreement": "Pearson r = 0.97 (p < 0.001) across five tasks, versus r = 0.85 for Ctrl-World; absolute success rates in the world model are lower than real",
+    "note": "Paper opened (arXiv HTML); CoRL 2026 taken from the arXiv comment. Number of policies and the robot platform were not extracted.",
+    "tags": [
+      "World model",
+      "Memory",
+      "Long-horizon"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.18960"
+      }
+    ]
+  },
+  {
+    "name": "RoboSnap / DROID-Sim",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-07",
+    "evaluates": "fine-tuned pi0.5 policies in simulation scenes generated from a single RGB image of the real scene",
+    "improves": "Building simulation scenes that are both physically stable and visually faithful is slow, which limits real-to-sim evaluation to a few hand-made scenes",
+    "setup": "Layered real-to-sim: collision-aware foreground assets for interaction plus a 3D Gaussian splatting layer for background appearance; DROID-Sim companion dataset built from DROID scenes",
+    "scale": "DROID-Sim: 564 real-world DROID scenes; correlation study on real-robot tasks with real-only fine-tuned pi0.5 policies",
+    "agreement": "Pearson r = 0.887 and MMRV 0.0066 between real and simulated success rates",
+    "note": "Paper opened (arXiv HTML). Number of tasks and checkpoints in the correlation study was not extracted.",
+    "tags": [
+      "Simulator",
+      "Gaussian splatting",
+      "DROID"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.06699"
+      }
+    ]
+  },
+  {
+    "name": "Agentic Real2Sim",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-07",
+    "evaluates": "manipulation policies in physics-simulation twins that VLM agents assemble automatically from real recordings of robot-object interaction",
+    "improves": "Real-to-sim conversion needs manual tuning of perception tools, mesh cleanup and frame alignment for every scene",
+    "setup": "VLM agents recover geometry, object states and physical parameters and build a runnable simulation episode; demonstrated on DROID episodes, deformable-object scenes and humanoid motion scenes",
+    "scale": "Correlation study over 6 pick-and-place tasks",
+    "agreement": "Pearson r = 0.920 (p = 0.009) between simulated and real task success rates",
+    "note": "Paper opened (arXiv HTML). The correlation is across tasks rather than across policies; policy and trial counts were not extracted.",
+    "tags": [
+      "Simulator",
+      "DROID",
+      "Pick-and-place"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.19190"
+      }
+    ]
+  },
+  {
+    "name": "ViTacWorld",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-07",
+    "evaluates": "tactile manipulation policy checkpoints on contact-rich tasks by predicting both camera images and tactile feedback from robot actions",
+    "improves": "Vision-only world models cannot roll out policies that need tactile input, and real tactile evaluation data are costly",
+    "setup": "Action-conditioned visuo-tactile world model pretrained on public real tactile datasets and simulation, fine-tuned on real policy rollouts; imagined success compared with real success over 50 trials",
+    "scale": "12 task-checkpoint pairs; 50 trials each; tasks include cucumber peeling",
+    "agreement": "Pearson r = 0.863, Spearman 0.790, mean absolute error 12.33 percentage points; underestimates success by 9.0 points on average",
+    "note": "Paper opened (arXiv HTML). Authors state the results support relative comparison of the tested checkpoints only.",
+    "tags": [
+      "World model",
+      "Tactile",
+      "Insertion"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.22530"
+      },
+      {
+        "label": "Project",
+        "url": "https://vitacworld.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "DexTouch-WM",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "IROS 2026 workshop",
+    "evaluates": "dexterous-hand policies in a world model that jointly predicts RGB and full-hand tactile signals, trained with up to 100 hours of human touch data",
+    "improves": "Tactile world models need dense robot tactile data that is costly to collect and tied to one sensor",
+    "setup": "Piezoresistive tactile arrays with the same layout on human and robot hands; human motion retargeted to robot actions; imagined rollouts scored by five human raters and compared with real evaluation",
+    "scale": "4 tasks (place shoes, place phone, stack bowls, stand bottle); 5 hours of robot data plus 0-100 hours of human data",
+    "agreement": "Per-task Pearson 0.972, 0.939, 0.889, 0.577 for the human+robot model (MMRV 0 to 0.067); 0.400 to 0.945 for the robot-only model",
+    "note": "Paper opened (arXiv HTML). Workshop paper; correlations are computed over few policies per task.",
+    "tags": [
+      "World model",
+      "Tactile",
+      "Dexterous hand"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.20649"
+      }
+    ]
+  },
+  {
+    "name": "HapticWorld",
+    "group": "proxy",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "force-conditioned policies on contact-rich tasks inside a learned world simulator that predicts joint torque together with images",
+    "improves": "Vision-only world simulators cannot run policies that take force or torque as input",
+    "setup": "Interactive world model with real-time torque feedback to the teleoperator; in-simulator success rates compared with real success rates for policies trained on simulated and real data",
+    "scale": "3 contact-rich tasks (microwave opening, whiteboard wiping, box flipping); 20 real trials per task and configuration",
+    "agreement": "Reported qualitatively: in-simulator evaluation preserves the ordering of policies and closely tracks real success; no coefficient given",
+    "note": "Paper opened (arXiv HTML). Agreement claim is not quantified with a correlation metric.",
+    "tags": [
+      "World model",
+      "Tactile",
+      "Generalization"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.31924"
+      }
+    ]
+  },
+  {
+    "name": "REBOOT",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "precision assembly policies phase by phase (align and engage for pick, transport, align and engage for place) and their recovery from injected failures",
+    "improves": "Real-world benchmarks reduce performance to binary success and datasets contain almost only successful demonstrations, hiding where precision tasks fail",
+    "setup": "Real-robot dataset with four RGB-D viewpoints and language descriptions of phase success and failure; tasks annotated by symmetry, clearance tier and direction (install/remove pairs); half expert and half recovery demonstrations",
+    "scale": "2,160 demonstrations over 18 precision assembly tasks; baselines: action-chunked transformer, diffusion policy, pi0-FAST, scored by phase-level completion rate",
+    "agreement": "",
+    "note": "Abstract and part of the HTML opened; robot hardware and number of evaluation trials were not extracted.",
+    "tags": [
+      "Assembly",
+      "Insertion",
+      "Dataset"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.22591"
+      }
+    ]
+  },
+  {
+    "name": "Benchmarking Study of Vision-based Robotic Grasping Algorithms",
+    "group": "physical",
+    "year": 2025,
+    "venue": "arXiv 2025-03 (earlier version 2023-07)",
+    "evaluates": "four vision-based grasp planners (two learned, two analytical) under changes in lighting, background texture, camera noise and gripper",
+    "improves": "Grasping algorithms are compared under one lab's conditions, so sensitivity to setup factors and cross-lab repeatability are unknown",
+    "setup": "Existing benchmarking protocol from the literature run on real robots and in matching simulation; some experiments repeated in two laboratories with the same protocol; recordings and benchmarking software released",
+    "scale": "5,040 experiments",
+    "agreement": "",
+    "note": "Abstract pages only were opened (arXiv 2503.11163 and its earlier version 2307.11622); robot hardware and the name of the protocol were not extracted.",
+    "tags": [
+      "Grasping",
+      "Generalization",
+      "Simulator"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2503.11163"
+      }
+    ]
+  },
+  {
+    "name": "DexH2R",
+    "group": "physical",
+    "year": 2025,
+    "venue": "ICCV 2025",
+    "evaluates": "dynamic grasping by a dexterous robot hand of objects handed over by a moving human, on unseen objects and unseen people",
+    "improves": "Handover datasets cover static grasps or synthesized handover motion and lack real robot-side dexterous motion for dynamic handovers",
+    "setup": "Real-world dataset collected by teleoperating a ShadowHand during human-to-robot handovers; fixed train and test splits (unseen objects and/or unseen subjects); baselines include autoregressive and diffusion-policy methods",
+    "scale": "4,282 handover trials, 39 participants, 56 objects; test set of 803 trajectories",
+    "agreement": "",
+    "note": "Paper opened (arXiv HTML). Benchmark comparison is largely on the recorded test split; the extent and trial counts of live real-robot evaluation were not extracted.",
+    "tags": [
+      "Dexterous hand",
+      "Dynamic",
+      "Dataset",
+      "Grasping"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2506.23152"
+      },
+      {
+        "label": "Project",
+        "url": "https://dexh2r.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "RoboCup@Work / Smart Manufacturing League",
+    "group": "competition",
+    "year": 2026,
+    "venue": "RoboCup (annual)",
+    "evaluates": "autonomous mobile manipulators in industrial scenarios: grasping, transport and precise placement of small parts among shelves, platforms and conveyor belts",
+    "improves": "",
+    "setup": "On-site RoboCup Industrial league with teams' own mobile manipulators in a shared arena; from 2026 RoboCup@Work and the Logistics League merge into the Smart Manufacturing League, with 2026 as a transition year",
+    "scale": "Annual league at RoboCup (for example Salvador, July 2025); team counts and results not found",
+    "agreement": "",
+    "note": "Smart Manufacturing League page opened; the task description comes from search snippets of the RoboCup@Work site and a 2015 paper abstract. Current rulebook and results were not opened.",
+    "tags": [
+      "Mobile",
+      "Pick-and-place",
+      "Assembly"
+    ],
+    "links": [
+      {
+        "label": "Site",
+        "url": "https://sml.robocup.org/"
+      },
+      {
+        "label": "Site",
+        "url": "https://atwork.robocup.org/"
+      }
+    ]
+  }
+]

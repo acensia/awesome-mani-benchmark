@@ -25,5 +25,40 @@
   "veo-world-simulator": 1,
   "gigabrain-challenge": null,
   "unibot": null,
-  "robothon": {"from": "drj-task-board", "index": 4}
+  "robothon": {
+    "from": "drj-task-board",
+    "index": 4
+  },
+  "robocasa365": 1,
+  "robocasa-gr-1-tabletop-tasks": 3,
+  "robodojo-simulation-suite": 4,
+  "robofinals-100": 3,
+  "assemble-bench": null,
+  "libero-plus": 4,
+  "dynbench": 4,
+  "clevrskills": 1,
+  "robomme-interference": {
+    "from": "robomme",
+    "index": 0
+  },
+  "robospa": null,
+  "bigym": 4,
+  "maniskill3": 1,
+  "robomimic": 1,
+  "robocasa": 1,
+  "behavior-1k": 1,
+  "franka-kitchen": 2,
+  "aloha-simulation-tasks": 4,
+  "bench2dex": 1,
+  "metafine": 3,
+  "hribench": 3,
+  "rtc-kinetix-dynamic-benchmark": null,
+  "univtac-benchmark": 2,
+  "async-vla-inference": null,
+  "dynagrasp-32": null,
+  "robochess-challenge": 1,
+  "taco": 3,
+  "abc-sim-abc-eval": 3,
+  "food-topping-challenge": null,
+  "weaver": 1
 }

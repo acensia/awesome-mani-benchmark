@@ -1,0 +1,305 @@
+[
+  {
+    "name": "LIBERO",
+    "year": 2023,
+    "venue": "NeurIPS 2023 (Datasets and Benchmarks)",
+    "evaluates": "Language-conditioned tabletop manipulation; built for lifelong-learning knowledge transfer, used by VLA papers as a per-suite fine-tuning success-rate test (Spatial, Object, Goal, Long)",
+    "improves": "No benchmark isolated transfer of declarative (object, spatial) versus procedural (goal) knowledge in lifelong robot learning with human demonstrations for every task",
+    "setup": "robosuite on MuJoCo; Franka Panda arm; agent-view and wrist RGB cameras plus 8-D proprioception; 7-D actions (6-D end-effector delta plus gripper); tasks specified in a PDDL-style language with instructions derived from Ego4D activities",
+    "scale": "130 tasks in four suites: LIBERO-Spatial (10), LIBERO-Object (10), LIBERO-Goal (10), LIBERO-100 (LIBERO-90 short-horizon + LIBERO-Long/LIBERO-10); 50 human teleoperated demonstrations per task; common VLA protocol: 4 suites x 10 tasks x 50 episodes (LeRobot uses 10 episodes per task)",
+    "real_validation": "",
+    "vla_results": "OpenVLA (76.5), OpenVLA-OFT (97.1), pi0 (94.2, as run by OpenVLA-OFT), pi0-FAST (85.5), pi0.5 (96.85, openpi), GR00T N1.6 / N1.7, SmolVLA (87.3), X-VLA (98.1), UniVLA (95.2), VLA-Adapter (97.3), VLA-0 (94.7), MemoryVLA, FLOWER, Dita, MMaDA-VLA (98.0), CAC-VLA (98.9), Octo and Diffusion Policy as baselines",
+    "status": "Most used VLA simulation target; saturated (many four-suite averages of 97-99%; highest found 99.9 with RL post-training). No official leaderboard; third-party aggregate at https://allenai.github.io/vla-evaluation-harness/leaderboard/. Repository last pushed 2025-03.",
+    "note": "Evaluation tasks equal training tasks (no held-out split). LIBERO-PRO (arXiv 2510.03827) reports >90% scores collapsing to 0% under object, layout or instruction changes; a language-blind 0.09B probe scores 92-100% per suite and only 19.8% of SOTA claims are statistically significant (arXiv 2606.04233).",
+    "tags": ["Generalist / VLA", "Language", "Imitation learning", "Long-horizon"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2306.03310"},
+      {"label": "Project", "url": "https://libero-project.github.io/"},
+      {"label": "Code", "url": "https://github.com/Lifelong-Robot-Learning/LIBERO"},
+      {"label": "Dataset", "url": "https://huggingface.co/datasets/lerobot/libero"}
+    ]
+  },
+  {
+    "name": "CALVIN",
+    "year": 2021,
+    "venue": "IEEE RA-L 2022 (arXiv 2021-12)",
+    "evaluates": "Long-horizon language-conditioned manipulation: completing chains of five consecutive instructions from onboard sensors, including zero-shot transfer to an unseen environment (ABC→D)",
+    "improves": "Earlier vision-and-language manipulation datasets had short sequences, simple action spaces and limited language; none tested chained instructions in unseen environments",
+    "setup": "PyBullet; 7-DoF Franka Panda at a desk with drawer, sliding door, light switch, button and blocks; static and gripper RGB-D cameras, tactile images, proprioception; absolute or relative Cartesian or joint actions at 30 Hz",
+    "scale": "34 tasks in four environments (A-D) differing in textures and fixture positions; about 24 h of teleoperated play data (2.4M steps), 1% language-annotated; splits D→D, ABC→D, ABCD→D; 1,000 chains of 5 instructions",
+    "real_validation": "",
+    "vla_results": "X-VLA (4.43 ABC→D), UniVLA (3.80; the separately named Unified VLA reports 4.41), VLA-Adapter (4.42), FLOWER (4.53), Dita (3.61), MMaDA-VLA (4.78), OpenVLA and OpenVLA-OFT (third-party runs), RoboFlamingo, GR-1, DeeR, Seer, MoDE, MDT, 3D Diffuser Actor",
+    "status": "Standard reporting target; near-saturated on ABC→D (papers report up to 4.78 of 5; official leaderboard tops at 4.53). Leaderboard: http://calvin.cs.uni-freiburg.de/ (served over HTTP only). Repository last pushed 2025-09.",
+    "note": "Official leaderboard lags published results. Audit arXiv 2606.04233: a language-blind probe completes over 3.1 tasks per chain, resampling block poses within the training range drops X-VLA by 1.03, and 19.7% of SOTA claims are statistically significant.",
+    "tags": ["Long-horizon", "Language", "Generalization", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2112.03227"},
+      {"label": "Code", "url": "https://github.com/mees/calvin"},
+      {"label": "Leaderboard", "url": "http://calvin.cs.uni-freiburg.de/"}
+    ]
+  },
+  {
+    "name": "RLBench (incl. 18-task PerAct subset)",
+    "year": 2019,
+    "venue": "IEEE RA-L 2020 (arXiv 2019-09); PerAct subset: CoRL 2022",
+    "evaluates": "Vision-guided manipulation across 100 hand-designed tasks from reaching to multi-stage tasks; in practice multi-task language-conditioned keyframe policies on the 18-task, 249-variation PerAct subset",
+    "improves": "Robot learning lacked a large shared task set with motion-planned demonstrations covering reinforcement, imitation, multi-task and few-shot learning",
+    "setup": "CoppeliaSim (v4.1) via PyRep; Franka Panda; RGB, depth and segmentation from shoulder, front and wrist cameras plus proprioception; PerAct protocol uses four 128x128 RGB-D cameras and next-keyframe end-effector poses executed by a motion planner",
+    "scale": "100 tasks with unlimited motion-planned demonstrations; PerAct subset: 18 tasks, 249 variations, 10 or 100 demonstrations per task, 25 evaluation episodes per task",
+    "real_validation": "",
+    "vla_results": "BridgeVLA (88.2% on 18 tasks), HybridVLA (74% on a 10-task subset, with OpenVLA 41%, pi0 55%, CogACT 60% as baselines), ActiveVLA; mostly 3D keyframe policies: PerAct, RVT-2 (81.4%), 3D Diffuser Actor (81.3%), SAM2Act (86.8%)",
+    "status": "Standard target for 3D keyframe policies, secondary for 2D VLAs; 18-task averages now 85-94% (93.7% listed for BridgeVLA++). No official leaderboard. Repository last pushed 2025-01.",
+    "note": "RLBench itself has no real-robot component (PerAct separately ran 7 real tasks). Keyframe-plus-planner results are not comparable with closed-loop VLA results, and VLA papers use differing 10-task subsets; BridgeVLA++ figure taken from a third-party aggregate.",
+    "tags": ["Imitation learning", "Language", "Generalist / VLA"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/1909.12271"},
+      {"label": "Code", "url": "https://github.com/stepjam/RLBench"},
+      {"label": "Paper", "url": "https://arxiv.org/abs/2209.05451"}
+    ]
+  },
+  {
+    "name": "Meta-World",
+    "year": 2019,
+    "venue": "CoRL 2019",
+    "evaluates": "Multi-task and meta reinforcement learning over 50 Sawyer tabletop tasks; VLA papers use the 50 tasks as a multi-task imitation benchmark grouped into easy, medium, hard and very hard",
+    "improves": "Earlier meta-RL benchmarks used narrow task distributions that could not test generalization to new tasks",
+    "setup": "MuJoCo; simulated Sawyer arm; 39-D state observations by default (LeRobot protocol: one 480x480 corner camera plus 4-D state); 4-D actions (3-D end-effector delta plus gripper)",
+    "scale": "50 tasks; MT1, MT10, MT50 multi-task sets; ML1, ML10 (10 train, 5 test) and ML45 (45 train, 5 test) meta-learning sets; LeRobot grouping: 28 easy, 11 medium, 6 hard, 5 very hard",
+    "real_validation": "",
+    "vla_results": "SmolVLA (57.3% on 50 tasks), pi0 (47.9-50.5%, as run by SmolVLA), TinyVLA (31.6%), FabriVLA (90.0% MT50), Diffusion Policy (10.5%)",
+    "status": "Secondary VLA reporting target, supported in LeRobot; scores range from 57% to 90% under differing protocols. Maintained by the Farama Foundation (v3; Meta-World+ at NeurIPS 2025 Datasets and Benchmarks; repository pushed 2026-09). No official leaderboard.",
+    "note": "Meta-World+ (arXiv 2505.11289) documents numerous undocumented changes across versions that inhibit fair comparison. VLA use departs from the original RL protocol; the MT50 setting uses fixed object and goal positions.",
+    "tags": ["Reinforcement learning", "Imitation learning", "Generalist / VLA"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/1910.10897"},
+      {"label": "Code", "url": "https://github.com/Farama-Foundation/Metaworld"},
+      {"label": "Paper", "url": "https://arxiv.org/abs/2505.11289"},
+      {"label": "Dataset", "url": "https://huggingface.co/datasets/lerobot/metaworld_mt50"}
+    ]
+  },
+  {
+    "name": "ManiSkill2",
+    "year": 2023,
+    "venue": "ICLR 2023",
+    "evaluates": "Generalizable manipulation skills across rigid, articulated and soft-body tasks with object-level variation, for reinforcement and imitation learning from state, RGB-D or point clouds",
+    "improves": "Earlier manipulation benchmarks had limited object diversity, no soft bodies, slow visual simulation and inconsistent interfaces across task types",
+    "setup": "SAPIEN for rigid bodies plus a Warp-based GPU MPM simulator for soft bodies; Franka Panda by default, mobile-base robots for cabinet, chair and bucket tasks; state, RGB-D and point-cloud observations; joint or end-effector controllers",
+    "scale": "20 task families (e.g., PickCube, StackCube, PickSingleYCB, PickClutterYCB, PegInsertionSide, PlugCharger, OpenCabinetDoor, Pour), 2,000+ object models, 4M+ demonstration frames",
+    "real_validation": "Sim-to-real checks only: a PickCube policy scored 91.0% in simulation and 60.0% on a real ROKAE arm, and Pinch trajectories were compared in simulation and reality; no sim-real ranking correlation.",
+    "vla_results": "Dita / Diffusion Transformer Policy (65.8% on a 5-task set), GeoVLA (77.0%), CogACT and OpenVLA-OFT re-implementations (third-party aggregate)",
+    "status": "Occasional VLA target through 5-task subsets; not saturated (best 5-task average found 77%). Superseded by ManiSkill3; original code kept at tag v0.5.3. No leaderboard.",
+    "note": "No fixed VLA protocol: a third-party aggregate counts 14+ task-subset combinations, with the most common 5-task set covering about 24% of entries. GeoVLA figure taken from that aggregate and a search snippet.",
+    "tags": ["Reinforcement learning", "Imitation learning", "Deformable", "Generalization"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2302.04659"},
+      {"label": "Code", "url": "https://github.com/mani-skill/ManiSkill"}
+    ]
+  },
+  {
+    "name": "ManiSkill3",
+    "year": 2024,
+    "venue": "RSS 2025 (arXiv 2024-10)",
+    "evaluates": "GPU-parallel simulation and rendering for manipulation across 12 task domains (tabletop, mobile manipulation, humanoid, dexterous, drawing/cleaning), used for RL, imitation and fine-tuned VLA evaluation",
+    "improves": "ManiSkill2 and other simulators were too slow for large-scale visual RL and lacked heterogeneous parallel scenes and real2sim evaluation environments",
+    "setup": "SAPIEN with GPU-parallel physics and rendering (30,000+ FPS with rendering reported); single-arm, mobile, humanoid and dexterous robots; state, RGB-D and segmentation observations; joint or end-effector controllers",
+    "scale": "12 task domains; millions of demonstration frames; VLA use so far: 5 tabletop tasks (PegInsertionSide, PickCube, StackCube, PlugCharger, PushCube) with 5,000 motion-planned trajectories and 250 trials per method",
+    "real_validation": "The task suites report no sim-real correlation; the platform also hosts real2sim digital-twin environments (SIMPLER ports) and sim2real examples, which are catalogued separately.",
+    "vla_results": "RDT-1B (53.6% mean), Diffusion Policy (30.2%), OpenVLA (4.8%), Octo (0.0%) on the 5-task set in the RDT repository",
+    "status": "Actively maintained (repository pushed 2026-08); occasional VLA target through small tabletop subsets; not saturated. No leaderboard.",
+    "note": "Released in 2024, so outside the 2023-or-earlier cut; included because it replaces ManiSkill2 and hosts the RDT benchmark. The RDT evaluation code uses ManiSkill3 (-v1) environments although its README only says ManiSkill.",
+    "tags": ["Reinforcement learning", "Imitation learning", "Generalist / VLA"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2410.00425"},
+      {"label": "Project", "url": "https://www.maniskill.ai/"},
+      {"label": "Code", "url": "https://github.com/mani-skill/ManiSkill"}
+    ]
+  },
+  {
+    "name": "robomimic (robosuite tasks)",
+    "year": 2021,
+    "venue": "CoRL 2021 (Oral); robosuite framework arXiv 2020-09",
+    "evaluates": "Offline imitation and offline RL from human demonstrations of varying quality on multi-stage single-arm and two-arm tasks (Lift, Can, Square, Transport, Tool Hang)",
+    "improves": "No standardized human-demonstration datasets existed to study how data quality, observation modality and hyperparameters affect offline policy learning",
+    "setup": "robosuite on MuJoCo; Franka Panda arms; low-dimensional (proprioception plus object poses) or image observations; continuous end-effector actions",
+    "scale": "5 simulated tasks; 200 proficient-human demonstrations per task (PH), 300 multi-human demonstrations from 6 operators (MH), machine-generated sets for Lift and Can; 50 rollouts per evaluation",
+    "real_validation": "Three tasks (Lift, Can, Tool Hang) were also trained and evaluated on a real Franka arm with 200 demonstrations each; no sim-real correlation is reported.",
+    "vla_results": "",
+    "status": "Standard for single-task visuomotor policies (Diffusion Policy uses it); not a reporting target in the VLA papers checked. Both repositories maintained (pushed 2026-07 and 2026-08). No leaderboard.",
+    "note": "robosuite (arXiv 2009.12293, v1.5 described in a 2025 revision) is the framework under LIBERO, RoboCasa and MimicGen. No VLA result on the robomimic tasks was found in this session.",
+    "tags": ["Imitation learning", "Reinforcement learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2108.03298"},
+      {"label": "Paper", "url": "https://arxiv.org/abs/2009.12293"},
+      {"label": "Project", "url": "https://robomimic.github.io/"},
+      {"label": "Code", "url": "https://github.com/ARISE-Initiative/robomimic"},
+      {"label": "Code", "url": "https://github.com/ARISE-Initiative/robosuite"}
+    ]
+  },
+  {
+    "name": "RoboCasa",
+    "year": 2024,
+    "venue": "RSS 2024",
+    "evaluates": "Everyday kitchen manipulation by a mobile manipulator: atomic skills (pick-and-place, doors, drawers, knobs, levers, buttons, navigation) and LLM-guided composite tasks across varied kitchens",
+    "improves": "Earlier simulation suites lacked scene and object diversity and large demonstration sets for training and testing generalist policies",
+    "setup": "robosuite on MuJoCo; Franka Panda on a mobile base by default, other embodiments supported; three RGB cameras (eye-in-hand, left, right) plus proprioception; continuous arm, gripper and base actions",
+    "scale": "100 tasks (25 atomic, 75 composite); 120 kitchen scenes (10 floor plans x 12 styles); 2,509 objects in 153 categories; 50 human demonstrations per atomic task; 100K+ MimicGen trajectories (3,000 per task for 24 atomic tasks)",
+    "real_validation": "Sim-and-real co-training only: on a real Franka in a kitchen (3 pick-and-place tasks) success rose from 13.6% to 24.4% with simulation data; no sim-real correlation reported.",
+    "vla_results": "GR00T N1 (32.1% at 100 demos), GR00T N1.5 (47.5% at 30 demos), GR00T N1.6 (66.2%), all on 24 atomic tasks; pi0, pi0.5 and SmolVLA via third-party runs; BC-Transformer and Diffusion Policy baselines",
+    "status": "Standard target for GR00T-style models (24 atomic tasks, Panda); not saturated (highest 24-task averages found about 80%). Superseded by RoboCasa365, which holds the official leaderboard; repository pushed 2026-09.",
+    "note": "Released in 2024; included because VLA papers treat the 24-task protocol as established. Demo counts (30/100/300, human or generated) differ across papers; an audit found 53.3% of reported gains statistically significant (arXiv 2606.04233). Top scores from a third-party aggregate.",
+    "tags": ["Generalist / VLA", "Mobile", "Imitation learning", "Generalization"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2406.02523"},
+      {"label": "Project", "url": "https://robocasa.ai/"},
+      {"label": "Code", "url": "https://github.com/robocasa/robocasa"}
+    ]
+  },
+  {
+    "name": "BEHAVIOR-1K",
+    "year": 2022,
+    "venue": "CoRL 2022 (extended version arXiv 2024-03)",
+    "evaluates": "Long-horizon household activities for mobile manipulators, defined by predicate-logic goal conditions over rigid, deformable and fluid objects",
+    "improves": "Earlier embodied benchmarks chose tasks by designer convenience and lacked realistic physics; activities here come from a survey of what people want robots to do",
+    "setup": "OmniGibson on NVIDIA Omniverse / PhysX 5; mobile manipulators (Tiago in the paper's real study; Galaxea R1 Pro for the released GR00T N1.6 checkpoint); RGB-D, proprioception and LiDAR; low-level control or action primitives",
+    "scale": "1,000 activities defined in BDDL, 50 scenes, 9,000+ objects in 1,900+ categories; survey of 1,461 participants",
+    "real_validation": "Preliminary sim-to-real study: a CollectTrash policy reached about 40% in simulation versus about 22% (oracle perception) and 0% (trained vision policy) on a real Tiago in a mock apartment.",
+    "vla_results": "GR00T N1.6 (released BEHAVIOR-1K checkpoint; no score stated in its README)",
+    "status": "Active through the 2025-2026 BEHAVIOR Challenge (catalogued separately); far from saturated; repository pushed 2026-09.",
+    "note": "The paper's baselines are RL with action primitives (visuomotor RL scored 0), not VLAs; VLA results come through the challenge task subset, which belongs to the newer slice.",
+    "tags": ["Long-horizon", "Mobile", "Deformable", "Generalist / VLA"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2403.09227"},
+      {"label": "Project", "url": "https://behavior.stanford.edu/"},
+      {"label": "Code", "url": "https://github.com/StanfordVL/BEHAVIOR-1K"}
+    ]
+  },
+  {
+    "name": "Franka Kitchen (Relay Policy Learning / D4RL kitchen)",
+    "year": 2019,
+    "venue": "CoRL 2019 (environment); D4RL arXiv 2020-04 (datasets)",
+    "evaluates": "Multi-stage long-horizon manipulation: reaching a goal configuration of several kitchen fixtures (microwave, kettle, burners, light switch, cabinets) in one episode from unstructured demonstrations",
+    "improves": "Imitation and reinforcement learning alone failed on long-horizon multi-stage tasks; the environment was built to test combining them from unstructured play data",
+    "setup": "MuJoCo; 9-DoF Franka (arm plus gripper joints) with joint-velocity actions; 59-D state observations (image variants used by later work); sparse sub-task completion reward; 280-step episodes",
+    "scale": "One kitchen scene; D4RL datasets from human demonstrations: complete (3,680 transitions), partial (136,950) and mixed (136,950)",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Standard for behaviour-cloning and offline-RL policy papers (Diffusion Policy uses it); not a reporting target in the VLA papers checked. Maintained in Gymnasium-Robotics (pushed 2026-09).",
+    "note": "No language conditioning and a single fixed scene. No VLA result on it was verified in this session.",
+    "tags": ["Long-horizon", "Imitation learning", "Reinforcement learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/1910.11956"},
+      {"label": "Paper", "url": "https://arxiv.org/abs/2004.07219"},
+      {"label": "Project", "url": "https://robotics.farama.org/envs/franka_kitchen/franka_kitchen/"}
+    ]
+  },
+  {
+    "name": "VIMA-Bench",
+    "year": 2022,
+    "venue": "ICML 2023 (arXiv 2022-10)",
+    "evaluates": "Tabletop manipulation specified by multimodal prompts (text interleaved with images or video frames), with four levels of zero-shot generalization from placement to novel tasks",
+    "improves": "Task specifications (language, goal image, video demonstration) were handled by separate models and benchmarks; no suite tested them under one prompt format with graded generalization",
+    "setup": "Ravens simulator on PyBullet; frontal and top-down RGB with object segmentation and boxes; pick-and-place and wipe primitives parameterized by end-effector poses",
+    "scale": "17 task templates in 6 categories, instantiated into thousands of procedurally generated tasks; 650K scripted expert trajectories (50K per task); 4 generalization levels (L1-L4)",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Used mainly by multimodal-prompt policy papers (VIMA lineage); not a reporting target in the VLA papers checked. Repository last pushed 2023-09.",
+    "note": "High-level primitive actions rather than continuous control. No VLA result on it was verified in this session.",
+    "tags": ["Generalization", "Language", "Reasoning", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2210.03094"},
+      {"label": "Project", "url": "https://vimalabs.github.io/"},
+      {"label": "Code", "url": "https://github.com/vimalabs/VIMABench"}
+    ]
+  },
+  {
+    "name": "ARNOLD",
+    "year": 2023,
+    "venue": "ICCV 2023",
+    "evaluates": "Language-grounded manipulation toward continuous goal states (e.g., open a drawer halfway, pour half the water) in realistic 3D scenes, with splits for novel objects, scenes and goal states",
+    "improves": "Earlier language-conditioned benchmarks used discrete binary goals and simple scenes, so they could not test grounding of continuous object states",
+    "setup": "NVIDIA Isaac Sim with PhysX 5; 7-DoF Franka Panda with parallel gripper; five 128x128 RGB-D cameras; two-phase keyframe actions (grasp, then manipulate to the goal state)",
+    "scale": "8 tasks (PickupObject, ReorientObject, Open/CloseDrawer, Open/CloseCabinet, PourWater, TransferWater), 20 scenes, 40 objects, 10k demonstrations",
+    "real_validation": "A preliminary sim-to-real transfer on a real Franka (drawer and pickup tasks) is described, with the authors noting a remaining sim-to-real gap; no correlation reported.",
+    "vla_results": "",
+    "status": "Niche; baselines are PerAct-style models (about 55% on the test split, about 5% on novel goal states). Not a reporting target in the VLA papers checked. Repository last pushed 2025-03.",
+    "note": "No VLA result on it was verified in this session; real-robot numbers were not extracted.",
+    "tags": ["Language", "Generalization", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2304.04321"},
+      {"label": "Project", "url": "https://arnold-benchmark.github.io/"},
+      {"label": "Code", "url": "https://github.com/arnold-benchmark/arnold"}
+    ]
+  },
+  {
+    "name": "Language-Table (simulation)",
+    "year": 2022,
+    "venue": "IEEE RA-L 2023 (arXiv 2022-10, Interactive Language)",
+    "evaluates": "Open-vocabulary language following for planar block pushing, with a simulated multi-task benchmark alongside the real-robot dataset",
+    "improves": "Earlier language-conditioned robot datasets were an order of magnitude smaller and did not support real-time language guidance",
+    "setup": "PyBullet board with 8 blocks, modelled on the real setup (xArm6 with a cylindrical end-effector); RGB image observations; 2-D Cartesian delta actions",
+    "scale": "5 simulated task families spanning 696 task conditions (block-to-block, block-to-block-relative, block-to-absolute-location, block-to-relative-location, separate); 181,020 simulated and 442,226 real episodes",
+    "real_validation": "The same setup exists as a real robot and the paper's headline result (93.5% over 87,588 instructions) is real-robot; no sim-real correlation is reported.",
+    "vla_results": "RT-2 (90 ± 10), LAPA, GR00T N1 (52.8%) and GR00T N1.5 (93.2%)",
+    "status": "Used by Google- and NVIDIA-lineage models and latent-action work; not a common target elsewhere. No leaderboard. Repository pushed 2026-09.",
+    "note": "Planar pushing only (2-D actions). The GR00T figures come from the N1.5 project page, which does not state the protocol.",
+    "tags": ["Language", "Imitation learning", "Generalist / VLA"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2210.06407"},
+      {"label": "Code", "url": "https://github.com/google-research/language-table"}
+    ]
+  },
+  {
+    "name": "ALOHA simulation tasks (ACT; gym-aloha)",
+    "year": 2023,
+    "venue": "RSS 2023",
+    "evaluates": "Fine-grained bimanual manipulation with joint-position control on two tasks: handing a cube between arms and inserting a peg into a socket in mid-air",
+    "improves": "Introduced with ACT as simulated counterparts of the real ALOHA tasks, to compare imitation methods on precise bimanual control with scripted and human demonstrations",
+    "setup": "MuJoCo; bimanual ALOHA with two ViperX arms; camera images plus joint positions; 14-D absolute joint-position actions (6 joints and a gripper per arm)",
+    "scale": "2 tasks (Transfer Cube, Bimanual Insertion); 50 demonstrations per task from a scripted policy or a human; ACT evaluated with 3 seeds x 50 rollouts",
+    "real_validation": "The ACT paper runs six separate real ALOHA tasks (80-90% success); the simulated tasks are not compared with real results.",
+    "vla_results": "FLOWER (54.0% average); pi0 via the openpi ALOHA-sim example (no score published there)",
+    "status": "Small sanity-check benchmark supported by LeRobot and openpi; ACT reached 97% and 90% with scripted data, 82% and 60% with human data. No leaderboard. gym-aloha pushed 2026-09.",
+    "note": "Two tasks in one fixed scene and no language variation; rarely reported in VLA main tables.",
+    "tags": ["Bimanual", "Imitation learning"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2304.13705"},
+      {"label": "Code", "url": "https://github.com/huggingface/gym-aloha"}
+    ]
+  },
+  {
+    "name": "Push-T",
+    "year": 2023,
+    "venue": "RSS 2023 (Diffusion Policy; adapted from IBC, 2021)",
+    "evaluates": "Contact-rich planar pushing: moving a T-shaped block onto a fixed target pose with a circular end-effector, scored by target-area coverage",
+    "improves": "Used in Diffusion Policy to test precise control under contact-rich dynamics and multimodal action distributions, which earlier behaviour-cloning benchmarks covered poorly",
+    "setup": "2-D pymunk physics with pygame rendering; state (agent and block pose), keypoint or 96x96 image observations; 2-D target-position actions",
+    "scale": "1 task; 200 human demonstrations in Diffusion Policy; solved when the block covers at least 95% of the goal zone",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Single-task sanity check for imitation policies (Diffusion Policy 0.95 from state, 0.91 from images); supported by LeRobot; not a VLA reporting target. gym-pusht pushed 2026-09.",
+    "note": "No language and no 3-D manipulation. Whether Diffusion Policy's real-robot experiments include a Push-T counterpart was not checked in this session, so real validation is left empty.",
+    "tags": ["Imitation learning", "Dynamic"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2303.04137"},
+      {"label": "Code", "url": "https://github.com/huggingface/gym-pusht"}
+    ]
+  },
+  {
+    "name": "MimicGen",
+    "year": 2023,
+    "venue": "CoRL 2023",
+    "evaluates": "Imitation learning from automatically generated demonstrations across tasks with varied initial-state distributions, objects and robot arms, including multi-part assembly and coffee preparation",
+    "improves": "Collecting enough human demonstrations for broad initial-state coverage was costly; the system expands a few human demonstrations into large datasets",
+    "setup": "robosuite on MuJoCo and Factory tasks in Isaac Gym; Panda, Sawyer, IIWA and UR5e arms; low-dimensional or image observations; end-effector actions",
+    "scale": "18 tasks; over 50,000 generated demonstrations from about 200 human demonstrations",
+    "real_validation": "The data-generation system was also run on a real robot (Stack and Coffee tasks); no sim-real correlation is reported.",
+    "vla_results": "",
+    "status": "Data-generation system whose task set serves as a benchmark for imitation policies; underlies RoboCasa and DexMimicGen data. Not a reporting target in the VLA papers checked.",
+    "note": "Only the abstract and project page were opened; real-robot numbers and VLA usage were not verified.",
+    "tags": ["Imitation learning", "Assembly", "Generalization"],
+    "links": [
+      {"label": "Paper", "url": "https://arxiv.org/abs/2310.17596"},
+      {"label": "Project", "url": "https://mimicgen.github.io/"}
+    ]
+  }
+]

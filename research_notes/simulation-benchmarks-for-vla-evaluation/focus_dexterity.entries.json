@@ -1,0 +1,642 @@
+[
+  {
+    "name": "WireCraft",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "Industrial deformable-linear-object manipulation: connector insertion at a stated 3 mm plug–socket clearance, clip routing and channel seating, with reach success and insertion success reported separately",
+    "improves": "Earlier cable and wire benchmarks did not align simulation tasks, real-robot data and one evaluation protocol across RL, imitation and VLA policies",
+    "setup": "Isaac Lab 2.2.1 / Isaac Sim 4.5; four connector geometries (cylinder, cuboid, Ethernet, DisplayPort), 1–3 clip routing, straight and curved channel seating; two DLO physics models; shared policy interface",
+    "scale": "3 task families; 1,000 scripted trajectories for imitation / VLA training; about 150,000 scripted transitions for state-based RL",
+    "real_validation": "UR5 Ethernet insertion with ACT trained on mixed real and simulated data reached 4/10 insertions; no sim–real correlation statistic is reported.",
+    "vla_results": "Ethernet insertion: pi0.5 6.2% reach / 0.0% insertion; a Diffusion Transformer VLA policy 3.13% insertion; state PPO 95.86% insertion for comparison",
+    "status": "New (June 2026); authors state benchmark, data and tools will be released on acceptance; no leaderboard",
+    "agreement": "",
+    "note": "Numbers read from the arXiv HTML v1. ACT and Diffusion Policy values are given only in a figure, so they are not quoted here.",
+    "tags": [
+      "Cable",
+      "Insertion",
+      "Generalist / VLA",
+      "Deformable"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.18097"
+      }
+    ]
+  },
+  {
+    "name": "Bench2Dex",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "Bimanual manipulation with multi-fingered hands across 12 arm–hand embodiments: tool use, articulated objects, jigsaw assembly, piano keys, pouring and box loading, with a shared tactile image for finger contact",
+    "improves": "Dexterous-hand benchmarks were tied to one hand and had no common tactile observation format, so policies could not be compared across hand morphologies",
+    "setup": "NVIDIA Isaac Lab / Isaac Sim; 12 dexterous hands; standardized tactile interface that ray-casts contact distance into 8-bit images; seven perturbation factors split into invariance and equivariance groups",
+    "scale": "26 bimanual tasks; about 1,300 human-teleoperated demonstrations (Manus glove + ARKit); 20,800 evaluation rollouts, 50 per task–embodiment–channel",
+    "real_validation": "",
+    "vla_results": "Matched scenes, 1,300 rollouts each: GR00T N1.5 48.5%, ACT 29.5%, pi0.5 27.3%, Diffusion Policy 12.9%. Combined perturbations: GR00T N1.5 19.8%, pi0.5 19.7%, ACT 13.0%, Diffusion Policy 3.8%",
+    "status": "New technical report (September 2026); code and data on GitHub, Hugging Face and ModelScope; no public leaderboard found",
+    "agreement": "",
+    "note": "Simulation only; hand and tactile models are not calibrated against hardware. Most tasks are loading, sorting or pouring, so the precision demand is finger coordination rather than tight clearance. The project page quotes 25.5% for pi0.5 under shift; the paper table gives 19.7%.",
+    "tags": [
+      "Dexterous hand",
+      "Bimanual",
+      "Tactile",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.15726"
+      },
+      {
+        "label": "Project",
+        "url": "https://bench2dex.github.io/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/Bench2Dex/Bench2Dex"
+      }
+    ]
+  },
+  {
+    "name": "SurgVLA-Bench",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "VLA control of laparoscopic instruments under an endoscopic view: needle and gauze picking, electrocoagulation, vessel clipping and hemostasis, where small positioning errors on thin objects fail the task",
+    "improves": "VLA models had no surgical evaluation with a task hierarchy from atomic actions to full procedures",
+    "setup": "SurRoL (PyBullet) with added organ models; 8 tasks in three levels (atomic, conditional with distractors, composite); step limits of 100–150",
+    "scale": "8 tasks; over 800 simulated trajectories (about 40,000 frames) for LoRA fine-tuning; 50 trials per model per task",
+    "real_validation": "",
+    "vla_results": "OpenVLA 36–76% on Level 1 and 0% on Level 3; pi0 0–76% on Level 1; pi0.5 0–78% on Level 1 and 0–12% on Level 3; SmolVLA 0–8% on all levels",
+    "status": "New (June 2026); code and data on GitHub; no leaderboard",
+    "agreement": "",
+    "note": "Ranges are per-task spans read from Table 2 via the arXiv HTML; success is binary and no positional-error metric is reported. Simulation only.",
+    "tags": [
+      "Generalist / VLA",
+      "Grasping",
+      "Deformable"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.29247"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/VCL-HNU/SurgVLA"
+      }
+    ]
+  },
+  {
+    "name": "UniVTAC Benchmark",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-02",
+    "evaluates": "Visuo-tactile gripper manipulation on eight tasks, four of them contact-rich insertions or extractions (hole, HDMI, tube, key) where alignment must be corrected from fingertip contact",
+    "improves": "Tactile policy learning lacked a simulator that both generates large tactile datasets and gives a common benchmark for visuo-tactile policies",
+    "setup": "TacEx on NVIDIA Isaac Sim with IPC soft-body contact; simulated GelSight Mini, ViTai GF225 and Xense WS sensors; automated data generation",
+    "scale": "8 tasks; 50 demonstrations per task; 100 evaluation rollouts per task",
+    "real_validation": "Three real tasks (Insert Tube, Insert USB, Bottle Upright) on a Tianji Marvin arm: 43.3% vision-only versus 68.3% with the simulation-pretrained tactile encoder; no sim–real correlation statistic.",
+    "vla_results": "Not in the benchmark paper. The later N0-VTLA paper reports 83.1% mean on the eight tasks for N0-VTLA and 67.1% for the strongest baseline, InternVLA-A1",
+    "status": "Released February 2026 with project page; paper baselines are ACT, VITaL and ACT + UniVTAC encoder (30.9%, 40.5%, 48.0% average); reused by N0-VTLA and NeoSim (2026)",
+    "agreement": "",
+    "note": "No stated insertion clearance was confirmed. VLA numbers come from a different paper (arXiv 2607.23782), not from the benchmark authors.",
+    "tags": [
+      "Tactile",
+      "Insertion",
+      "Imitation learning",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2602.10093"
+      },
+      {
+        "label": "Project",
+        "url": "https://univtac.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "DexHoldem",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "Real ShadowHand-on-UR-arm handling of thin playing cards (about 0.3 mm) and chips over 14 primitives: pickup, placement, revealing, chip moves; scores task completion and scene-preserving success",
+    "improves": "Dexterous-hand benchmarks and embodied-agent benchmarks were separate; none required perception, game-state tracking and multi-fingered control together in a real scene that each action changes",
+    "setup": "ShadowHand mounted on a UR arm at a physical Texas Hold'em table; 14 manipulation primitives; separate policy, perception (VLM) and closed-loop system benchmarks",
+    "scale": "14 primitives; 1,470 teleoperated demonstrations (105 per primitive); 80 trials per policy, 720 policy trials in total; 33 closed-loop hands",
+    "real_validation": "",
+    "vla_results": "Task completion / scene-preserving success: pi0.5 61.2% / 47.5%, pi0 57.5% / 47.5%, RDT 46.2% / 30.0%, Diffusion Policy (DINO) 36.2% / 26.2%; ACT, BAKU and other DP variants 1.2–20.0%. Full-hand completion 12.1%",
+    "status": "Preprint (v3, October 2026); dataset on Hugging Face and code on GitHub; single-lab hardware, no leaderboard",
+    "agreement": "",
+    "note": "Numbers from arXiv HTML v3. Requires a ShadowHand, so reproduction by other labs is costly; arXiv listing title of an earlier version differs ('Playing Texas Hold'em with Dexterous Embodied System').",
+    "tags": [
+      "Dexterous hand",
+      "Generalist / VLA",
+      "Dataset",
+      "Long-horizon"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2605.18727"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/DexHoldem/"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/Winniechen2002/TexasPokerRobot"
+      }
+    ]
+  },
+  {
+    "name": "MetaFine",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "Fine-grained manipulation split into understanding, perception and behaviour; reports stage-wise success for 10 atomic skills including Align and Insert under position and angle tolerances, plus trajectory smoothness",
+    "improves": "Binary task success hides which sub-skill fails; the authors report up to 70% capability inflation when only binary success is used",
+    "setup": "Simulation tasks rebuilt from RoboTwin, CALVIN and LIBERO into one skill-graph format; 431 objects with 1,078 labelled parts; perturbation levels for viewpoint and lighting",
+    "scale": "10 atomic skills; 45+ task instances; 100 demonstrations per task; 7 policies",
+    "real_validation": "20–25 paired real rollouts per policy are combined with simulation through prediction-powered inference, cutting estimate variance (11.5% to 2.6% for pi0.5); no correlation coefficient is reported.",
+    "vla_results": "ACT, DP3, Octo, OpenVLA, OpenVLA-OFT, pi0, pi0.5 evaluated. Peg-in-hole Align stage: Octo 4%, OpenVLA-OFT 19%, pi0.5 0% (32% after a visual-encoder change). Part-substitution instructions drop all five VLAs to 0%",
+    "status": "New (May 2026); code on GitHub, data on Hugging Face; no leaderboard",
+    "agreement": "",
+    "note": "Per-skill numbers were read through an automated summary of the arXiv HTML and should be checked against the paper tables before quoting.",
+    "tags": [
+      "Generalist / VLA",
+      "Insertion",
+      "Robustness"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2605.19986"
+      },
+      {
+        "label": "Project",
+        "url": "https://metafine.github.io/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/Hiangx-robotics/MetaFine"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/hiangx/MetaFine"
+      }
+    ]
+  },
+  {
+    "name": "WorkBenchMark",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "End-to-end assembly of LEGO Duplo structures from scattered bricks; interlocking studs require aligned placement and full press-down, scored by assembly success and per-connection execution accuracy",
+    "improves": "Assembly benchmarks lacked a graded complexity scale tied to RoboCup Smart Manufacturing League tasks that both planning pipelines and end-to-end VLAs can be run on",
+    "setup": "MuJoCo via LIBERO for simulation; UR5 with wrist RGB-D camera for the real subset; four tiers from two-brick stacks to interlocking 3–12 brick structures",
+    "scale": "400 simulation tasks (100 per tier); real subset of 10 tasks per tier",
+    "real_validation": "The planning pipeline was run on a UR5 for Tiers 1–3 (90%, 90%, 70% success); the VLA baseline was not run on the real robot and no sim–real correlation is reported.",
+    "vla_results": "Fine-tuned pi0.5 success by tier 1–4: 82%, 63%, 23%, 2%; zero-shot Gemini 2.5 Flash + pi0.5: 70%, 59%, 19%, 5%; planning pipeline: 94%, 87%, 67%, 62%",
+    "status": "New (June 2026); project page; tied to the RoboCup Smart Manufacturing League; no leaderboard",
+    "agreement": "",
+    "note": "Duplo bricks are mechanically forgiving (the authors say so), so the precision demand is alignment to the stud grid rather than tight clearance.",
+    "tags": [
+      "Assembly",
+      "Long-horizon",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.19358"
+      },
+      {
+        "label": "Project",
+        "url": "https://workbenchmark.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "ForceBench",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "Under submission (project page, 2026-09)",
+    "evaluates": "How a six-axis wrist force signal should be fed to a VLA, on eight tasks covering physical-property inference, resistance-dependent interaction (faucets, stove knobs, drawer) and contact-rich assembly (nut threading)",
+    "improves": "Force-aware VLA papers each used their own tasks and fusion design, so force-integration strategies had not been compared under one protocol",
+    "setup": "Simulation at 60 Hz physics / 15 Hz control with a pi0.5 backbone and six force-fusion variants; separate real evaluation on a Franka Research 3 with KWR75B force/torque sensor and Robotiq gripper",
+    "scale": "8 simulation tasks; 1,600 demonstrations (200 per task); 16,000 simulation episodes; 800 real trials on 5 real tasks (20 per task–system pair)",
+    "real_validation": "Five separately trained real tasks (Weight Sort, Plate Retrieve, Stamp Press, Plug Insert, Block Insert): pi0.5 without force 40%, best force variants 63%; this is not sim-to-real transfer and no correlation is reported.",
+    "vla_results": "Simulation average over 8 tasks: pi0.5 without force 23.25%, pi0.5 with prompt-fusion force 35.31%; pi0, ForceVLA and ForceFlow included as reference models",
+    "status": "Project page only as of 2026-10; paper, code and data links not yet active",
+    "agreement": "",
+    "note": "Verified from the project page only; no arXiv paper was found, and the simulator name is not stated on the page. Treat all numbers as preliminary.",
+    "tags": [
+      "Generalist / VLA",
+      "Assembly",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Project",
+        "url": "https://forcebench-platform.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "Tabero",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "Force-controlled grasping in LIBERO tasks replayed with simulated GelSight sensors; besides success it reports average and peak grip force and applied force under 'gentle' versus 'firm' instructions",
+    "improves": "VLA benchmarks score only task success and carry no tactile signal, so they cannot tell whether a policy handled an object with appropriate force",
+    "setup": "Isaac Lab 2.2+ / Isaac Sim 5.0+ with Taxim / FOTS tactile simulation; LIBERO trajectories regenerated with tactile images, marker fields and force; hybrid force–position control interface",
+    "scale": "LIBERO-derived task set; the reported evaluation uses 9 tasks and 450 trials; three datasets with different force levels",
+    "real_validation": "",
+    "vla_results": "Tabero-VTLA (pi0 with LoRA and tactile inputs): 86% success at 32.4 N average grip force under firm instructions; 52% success at 3.7 N under gentle instructions",
+    "status": "New (May 2026); code and weights released; no leaderboard; no third-party results found",
+    "agreement": "",
+    "note": "Measures force precision rather than positional precision. The total number of tasks in the full benchmark was not confirmed; only the authors' own model is reported.",
+    "tags": [
+      "Tactile",
+      "Generalist / VLA",
+      "Grasping"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2605.27886"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/NathanWu7/Tabero"
+      }
+    ]
+  },
+  {
+    "name": "ManiFeel",
+    "group": "simulation",
+    "year": 2025,
+    "venue": "arXiv 2025-05",
+    "evaluates": "Visuotactile imitation policies on insertion (peg, USB, power plug, gear), screwing (nut–bolt, bulb) and exploration tasks, comparing vision-only, tactile-RGB and tactile force-field inputs",
+    "improves": "No reproducible simulation benchmark existed for supervised visuotactile policy learning across sensing modalities and policy architectures",
+    "setup": "IsaacGym with TacSL tactile simulation; Franka Panda with GelSight R1.5 sensor; Diffusion Policy, Equivariant Diffusion Policy and Flow Matching baselines",
+    "scale": "99 simulation setups and 44 real setups; 20–100 teleoperated demonstrations per task; about 1,500 simulation rollouts per setup; 15 real rollouts per configuration",
+    "real_validation": "Gear assembly, bulb installation and ball sorting were repeated on a real Franka; the authors state the simulation trends were reproduced, without a correlation statistic.",
+    "vla_results": "",
+    "status": "Code, data and checkpoints released; the project page lists a Best Paper Award at the Sense of Space workshop, CVPR 2026; no VLA baseline",
+    "agreement": "",
+    "note": "No stated clearances were found. Task counts differ between the project page (11 tasks listed) and the paper summary (99 setups); the main publication venue was not confirmed.",
+    "tags": [
+      "Tactile",
+      "Insertion",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2505.18472"
+      },
+      {
+        "label": "Project",
+        "url": "https://zhengtongxu.github.io/manifeel-website/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/purdue-mars/manifeel"
+      }
+    ]
+  },
+  {
+    "name": "PRISM",
+    "group": "physical",
+    "year": 2026,
+    "venue": "IROS 2026 (arXiv 2026-08)",
+    "evaluates": "Real industrial contact-rich skills with force/torque and visuotactile sensing: connector plug/unplug, bearing installation, NIST task-board operations, caliper packaging, conveyor sorting; baseline protocol reports success on three tasks",
+    "improves": "Large robot datasets focus on short, low-contact pick-and-place and lack synchronized force, tactile and multi-view data for tight-tolerance industrial procedures",
+    "setup": "Franka Panda, bimanual Realman RM75-6F and LEJU humanoid; parallel, visuotactile and dexterous-hand end-effectors; multi-view RGB-D, 6-axis F/T at 100 Hz, visuotactile images; baseline evaluation on the Realman platform",
+    "scale": "25 tasks; 5,000+ teleoperated trajectories (about 45 hours) with paired human demonstrations; baselines use 200 demonstrations per task and 20 trials per configuration",
+    "real_validation": "",
+    "vla_results": "With pretraining, 200 demos: plug/unplug ACT 10%, Diffusion Policy 10%, pi0 25%; caliper packaging 55%, 55%, 85%; conveyor sorting 30%, 20%, 85%",
+    "status": "Dataset and project page released; primarily a dataset with a three-task baseline protocol; no leaderboard",
+    "agreement": "",
+    "note": "IROS 2026 venue is taken from the GitHub repository title, not the arXiv page. Tolerances are described as tight but not given in millimetres.",
+    "tags": [
+      "Dataset",
+      "Insertion",
+      "Tactile",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.17962"
+      },
+      {
+        "label": "Project",
+        "url": "https://tengbo-yu.github.io/PRISM/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/Tengbo-Yu/PRISM"
+      }
+    ]
+  },
+  {
+    "name": "NeoSim",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-07 (introduced in the N0-VTLA / N0-Foundation reports)",
+    "evaluates": "Visuo-tactile gripper manipulation on 12 tasks (4 single-arm, 8 dual-arm): charger and USB plugging, screw insertion, gear placement, chip grasping, pouring, handover, stacking and unstacking",
+    "improves": "Tactile VLA models had no simulation suite whose contact force fields match the format of the real sensor used for training, so sim and real tactile results were not comparable",
+    "setup": "Built in the UniVTAC framework (Isaac Sim); renders per-contact three-axis force fields in the NeoForce sensor format; fixed language prompt per task",
+    "scale": "12 tasks; 100 demonstrations per task for training",
+    "real_validation": "A companion real suite, NeoReal (9–10 contact-rich tasks), reports pi0.5 29.4% versus N0-VTLA 47.2%; no sim–real correlation is reported.",
+    "vla_results": "Mean success: N0-VTLA 50.8%, pi0.5 45.8%, Xiaomi-Robotics-0 23.4%, StarVLA-alpha 23.2%, GigaWorld-Policy 10.8%, InternVLA-A1 8.6%; LingBot-VA 32.1% in the companion data report",
+    "status": "New (July 2026); introduced inside a model paper by NeoteAI and Fudan; code repositories linked; no leaderboard or third-party use found",
+    "agreement": "",
+    "note": "Benchmark is described in a method paper and a company report; number of evaluation trials and whether the task assets are public were not confirmed. NeoReal task count differs between the two reports (9 vs 10).",
+    "tags": [
+      "Tactile",
+      "Bimanual",
+      "Insertion",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.23782"
+      },
+      {
+        "label": "Project",
+        "url": "https://research.neoteai.com/n0-vtla/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/neoteai/N0-VTLA"
+      },
+      {
+        "label": "Site",
+        "url": "https://research.neoteai.com/n0-foundation/"
+      }
+    ]
+  },
+  {
+    "name": "ALOHA sim (Transfer Cube, Bimanual Insertion)",
+    "group": "simulation",
+    "year": 2023,
+    "venue": "RSS 2023",
+    "evaluates": "Two bimanual fine-manipulation tasks: handing a cube between grippers with about 1 cm clearance, and mid-air peg-in-socket insertion with about 5 mm clearance, with per-subtask success",
+    "improves": "Imitation-learning suites of the time used single arms and coarse tasks; these tasks need coordinated two-arm motion where small errors cause collision or a missed insertion",
+    "setup": "MuJoCo model of the ALOHA bimanual ViperX setup at 50 Hz joint-position control; scripted and human-teleoperated demonstration sets; distributed as gym-aloha in LeRobot",
+    "scale": "2 tasks; 50 demonstrations per task and data source; original evaluation 3 seeds x 50 rollouts",
+    "real_validation": "The same paper runs six real ALOHA tasks (battery slotting, cable-tie threading, cup opening, and others), but no sim–real correlation is reported.",
+    "vla_results": "",
+    "status": "Widely used small test bed; ACT reaches 86% / 50% (scripted / human data) on Transfer Cube and 32% / 20% on Insertion; no leaderboard",
+    "agreement": "",
+    "note": "Clearances and ACT numbers were read from the paper PDF. No peer-reviewed table of VLA results on these two tasks was found; community reports exist but were not verified.",
+    "tags": [
+      "Bimanual",
+      "Insertion",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2304.13705"
+      },
+      {
+        "label": "Project",
+        "url": "https://tonyzhaozh.github.io/aloha/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/huggingface/gym-aloha"
+      }
+    ]
+  },
+  {
+    "name": "FACT contact-rich task suite",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "Five real contact-rich tasks for VLAs with a wrist force/torque sensor: plug, USB and key insertion needing sub-millimetre alignment under occlusion, button push to a force threshold, whiteboard erasing",
+    "improves": "VLA failures in contact-rich tasks were reported as one number; this study separates precision failures from force failures and compares force-aware VLAs on the same tasks",
+    "setup": "Franka Research 3 with Bota SensONE 6-axis F/T sensor (400 Hz), external and wrist cameras at 15 Hz; pi0.5 fine-tuned with LoRA; fixtures described by a bill of materials and 3D-printable files",
+    "scale": "5 tasks; 40 rollouts per task and method; nearly 2,500 real rollouts in total",
+    "real_validation": "",
+    "vla_results": "Average over five tasks: FACT (pi0.5 backbone) 66%; best prior baseline ForceVLA 40.5%; pi0.5 and TA-VLA also compared. FACT per task: plug 57.5%, USB 47.5%, key 60%, button 75%, board 90%",
+    "status": "New (August 2026); task suite sits inside a method paper from Stanford IPRL; hardware files and code announced, availability not confirmed",
+    "agreement": "",
+    "note": "Not presented as a benchmark by its authors. Per-baseline numbers other than the ForceVLA average were not extracted.",
+    "tags": [
+      "Generalist / VLA",
+      "Insertion",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.01402"
+      },
+      {
+        "label": "Project",
+        "url": "https://stanford-iprl-lab.github.io/fact/"
+      }
+    ]
+  },
+  {
+    "name": "DexToolBench",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-02 (introduced in the SimToolReal paper)",
+    "evaluates": "Real multi-fingered tool use: grasping a tool, rotating it in hand by 90 degrees and using it (hammer swing, marker writing, screwdriver spin, brush, eraser, spatula), scored by fraction of goal poses tracked",
+    "improves": "Dexterous tool-use results were reported per tool with task-specific policies; no shared real-world task set with matching simulation environments existed",
+    "setup": "7-DoF KUKA iiwa 14 with 22-DoF Sharpa five-fingered hand; 6 tool categories, 12 object instances; digital-twin simulation environments and purchase links for the objects",
+    "scale": "24 tasks; 5 real rollouts per task, 120 rollouts in total",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Released with project page (simtoolreal.github.io); baselines are kinematic retargeting, fixed grasp and specialist RL policies; no VLA or generalist-policy result found",
+    "agreement": "",
+    "note": "Benchmark is defined inside a method paper. Needs a Sharpa hand and KUKA arm, which limits reproduction.",
+    "tags": [
+      "Dexterous hand",
+      "Reinforcement learning",
+      "Grasping"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2602.16863"
+      },
+      {
+        "label": "Project",
+        "url": "https://simtoolreal.github.io"
+      }
+    ]
+  },
+  {
+    "name": "DexCraft",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-06 (introduced in 'From Grasps to Dexterity')",
+    "evaluates": "Articulated tool use with a multi-fingered hand: hold the tool at a goal pose and actuate its joint with a finger (spray trigger, lighter lid, pump, pliers, stapler, pen click)",
+    "improves": "Dexterous-hand suites centre on grasping and relocation; these tasks need a stable grasp and an independent finger motion at once, which parallel grippers cannot do",
+    "setup": "ManiSkill3; xArm6 with 16-DoF LEAP Hand (22-dimensional action); success requires tool pose match and joint triggered beyond a threshold",
+    "scale": "6 tasks; 5 teleoperated demonstrations per task expanded to 100 with MimicGen",
+    "real_validation": "Three real tasks (syringe, spray bottle, scissors), 50 demonstrations and 18 episodes: 40.7% for the proposed method versus 7.4% for DP3; these are different tasks, so no sim–real correlation.",
+    "vla_results": "",
+    "status": "New (June 2026); baselines are Diffusion Policy, DP3 and hierarchical variants (DP3 19.1%, proposed method 64.6%); no VLA baseline",
+    "agreement": "",
+    "note": "Benchmark is defined inside a method paper from CMU; the RSS venue was reported by an automated summary and is not confirmed.",
+    "tags": [
+      "Dexterous hand",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.30749"
+      },
+      {
+        "label": "Project",
+        "url": "https://yingyuan0414.github.io/grasp2dexterity/"
+      }
+    ]
+  },
+  {
+    "name": "AutoMate",
+    "group": "simulation",
+    "year": 2024,
+    "venue": "RSS 2024",
+    "evaluates": "Plug-into-socket assembly over 100 part geometries with contact-rich insertion; specialist and generalist policies are scored by success per assembly in simulation and on a real robot",
+    "improves": "Earlier assembly simulation work (Factory, IndustReal) covered a handful of part types; no large, simulation-ready and 3D-printable set of assemblies existed for training and comparing policies",
+    "setup": "Isaac Gym environments (also integrated into Isaac Lab); 100 assemblies that are both simulation-compatible and 3D-printable",
+    "scale": "100 assemblies; real evaluation of 200 policy-only trials over 20 assemblies and 100 perception-initialized trials over 5 assemblies",
+    "real_validation": "Zero-shot sim-to-real: about 80% success in simulation and 86–90% mean in perception-initialized real trials; the authors report real performance similar to or better than simulation.",
+    "vla_results": "",
+    "status": "Environments shipped in IsaacGymEnvs and Isaac Lab; used as an RL assembly test bed; no VLA result found",
+    "agreement": "",
+    "note": "Clearances are not stated on the pages opened. Baselines are RL specialists and a distilled generalist, not VLAs.",
+    "tags": [
+      "Assembly",
+      "Insertion",
+      "Reinforcement learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2407.08028"
+      },
+      {
+        "label": "Project",
+        "url": "https://bingjietang718.github.io/automate/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/isaac-sim/IsaacGymEnvs/blob/automate/docs/automate.md"
+      }
+    ]
+  },
+  {
+    "name": "QBIT",
+    "group": "simulation",
+    "year": 2025,
+    "venue": "arXiv 2025-03",
+    "evaluates": "Peg-in-hole and USB insertion quality at 1 mm and 0.1 mm clearance, measured by success, completion time, force energy, force smoothness and peak contact force",
+    "improves": "Insertion benchmarks reported success rate only; contact quality and the effect of randomized contact parameters on sim-to-real transfer were not measured",
+    "setup": "MuJoCo with randomized stiffness, damping and friction, run at scale on Kubernetes with ROS 2 containers; real UR5e with SCHUNK FTN-AXIA80 force/torque sensor",
+    "scale": "100 real repetitions per method; over 1,000 simulation runs per randomization study; three methods compared",
+    "real_validation": "The same three insertion methods were run on a real UR5e; the paper compares mesh-decomposition choices by how closely simulated contact matches the real robot, without a correlation statistic.",
+    "vla_results": "",
+    "status": "Code on GitHub; no public submission portal found; baselines are position control, impedance control and InsertionNet; no VLA result",
+    "agreement": "",
+    "note": "Listed as submitted to IEEE; final venue not confirmed. One of the few insertion benchmarks with force-quality metrics.",
+    "tags": [
+      "Insertion",
+      "Assembly"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2503.07479"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/djumpstre/Qbit"
+      }
+    ]
+  },
+  {
+    "name": "VTDexManip",
+    "group": "simulation",
+    "year": 2025,
+    "venue": "ICLR 2025",
+    "evaluates": "Multi-fingered manipulation with vision and binary tactile input on six tasks: bottle-cap turning, faucet screwing, lever sliding, table and in-hand reorientation, bimanual hand-over",
+    "improves": "No visual-tactile dataset and benchmark existed for pretraining and comparing representations on complex dexterous-hand skills",
+    "setup": "IsaacGym; multi-finger hand; human visual-tactile dataset for pretraining; RL policy learning on top of 18 pretrained and non-pretrained encoders",
+    "scale": "6 tasks; 182 objects in the dataset; 18 methods compared",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Code and dataset on GitHub; RL benchmark with no VLA or imitation baseline",
+    "agreement": "",
+    "note": "Details were read from the GitHub README and search summaries of the ICLR paper; the paper PDF was not parsed and no arXiv abs URL was found, so the Paper link points to the ICLR proceedings PDF.",
+    "tags": [
+      "Dexterous hand",
+      "Tactile",
+      "Reinforcement learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://proceedings.iclr.cc/paper_files/paper/2025/file/e19b6f65791e350347bcff8a3955cb5b-Paper-Conference.pdf"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/LQTS/VTDexManip"
+      }
+    ]
+  },
+  {
+    "name": "RoboPianist",
+    "group": "simulation",
+    "year": 2023,
+    "venue": "CoRL 2023",
+    "evaluates": "Piano playing with two 24-DoF Shadow hands; each key must be pressed at the right time, scored by precision, recall and F1 of key presses against the MIDI score",
+    "improves": "Dexterous-hand benchmarks lacked a task with high-dimensional control, strict spatial and temporal precision and an interpretable continuous metric",
+    "setup": "MuJoCo; two Shadow Dexterous Hands over a simulated piano; MIDI pieces with fingering annotations",
+    "scale": "150 pieces (Repertoire-150), with a 12-piece Etude-12 subset; RL baseline reaches F1 0.79 on Etude-12",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Open-source environment used in dexterous RL work; no VLA result found",
+    "agreement": "",
+    "note": "Uses state-based RL with task-specific rewards; it has no language-conditioned or image-based protocol, so VLA evaluation would need an adapter.",
+    "tags": [
+      "Dexterous hand",
+      "Bimanual",
+      "Reinforcement learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2304.04150"
+      },
+      {
+        "label": "Project",
+        "url": "https://kzakka.com/robopianist/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/google-research/robopianist"
+      }
+    ]
+  }
+]

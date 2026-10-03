@@ -802,5 +802,1731 @@
     "improves": "video classifier로 결과를 판정해 world model 평가를 수술 로봇으로 확장한다",
     "setup": "video classifier를 쓰는 Cosmos world model. dVRK 수술 로봇.",
     "agreement": "정성적 주장만 제시"
+  },
+  "libero": {
+    "evaluates": "언어 지시 기반 tabletop 매니퓰레이션. lifelong learning의 knowledge transfer를 위해 만들어졌으며, VLA 논문에서는 suite별 fine-tuning 성공률 테스트(Spatial, Object, Goal, Long)로 쓰인다",
+    "improves": "모든 태스크에 사람 시연을 갖추고, lifelong robot learning에서 declarative(object, spatial) knowledge와 procedural(goal) knowledge의 transfer를 분리해 보는 벤치마크가 없었다",
+    "setup": "MuJoCo 기반 Robosuite. Franka Panda 팔. agent-view RGB 카메라와 wrist RGB 카메라, 8-D proprioception. 7-D action(6-D end-effector delta와 gripper). 태스크는 PDDL 방식 언어로 명세하며, 지시문은 Ego4D activity에서 가져왔다.",
+    "scale": "4개 suite의 태스크 130개: LIBERO-Spatial (10), LIBERO-Object (10), LIBERO-Goal (10), LIBERO-100 (short-horizon인 LIBERO-90 + LIBERO-Long/LIBERO-10). 태스크당 사람의 teleoperation 시연 50건. 통용되는 VLA 프로토콜: suite 4개 x 태스크 10개 x 50 episode(LeRobot은 태스크당 10 episode 사용)",
+    "policies": "OpenVLA (76.5), OpenVLA-OFT (97.1), π0 (94.2, OpenVLA-OFT 측이 실행한 결과), π0-FAST (85.5), π0.5 (96.85, openpi), GR00T N1.6 / N1.7, SmolVLA (87.3), X-VLA (98.1), UniVLA (95.2), VLA-Adapter (97.3), VLA-0 (94.7), MemoryVLA, FLOWER, Dita, MMaDA-VLA (98.0), CAC-VLA (98.9), baseline으로 Octo와 Diffusion Policy",
+    "status": "가장 많이 쓰이는 VLA 시뮬레이션 대상. 포화됨(4개 suite 평균 97-99%가 다수이고, 발견된 최고치는 RL post-training을 쓴 99.9). 공식 리더보드 없음. 제3자 집계: https://allenai.github.io/vla-evaluation-harness/leaderboard/. repository 마지막 push 2025-03",
+    "note": "평가 태스크가 학습 태스크와 같다(held-out split 없음). LIBERO-PRO(arXiv 2510.03827)는 물체, layout, 지시문이 바뀌면 90%를 넘던 점수가 0%로 무너진다고 보고한다. 언어를 보지 않는 0.09B probe가 suite별 92-100%를 기록하며, SOTA 주장 중 통계적으로 유의한 것은 19.8%뿐이다(arXiv 2606.04233)."
+  },
+  "calvin": {
+    "evaluates": "long-horizon 언어 지시 기반 매니퓰레이션: onboard 센서 입력으로 연속된 지시 5개의 chain을 완수한다. unseen 환경으로의 zero-shot 전이(ABC→D)를 포함한다",
+    "improves": "이전 vision-and-language 매니퓰레이션 데이터셋은 sequence가 짧고 action space가 단순하며 언어가 제한적이었다. unseen 환경에서 chain으로 이어진 지시를 테스트한 것은 없었다",
+    "setup": "PyBullet. 서랍, sliding door, 조명 스위치, 버튼, block이 있는 책상 앞의 7-DoF Franka Panda. static RGB-D 카메라와 gripper RGB-D 카메라, 촉각 이미지, proprioception. 30 Hz의 absolute 또는 relative Cartesian action 또는 joint action.",
+    "scale": "texture와 fixture 위치가 다른 4개 환경(A-D)의 태스크 34개. teleoperation play data 약 24시간(2.4M step), 그중 1%에 언어 annotation. split은 D→D, ABC→D, ABCD→D. 지시 5개짜리 chain 1,000개",
+    "policies": "X-VLA (4.43 ABC→D), UniVLA (3.80. 별도의 이름을 가진 Unified VLA는 4.41을 보고), VLA-Adapter (4.42), FLOWER (4.53), Dita (3.61), MMaDA-VLA (4.78), OpenVLA와 OpenVLA-OFT (제3자 실행), RoboFlamingo, GR-1, DeeR, Seer, MoDE, MDT, 3D Diffuser Actor",
+    "status": "표준적인 결과 보고 대상. ABC→D에서 포화에 가까움(논문들은 5 중 최고 4.78을 보고하고, 공식 리더보드 최고치는 4.53). 리더보드: http://calvin.cs.uni-freiburg.de/ (HTTP로만 제공). repository 마지막 push 2025-09",
+    "note": "공식 리더보드는 발표된 결과보다 뒤처져 있다. audit인 arXiv 2606.04233에 따르면, 언어를 보지 않는 probe가 chain당 3.1개 넘는 태스크를 완수하고, block pose를 학습 범위 안에서 다시 sampling하면 X-VLA가 1.03 떨어지며, SOTA 주장의 19.7%가 통계적으로 유의하다."
+  },
+  "rlbench": {
+    "evaluates": "reaching부터 multi-stage 태스크까지, 사람이 직접 설계한 태스크 100개에 걸친 vision 기반 매니퓰레이션. 실제로는 태스크 18개·variation 249개로 된 PerAct subset에서의 multi-task 언어 지시 기반 keyframe 정책을 본다",
+    "improves": "robot learning에는 강화학습, imitation learning, multi-task learning, few-shot learning을 아우르며 motion planning으로 만든 시연을 갖춘 대규모 공용 태스크 세트가 없었다",
+    "setup": "PyRep을 통한 CoppeliaSim (v4.1). Franka Panda. shoulder, front, wrist 카메라의 RGB, depth, segmentation과 proprioception. PerAct 프로토콜은 128x128 RGB-D 카메라 4대와, motion planner가 실행하는 next-keyframe end-effector pose를 사용한다.",
+    "scale": "태스크 100개, motion planning으로 만든 시연은 무제한. PerAct subset: 태스크 18개, variation 249개, 태스크당 시연 10건 또는 100건, 태스크당 평가 episode 25건",
+    "policies": "BridgeVLA (태스크 18개에서 88.2%), HybridVLA (태스크 10개 subset에서 74%, baseline은 OpenVLA 41%, π0 55%, CogACT 60%), ActiveVLA. 대부분은 3D keyframe 정책: PerAct, RVT-2 (81.4%), 3D Diffuser Actor (81.3%), SAM2Act (86.8%)",
+    "status": "3D keyframe 정책에는 표준 대상, 2D VLA에는 부차적 대상. 태스크 18개 평균은 현재 85-94%(BridgeVLA++는 93.7%로 기재됨). 공식 리더보드 없음. repository 마지막 push 2025-01",
+    "note": "RLBench 자체에는 실로봇 구성 요소가 없다(PerAct는 별도로 실세계 태스크 7개를 실행했다). keyframe과 planner를 결합한 결과는 closed-loop VLA 결과와 비교할 수 없으며, VLA 논문마다 서로 다른 태스크 10개 subset을 쓴다. BridgeVLA++ 수치는 제3자 집계에서 가져왔다."
+  },
+  "meta-world": {
+    "evaluates": "Sawyer tabletop 태스크 50개에 걸친 multi-task 및 meta 강화학습. VLA 논문은 이 태스크 50개를 easy, medium, hard, very hard로 묶은 multi-task imitation 벤치마크로 쓴다",
+    "improves": "이전 meta-RL 벤치마크는 태스크 분포가 좁아 새로운 태스크로의 일반화를 테스트할 수 없었다",
+    "setup": "MuJoCo. 시뮬레이션 Sawyer 팔. 기본은 39-D state 관측(LeRobot 프로토콜: 480x480 corner 카메라 1대와 4-D state). 4-D action(3-D end-effector delta와 gripper).",
+    "scale": "태스크 50개. multi-task 세트 MT1, MT10, MT50. meta-learning 세트 ML1, ML10 (train 10, test 5), ML45 (train 45, test 5). LeRobot의 구분: easy 28, medium 11, hard 6, very hard 5",
+    "policies": "SmolVLA (태스크 50개에서 57.3%), π0 (47.9-50.5%, SmolVLA 측이 실행한 결과), TinyVLA (31.6%), FabriVLA (MT50 90.0%), Diffusion Policy (10.5%)",
+    "status": "VLA에는 부차적인 결과 보고 대상이며 LeRobot에서 지원됨. 서로 다른 프로토콜 아래 점수가 57%에서 90%까지 분포. Farama Foundation이 관리(v3. Meta-World+는 NeurIPS 2025 Datasets and Benchmarks. repository push 2026-09). 공식 리더보드 없음",
+    "note": "Meta-World+(arXiv 2505.11289)는 버전 간에 문서화되지 않은 변경이 다수 있어 공정한 비교를 저해한다는 점을 기록한다. VLA에서의 사용은 원래 RL 프로토콜에서 벗어나 있다. MT50 설정은 고정된 물체 위치와 goal 위치를 사용한다."
+  },
+  "maniskill2": {
+    "evaluates": "물체 수준의 variation이 있는 강체, articulated object, soft body 태스크에 걸친 일반화 가능한 manipulation skill. state, RGB-D, point cloud 입력의 강화학습과 imitation learning을 대상으로 한다",
+    "improves": "이전 매니퓰레이션 벤치마크는 물체 다양성이 제한적이고, soft body가 없으며, 시각 시뮬레이션이 느리고, 태스크 유형 간 interface가 일관되지 않았다",
+    "setup": "강체에는 SAPIEN, soft body에는 Warp 기반 GPU MPM 시뮬레이터. 기본 로봇은 Franka Panda이고, cabinet, chair, bucket 태스크에는 mobile base 로봇을 쓴다. state, RGB-D, point cloud 관측. joint 또는 end-effector controller.",
+    "scale": "태스크 family 20개(예: PickCube, StackCube, PickSingleYCB, PickClutterYCB, PegInsertionSide, PlugCharger, OpenCabinetDoor, Pour), 물체 모델 2,000개 이상, 시연 frame 4M 이상",
+    "real_check": "sim-to-real 점검뿐이다: PickCube 정책이 시뮬레이션에서 91.0%, 실제 ROKAE 팔에서 60.0%를 기록했고, Pinch trajectory를 시뮬레이션과 실세계에서 비교했다. sim-real 순위 상관은 보고되지 않았다.",
+    "policies": "Dita / Diffusion Transformer Policy (태스크 5개 세트에서 65.8%), GeoVLA (77.0%), CogACT와 OpenVLA-OFT 재구현(제3자 집계)",
+    "status": "태스크 5개 subset을 통해 간혹 VLA 대상으로 쓰임. 포화되지 않음(발견된 태스크 5개 평균 최고치 77%). ManiSkill3로 대체됨. 원래 코드는 tag v0.5.3에 보존됨. 리더보드 없음",
+    "note": "고정된 VLA 프로토콜이 없다: 제3자 집계는 태스크 subset 조합을 14개 이상으로 세며, 가장 흔한 태스크 5개 세트가 entry의 약 24%를 차지한다. GeoVLA 수치는 그 집계와 검색 snippet에서 가져왔다."
+  },
+  "maniskill3": {
+    "evaluates": "12개 태스크 domain(tabletop, mobile manipulation, humanoid, dexterous, drawing/cleaning)에 걸친 매니퓰레이션용 GPU 병렬 시뮬레이션 및 rendering. RL, imitation, fine-tuning한 VLA의 평가에 쓰인다",
+    "improves": "ManiSkill2와 다른 시뮬레이터는 대규모 visual RL에 쓰기에는 너무 느렸고, heterogeneous parallel scene과 real2sim 평가 환경이 없었다",
+    "setup": "GPU 병렬 physics와 rendering을 갖춘 SAPIEN(rendering 포함 30,000 FPS 이상으로 보고됨). single-arm, mobile, humanoid, dexterous 로봇. state, RGB-D, segmentation 관측. joint 또는 end-effector controller.",
+    "scale": "태스크 domain 12개. 수백만 시연 frame. 지금까지의 VLA 사용: tabletop 태스크 5개(PegInsertionSide, PickCube, StackCube, PlugCharger, PushCube), motion planning으로 만든 trajectory 5,000건, 방법당 250회",
+    "real_check": "task suite들은 sim-real 상관을 보고하지 않는다. 이 플랫폼은 real2sim digital-twin 환경(SIMPLER port)과 sim2real 예제도 호스팅하며, 이들은 별도로 수록돼 있다.",
+    "policies": "RDT repository의 태스크 5개 세트에서 RDT-1B (평균 53.6%), Diffusion Policy (30.2%), OpenVLA (4.8%), Octo (0.0%)",
+    "status": "활발히 관리됨(repository push 2026-08). 작은 tabletop subset을 통해 간혹 VLA 대상으로 쓰임. 포화되지 않음. 리더보드 없음",
+    "note": "2024년에 공개돼 2023년 또는 그 이전이라는 기준 밖이다. ManiSkill2를 대체하고 RDT 벤치마크를 호스팅하므로 포함했다. RDT 평가 코드는 README에 ManiSkill이라고만 적혀 있지만 ManiSkill3 (-v1) 환경을 사용한다."
+  },
+  "robomimic": {
+    "evaluates": "multi-stage single-arm 및 two-arm 태스크(Lift, Can, Square, Transport, Tool Hang)에서, 품질이 서로 다른 사람 시연으로 하는 offline imitation과 offline RL",
+    "improves": "데이터 품질, observation modality, hyperparameter가 offline 정책 학습에 미치는 영향을 연구할 표준화된 사람 시연 데이터셋이 없었다",
+    "setup": "MuJoCo 기반 Robosuite. Franka Panda 팔. low-dimensional(proprioception과 물체 pose) 또는 이미지 관측. continuous end-effector action.",
+    "scale": "시뮬레이션 태스크 5개. 태스크당 proficient-human 시연 200건(PH), operator 6명의 multi-human 시연 300건(MH), Lift와 Can에는 machine-generated 세트. 평가당 rollout 50회",
+    "real_check": "태스크 3개(Lift, Can, Tool Hang)는 실제 Franka 팔에서도 각 시연 200건으로 학습·평가했다. sim-real 상관은 보고되지 않았다.",
+    "status": "single-task visuomotor 정책의 표준(Diffusion Policy가 사용). 확인한 VLA 논문에서는 결과 보고 대상이 아님. 두 repository 모두 관리됨(push 2026-07, 2026-08). 리더보드 없음",
+    "note": "Robosuite(arXiv 2009.12293, v1.5는 2025년 개정판에 기술됨)는 LIBERO, RoboCasa, MimicGen의 기반 framework다. robomimic 태스크에서의 VLA 결과는 발견되지 않았다."
+  },
+  "robocasa": {
+    "evaluates": "mobile manipulator의 일상 주방 매니퓰레이션: 다양한 주방에 걸친 atomic skill(pick-and-place, door, drawer, knob, lever, button, navigation)과 LLM-guided composite 태스크",
+    "improves": "이전 시뮬레이션 suite에는 generalist 정책의 학습과 테스트에 필요한 scene·물체 다양성과 대규모 시연 세트가 부족했다",
+    "setup": "MuJoCo 기반 Robosuite. 기본은 mobile base 위의 Franka Panda이며, 다른 embodiment도 지원한다. RGB 카메라 3대(eye-in-hand, left, right)와 proprioception. continuous 팔, gripper, base action.",
+    "scale": "태스크 100개(atomic 25개, composite 75개). 주방 scene 120개(floor plan 10종 x style 12종). 153개 범주의 물체 2,509종. atomic 태스크당 사람 시연 50건. MimicGen trajectory 100K건 이상(atomic 태스크 24개에 태스크당 3,000건)",
+    "real_check": "sim-and-real co-training뿐이다: 주방의 실제 Franka(pick-and-place 태스크 3개)에서 시뮬레이션 데이터를 쓰자 성공률이 13.6%에서 24.4%로 올랐다. sim-real 상관은 보고되지 않았다.",
+    "policies": "GR00T N1 (시연 100건에서 32.1%), GR00T N1.5 (시연 30건에서 47.5%), GR00T N1.6 (66.2%), 모두 atomic 태스크 24개 기준. π0, π0.5, SmolVLA는 제3자 실행. baseline은 BC-Transformer와 Diffusion Policy",
+    "status": "GR00T류 모델의 표준 대상(atomic 태스크 24개, Panda). 포화되지 않음(발견된 태스크 24개 평균 최고치는 약 80%). RoboCasa365로 대체됐으며, 공식 리더보드는 RoboCasa365에 있음. repository push 2026-09",
+    "note": "2024년에 공개됐다. VLA 논문들이 태스크 24개 프로토콜을 확립된 것으로 다루므로 포함했다. 시연 수(30/100/300, 사람 또는 생성)가 논문마다 다르다. 한 audit은 보고된 향상의 53.3%가 통계적으로 유의하다고 밝혔다(arXiv 2606.04233). 최고 점수는 제3자 집계에서 가져왔다."
+  },
+  "behavior-1k": {
+    "evaluates": "mobile manipulator를 위한 long-horizon 가정 내 activity. 강체, 변형체, 유체에 대한 predicate logic goal condition으로 정의된다",
+    "improves": "이전 embodied 벤치마크는 설계자의 편의에 따라 태스크를 골랐고 현실적인 physics가 없었다. 여기의 activity는 사람들이 로봇에게 바라는 일을 조사한 survey에서 나왔다",
+    "setup": "NVIDIA Omniverse / PhysX 5 기반 OmniGibson. mobile manipulator(논문의 실세계 연구에서는 Tiago, 공개된 GR00T N1.6 checkpoint는 Galaxea R1 Pro). RGB-D, proprioception, LiDAR. low-level control 또는 action primitive.",
+    "scale": "BDDL로 정의한 activity 1,000개, scene 50개, 1,900개 이상 범주의 물체 9,000종 이상. 참가자 1,461명의 survey",
+    "real_check": "예비적인 sim-to-real 연구다: CollectTrash 정책이 시뮬레이션에서 약 40%에 도달한 반면, 모형 아파트의 실제 Tiago에서는 약 22%(oracle perception)와 0%(학습한 vision 정책)였다.",
+    "policies": "GR00T N1.6 (BEHAVIOR-1K checkpoint 공개. README에 점수는 명시되지 않음)",
+    "status": "2025-2026 BEHAVIOR Challenge(별도 수록)를 통해 활발히 운영됨. 포화와는 거리가 멂. repository push 2026-09",
+    "note": "논문의 baseline은 VLA가 아니라 action primitive를 쓰는 RL이다(visuomotor RL은 0점). VLA 결과는 challenge 태스크 subset을 통해 나온다(BEHAVIOR Challenge 항목 참고)."
+  },
+  "franka-kitchen": {
+    "evaluates": "multi-stage long-horizon 매니퓰레이션: unstructured 시연으로부터, 한 episode 안에 여러 주방 fixture(microwave, kettle, burner, light switch, cabinet)의 goal configuration에 도달한다",
+    "improves": "imitation learning과 강화학습은 각각 단독으로는 long-horizon multi-stage 태스크에 실패했다. 이 환경은 unstructured play data로부터 둘을 결합하는 방법을 테스트하려고 만들어졌다",
+    "setup": "MuJoCo. joint velocity action을 쓰는 9-DoF Franka(팔과 gripper joint). 59-D state 관측(후속 연구는 이미지 variant를 사용). sub-task 완수에 대한 sparse reward. 280 step episode.",
+    "scale": "주방 scene 1개. 사람 시연으로 만든 D4RL 데이터셋: complete (3,680 transition), partial (136,950), mixed (136,950)",
+    "status": "behaviour cloning 및 offline RL 정책 논문의 표준(Diffusion Policy가 사용). 확인한 VLA 논문에서는 결과 보고 대상이 아님. Gymnasium-Robotics에서 관리됨(push 2026-09)",
+    "note": "language conditioning이 없고 고정된 scene 하나뿐이다. 여기서의 VLA 결과는 확인되지 않았다."
+  },
+  "vima-bench": {
+    "evaluates": "multimodal prompt(텍스트에 이미지나 video frame이 섞인 형태)로 명세하는 tabletop 매니퓰레이션. placement부터 novel task까지 4단계의 zero-shot 일반화를 본다",
+    "improves": "태스크 명세 방식(언어, goal image, video 시연)은 제각기 다른 모델과 벤치마크가 다뤘다. 이를 하나의 prompt 형식 아래 단계별 일반화로 테스트하는 suite가 없었다",
+    "setup": "PyBullet 기반 Ravens 시뮬레이터. frontal 및 top-down RGB와 물체 segmentation, box. end-effector pose로 parameterize한 pick-and-place primitive와 wipe primitive.",
+    "scale": "6개 범주의 태스크 template 17개이며, procedural하게 생성한 수천 개의 태스크로 instantiate된다. scripted expert trajectory 650K건(태스크당 50K건). 일반화 level 4단계(L1-L4)",
+    "status": "주로 multimodal prompt 정책 논문(VIMA 계열)에서 사용됨. 확인한 VLA 논문에서는 결과 보고 대상이 아님. repository 마지막 push 2023-09",
+    "note": "continuous control이 아니라 high-level primitive action을 쓴다. 여기서의 VLA 결과는 확인되지 않았다."
+  },
+  "arnold": {
+    "evaluates": "현실적인 3D scene에서 continuous goal state(예: 서랍을 절반만 열기, 물을 절반만 붓기)를 향한 language-grounded 매니퓰레이션. novel 물체, scene, goal state에 대한 split을 둔다",
+    "improves": "이전 언어 지시 기반 벤치마크는 discrete binary goal과 단순한 scene을 써서, continuous한 물체 상태의 grounding을 테스트할 수 없었다",
+    "setup": "PhysX 5를 쓰는 NVIDIA Isaac Sim. parallel gripper를 단 7-DoF Franka Panda. 128x128 RGB-D 카메라 5대. two-phase keyframe action(grasp한 뒤 goal state까지 조작).",
+    "scale": "태스크 8개(PickupObject, ReorientObject, Open/CloseDrawer, Open/CloseCabinet, PourWater, TransferWater), scene 20개, 물체 40종, 시연 10k건",
+    "real_check": "실제 Franka에서의 예비적인 sim-to-real 전이(drawer 및 pickup 태스크)가 기술돼 있으며, 저자들은 sim-to-real gap이 남아 있다고 언급한다. 상관은 보고되지 않았다.",
+    "status": "niche한 벤치마크. baseline은 PerAct류 모델(test split에서 약 55%, novel goal state에서 약 5%). 확인한 VLA 논문에서는 결과 보고 대상이 아님. repository 마지막 push 2025-03",
+    "note": "여기서의 VLA 결과는 확인되지 않았다. 실로봇 수치는 추출하지 않았다."
+  },
+  "language-table": {
+    "evaluates": "평면 block pushing에서의 open-vocabulary 언어 지시 수행. 실로봇 데이터셋과 함께 시뮬레이션 multi-task 벤치마크를 제공한다",
+    "improves": "이전 언어 지시 기반 로봇 데이터셋은 규모가 한 자릿수 작았고 실시간 언어 guidance를 지원하지 않았다",
+    "setup": "block 8개가 놓인 PyBullet board로, 실세계 셋업(원통형 end-effector를 단 xArm6)을 본떠 만들었다. RGB 이미지 관측. 2-D Cartesian delta action.",
+    "scale": "696개 task condition에 걸친 시뮬레이션 태스크 family 5개(block-to-block, block-to-block-relative, block-to-absolute-location, block-to-relative-location, separate). 시뮬레이션 episode 181,020건과 실세계 episode 442,226건",
+    "real_check": "같은 셋업이 실로봇으로도 존재하며, 논문의 대표 결과(지시 87,588개에서 93.5%)는 실로봇 결과다. sim-real 상관은 보고되지 않았다.",
+    "policies": "RT-2 (90 ± 10), LAPA, GR00T N1 (52.8%), GR00T N1.5 (93.2%)",
+    "status": "Google 계열 및 NVIDIA 계열 모델과 latent action 연구에서 사용됨. 그 밖에서는 흔한 대상이 아님. 리더보드 없음. repository push 2026-09",
+    "note": "평면 pushing뿐이다(2-D action). GR00T 수치는 N1.5 project page에서 가져왔으며, 그 페이지는 프로토콜을 밝히지 않는다."
+  },
+  "aloha-simulation-tasks": {
+    "evaluates": "joint position control을 쓰는 fine-grained bimanual 매니퓰레이션. 태스크 2개: 두 팔 사이에서 cube 건네기, 공중에서 peg를 socket에 삽입하기",
+    "improves": "실제 ALOHA 태스크의 시뮬레이션 counterpart로 ACT와 함께 제안됐으며, scripted 시연과 사람 시연으로 정밀한 bimanual control에서 imitation 방법들을 비교하기 위한 것이다",
+    "setup": "MuJoCo. ViperX 팔 2개로 된 bimanual ALOHA. 카메라 이미지와 joint position. 14-D absolute joint position action(팔당 joint 6개와 gripper 1개).",
+    "scale": "태스크 2개(Transfer Cube, Bimanual Insertion). scripted 정책 또는 사람이 만든 태스크당 시연 50건. ACT는 seed 3개 x rollout 50회로 평가",
+    "real_check": "ACT 논문은 이와 별개인 실제 ALOHA 태스크 6개를 실행한다(성공률 80-90%). 시뮬레이션 태스크를 실세계 결과와 비교하지는 않는다.",
+    "policies": "FLOWER (평균 54.0%). openpi ALOHA-sim example을 통한 π0 (거기에 공개된 점수는 없음)",
+    "status": "LeRobot과 openpi가 지원하는 소규모 sanity check 벤치마크. ACT는 scripted 데이터로 97%와 90%, 사람 데이터로 82%와 60%에 도달. 리더보드 없음. gym-aloha push 2026-09",
+    "note": "고정된 scene 하나에 태스크 2개이며 언어 variation이 없다. VLA 논문의 main table에는 거의 보고되지 않는다."
+  },
+  "push-t": {
+    "evaluates": "contact-rich 평면 pushing: 원형 end-effector로 T자형 block을 고정된 target pose로 옮기며, target 영역 coverage로 채점한다",
+    "improves": "Diffusion Policy에서, 이전 behaviour cloning 벤치마크가 제대로 다루지 못한 contact-rich dynamics와 multimodal action distribution 아래의 정밀한 control을 테스트하는 데 쓰였다",
+    "setup": "2-D pymunk physics와 pygame rendering. state(agent와 block의 pose), keypoint 또는 96x96 이미지 관측. 2-D target position action.",
+    "scale": "태스크 1개. Diffusion Policy에서는 사람 시연 200건. block이 goal zone의 95% 이상을 덮으면 해결로 본다",
+    "status": "imitation 정책용 single-task sanity check(Diffusion Policy는 state 입력 0.95, 이미지 입력 0.91). LeRobot이 지원. VLA 결과 보고 대상이 아님. gym-pusht push 2026-09",
+    "note": "언어도 3-D 매니퓰레이션도 없다. Diffusion Policy의 실로봇 실험에 Push-T counterpart가 포함되는지는 확인하지 않았으므로, 실세계 검증 항목은 비워 두었다."
+  },
+  "mimicgen": {
+    "evaluates": "초기 상태 분포, 물체, 로봇 팔이 다양한 태스크에 걸쳐, 자동 생성한 시연으로 하는 imitation learning. 여러 부품의 조립과 커피 준비를 포함한다",
+    "improves": "넓은 초기 상태 범위를 다룰 만큼 사람 시연을 충분히 모으는 데는 비용이 많이 들었다. 이 시스템은 소수의 사람 시연을 대규모 데이터셋으로 확장한다",
+    "setup": "MuJoCo 기반 Robosuite와 Isaac Gym의 Factory 태스크. Panda, Sawyer, IIWA, UR5e 팔. low-dimensional 또는 이미지 관측. end-effector action.",
+    "scale": "태스크 18개. 사람 시연 약 200건으로부터 생성한 시연 50,000건 이상",
+    "real_check": "데이터 생성 시스템을 실로봇에서도 실행했다(Stack 및 Coffee 태스크). sim-real 상관은 보고되지 않았다.",
+    "status": "데이터 생성 시스템이며, 그 태스크 세트가 imitation 정책의 벤치마크 역할을 함. RoboCasa와 DexMimicGen 데이터의 기반. 확인한 VLA 논문에서는 결과 보고 대상이 아님",
+    "note": "abstract와 project page만 열어 보았다. 실로봇 수치와 VLA에서의 사용 여부는 확인하지 않았다."
+  },
+  "robotwin-1-0": {
+    "evaluates": "tabletop tool-use 및 pick-and-place 태스크에서의 dual-arm 협응. expert 데이터는 물체의 generative digital twin 위에서 LLM이 생성한 코드로 만든다",
+    "improves": "표준화된 dual-arm 벤치마크의 부재, 그리고 실제 dual-arm 플랫폼에 맞춘 bimanual 태스크용 확장 가능한 expert 데이터의 부재",
+    "setup": "SAPIEN 기반 시뮬레이션(arXiv HTML에는 ManiSkill3로 적혀 있다). RealSense D435 RGB-D 카메라 4대를 장착한 AgileX COBOT Magic dual-arm 플랫폼. 관측은 이미지 또는 point cloud다.",
+    "scale": "태스크 15개(그중 2개는 easy/hard 변형이 있음). 정책은 태스크당 생성된 expert 시연 20, 50 또는 100건으로 학습",
+    "real_check": "sim-to-real 전이뿐이다: 시뮬레이션 sample 300개로 사전학습하고 real sample 20개로 fine-tuning한 정책이 COBOT Magic에서 real 데이터만으로 학습한 경우보다 향상됐다(single-arm 약 70%, dual-arm 40%). sim-real 상관은 보고되지 않았다.",
+    "status": "RoboTwin 2.0으로 대체됨. CVPR 2025 MEIS dual-arm collaboration challenge의 기반. 별도 리더보드 없음",
+    "note": "논문의 baseline은 Diffusion Policy와 DP3뿐이다. 연도는 초기 arXiv 버전(2409.02920) 기준인데, 이 버전은 열어 보지 않았다. 세부 내용은 arXiv 2504.13059에서 가져왔다."
+  },
+  "robotwin-2-0": {
+    "evaluates": "태스크 50개에 걸친 bimanual tabletop 매니퓰레이션. clean scene과, clutter·조명·배경·테이블 높이·언어를 무작위화한 scene을 나눠 보고한다",
+    "improves": "기존 bimanual 시뮬레이션 suite는 태스크가 적고 embodiment가 하나뿐이며 시각·언어 변화가 거의 없어, 정책이 clean scene에 overfit했다",
+    "setup": "SAPIEN. dual-arm embodiment 5종(Aloha-AgileX, ARX-X5, Piper, Franka, UR5). 리더보드 프로토콜은 head RGB 카메라와 wrist RGB 카메라 2대, 14-D joint action을 쓰는 Aloha-AgileX를 사용한다.",
+    "scale": "태스크 50개. 147개 범주의 물체 731종(RoboTwin-OD). expert trajectory 100,000건 이상. 학습용으로 태스크당 clean 시연 50건, 평가용으로 설정(Easy/Hard)별 태스크당 episode 100건",
+    "real_check": "sim-to-real 전이뿐이다: COBOT-Magic 로봇(태스크 4개)에서, real 시연 10건에 무작위화한 synthetic trajectory 1,000건을 추가하거나 synthetic 데이터만으로 학습했을 때 실세계 성공률이 올랐다. sim-real 정책 순위 상관은 보고되지 않았다.",
+    "policies": "π0, RDT (논문); π0.5, X-VLA, GR00T N1.6, OpenVLA-OFT, InternVLA-A1, StarVLA-α, FastWAM, Spatial Forcing, X-WAM (후속 논문 및 XPolicyLab)",
+    "status": "원 연구실 밖에서 널리 채택됨(LeRobot, StarVLA, vla-eval, 정책 42개가 통합된 XPolicyLab). 리더보드: https://robotwin-platform.github.io/leaderboard",
+    "note": "학습 프로토콜이 두 가지로 통용되고 있어(태스크당 clean 시연 50건 대 태스크당 clean 시연 50건 + 무작위화 시연 500건), 논문 간 점수를 직접 비교할 수 없다. 리더보드 표는 가져왔을 때 렌더링되지 않았다."
+  },
+  "robocasa365": {
+    "evaluates": "주방에서의 multi-task 가정 mobile manipulation: atomic skill, seen composite 태스크, unseen composite 태스크. multi-task, foundation model fine-tuning, lifelong learning 프로토콜로 평가한다",
+    "improves": "원래 RoboCasa는 태스크 약 100개와 scene 120개에, 평가에 쓰이는 subset도 작았다. generalist 학습을 대규모로 연구하려면 태스크와 scene의 다양성이 더 커야 했다",
+    "setup": "MuJoCo(robosuite/RoboCasa). Omron mobile base 위의 Franka Panda. 256x256 RGB 카메라 3대와 proprioception. 12-D action(팔 end-effector, gripper, base, torso).",
+    "scale": "태스크 365개(atomic 65, composite 300). 주방 scene 2,500개. 인간 시연 600시간 이상, MimicGen 생성 시연 1,600시간 이상. 리더보드는 태스크 50개(atomic 18, composite-seen 16, composite-unseen 16)를 평가",
+    "real_check": "sim-and-real co-training뿐이다: 실제 주방의 DROID-style Franka(태스크 4개, 각 20회)에서 시뮬레이션 데이터와 co-training한 경우 79.8%, real 데이터만 쓴 경우 61.8%였다. sim-real 상관은 보고되지 않았다.",
+    "policies": "π0, π0.5, GR00T N1.5, GR00T N1.6, Xiaomi-Robotics-1, ABot-M0.5/M0.6, RLDX-1, PRTS, GigaWorld-Policy 0.1, Paimon-0, Phasor-m7, WorldDreamer",
+    "status": "채택 증가 중: 2026-09 기준 리더보드 등재 15건, 대부분 원 연구실 외부. 리더보드: https://robocasa.ai/leaderboard.html",
+    "note": "리더보드의 baseline 수치(예: GR00T N1.5 평균 23.9)가 arXiv 논문에서 추출한 값(20.0)과 다르다. 리더보드에는 갱신된 run이 반영된 것으로 보인다."
+  },
+  "robocasa-gr-1-tabletop-tasks": {
+    "evaluates": "dexterous hand를 갖춘 humanoid 상체가 egocentric 카메라로 수행하는 언어 지시 기반 tabletop rearrangement 및 articulated object 태스크",
+    "improves": "실제 humanoid tabletop 데이터에 대응하는 시뮬레이션이 없어, humanoid foundation model을 시뮬레이션에서 재현 가능하게 비교할 수 없었다",
+    "setup": "RoboCasa/robosuite를 통한 MuJoCo. Fourier dexterous hand를 장착한 Fourier GR-1 humanoid. egocentric head 카메라. 팔, hand, 허리, 목에 대한 joint-space action.",
+    "scale": "태스크 24개(pick-and-place rearrangement 18, articulated object 6). 태스크당 시연 1,000건. trajectory 240k건의 tabletop 데이터셋도 공개됨",
+    "policies": "GR00T N1, N1.5, N1.6, N1.7; StarVLA-α; TwinBrainVLA; 제3자 논문에서 baseline으로 쓰인 π0, π0.5, OpenVLA-OFT",
+    "status": "2026년 VLA 결과 표에 흔히 들어가는 humanoid 행(StarVLA-α, TwinBrainVLA, ABot-M0, VP-VLA, DIAL). 공식 리더보드는 발견되지 않음",
+    "note": "GR00T N1 논문은 이 suite를 실제 humanoid 데이터의 digital counterpart로 설명하지만 paired sim-real 평가는 보고하지 않는다. repo README는 raw 파일로만 읽을 수 있었다."
+  },
+  "dexmimicgen": {
+    "evaluates": "자동 생성된 시연으로 학습하는, gripper와 dexterous hand를 쓰는 bimanual 매니퓰레이션(조립, threading, transport, pouring, packing, sorting)",
+    "improves": "MimicGen 방식의 데이터 생성과 그 태스크 suite는 single-arm gripper 로봇만 다뤄, bimanual dexterous 및 humanoid 셋업에는 확장 가능한 데이터도 벤치마크도 없었다",
+    "setup": "robosuite를 통한 MuJoCo. embodiment 3종: parallel gripper를 장착한 bimanual Panda, dexterous hand를 장착한 bimanual Panda, dexterous hand를 장착한 GR-1 humanoid.",
+    "scale": "태스크 9개(embodiment당 3개). 인간 시연 60건에서 생성한 시연 21K건",
+    "real_check": "real-to-sim-to-real 전이뿐이다: 생성된 데이터로 학습한 실제 GR-1용 can sorting 정책이 90%에 도달했고, source 시연만 쓴 경우는 0%였다. sim-real 상관은 보고되지 않았다.",
+    "policies": "GR00T N1 (태스크 9개 세트는 GR00T N1 논문의 'DexMimicGen Cross-Embodiment Suite'에 해당)",
+    "status": "주로 NVIDIA GEAR 관련 연구에서 cross-embodiment 벤치마크로 사용됨. 리더보드 없음",
+    "note": "논문의 baseline은 BC-RNN과 Diffusion Policy다. GR00T N1 결과(태스크당 시연 100건에서 66.5%)는 GR00T N1 논문에서 가져왔다."
+  },
+  "roboverse": {
+    "evaluates": "여러 기존 suite를 통합한 태스크에서의 imitation 및 강화학습 정책. 일반화 4단계(task space, 환경, 카메라, 조명 및 반사)로 평가한다",
+    "improves": "시뮬레이터와 벤치마크의 파편화. 이 때문에 데이터 형식 공유, 시뮬레이터 간 평가, 일관된 프로토콜이 불가능하다",
+    "setup": "Isaac Sim/Lab, Isaac Gym, MuJoCo, SAPIEN, PyBullet, Genesis 위의 MetaSim layer(README에 따르면 CoppeliaSim은 PyRep 경유). 여러 팔, hand, humanoid. 통합된 Gym-style interface.",
+    "scale": "태스크 약 1,000개(매니퓰레이션 태스크 범주 276개), trajectory 약 500k건, asset 약 5.5k개",
+    "real_check": "sim-to-real 전이뿐이다: 논문은 imitation 정책의 direct sim-to-real 전이와 RL 정책의 sim-to-sim-to-real 전이를 보고한다. sim-real 상관은 보고되지 않았다.",
+    "status": "표준 결과 표라기보다 infrastructure로 사용됨. 리더보드는 발견되지 않음",
+    "note": "baseline 이름과 실로봇 수치를 arXiv HTML에서 추출하지 못했다. 따라서 논문의 VLA baseline은 확인되지 않았다."
+  },
+  "peract2-rlbench2": {
+    "evaluates": "두 팔의 공간적·시간적 협응이 필요한 언어 지시 기반 bimanual 6-DoF 매니퓰레이션",
+    "improves": "RLBench에는 bimanual 태스크가 없었고, 언어 지시 기반 two-arm 매니퓰레이션을 위한 시뮬레이션 벤치마크도 없었다",
+    "setup": "RLBench를 두 팔로 확장한 것. 언어 지시 기반 6-DoF bimanual action(로봇 모델과 카메라 구성은 확보하지 못했다).",
+    "scale": "태스크 13개, variation 23개",
+    "real_check": "project page는 이 방법이 실제 로봇에서도 동작한다고 밝히지만 세부 내용은 거의 없다. sim-real 상관은 보고되지 않았다.",
+    "status": "이후의 3D bimanual 정책 논문(예: AnyBimanual)에서 사용됨. VLA 결과 표에서는 덜 흔함. 리더보드 없음",
+    "note": "검색 요약은 이를 CoRL 2024 workshop 논문이라고 설명하지만, arXiv와 repo README 어디에도 venue가 명시돼 있지 않다. 로봇 모델과 시연 수는 확보하지 못했다."
+  },
+  "bigym": {
+    "evaluates": "가정 scene에서 humanoid가 수행하는 mobile bimanual 매니퓰레이션. reaching부터 주방 청소까지 다루며, 사람이 수집한 시연으로 학습한다",
+    "improves": "기존 벤치마크는 planner가 생성한 시연과 fixed-base 팔에 의존했다. mobile bimanual 태스크를 위한, 사람이 teleoperation한 multimodal 시연이 없었다",
+    "setup": "MuJoCo. Robotiq 2F-85 gripper 2개를 장착한 Unitree H1. proprioception과, head 카메라 및 wrist 카메라 2대의 RGB-D. action mode는 whole-body(23-D) 또는 bimanual floating-base(16-D).",
+    "scale": "태스크 40개. 태스크당 VR teleoperation 인간 시연 50건",
+    "status": "VLA 논문에서의 채택은 제한적. baseline은 ACT, Diffusion Policy, BC, demo-driven RL. 리더보드 없음",
+    "note": "venue는 CoRL 2024 proceedings 목록에서 가져왔다. arXiv 페이지에는 venue가 기재돼 있지 않다."
+  },
+  "humanoidbench": {
+    "evaluates": "dexterous hand를 갖춘 humanoid의 whole-body control. locomotion 태스크와, 선반 재배열·package 하역·창문 닦기 같은 매니퓰레이션 태스크를 다룬다",
+    "improves": "humanoid 학습 연구에는 locomotion과 dexterous whole-body manipulation을 결합한 공유 시뮬레이션 벤치마크가 없었다",
+    "setup": "MuJoCo. Shadow Hand 2개를 장착한 Unitree H1(Digit 및 gripper 변형도 지원). proprioceptive, egocentric 시각, 촉각 관측.",
+    "scale": "태스크 27개(whole-body manipulation 15, locomotion 12)",
+    "status": "주로 강화학습 벤치마크로 채택됨. VLA 결과는 발견되지 않음. 리더보드 없음",
+    "note": "시연이 없는 reward 기반 RL 벤치마크다. manipulation/locomotion 구분은 RSS 2024 논문 목록에서 가져왔다."
+  },
+  "maniskill-hab": {
+    "evaluates": "long-horizon 가정 rearrangement(TidyHouse, PrepareGroceries, SetTable)를 위한 low-level whole-body control. Pick, Place, Open, Close subtask로 분해한다",
+    "improves": "Home Assistant Benchmark 구현은 느리고 magical grasping을 썼다. low-level 매니퓰레이션 연구에는 현실적인 contact와 빠른 GPU 시뮬레이션이 필요했다",
+    "setup": "Home Assistant Benchmark를 GPU-parallel ManiSkill3(SAPIEN)로 port한 것. whole-body control을 쓰는 mobile manipulator(로봇 모델은 확보하지 못했다).",
+    "scale": "long-horizon 태스크 3개. RL 정책으로 생성하고 rule-based filtering을 거친 18K, 18K, 8K episode(8.8M transition) 데이터셋 공개",
+    "status": "mobile manipulation의 RL 및 IL 연구에 사용됨. VLA 결과는 발견되지 않음. 리더보드 없음",
+    "note": "로봇 모델은 확보하지 못했다. 논문의 baseline은 RL 및 imitation learning 정책이며, 이들은 태스크를 풀지 못한다."
+  },
+  "behavior-challenge": {
+    "evaluates": "navigation, bimanual 매니퓰레이션, long-horizon sequencing이 필요한 full-length 가정 activity. BDDL goal predicate에 대한 partial credit으로 채점한다",
+    "improves": "BEHAVIOR-1K에는 시연 데이터도 표준화된 학습 프로토콜도 없었다. 이 challenge는 teleoperation 시연, baseline, held-out 평가를 추가한다",
+    "setup": "Isaac Sim 위의 OmniGibson. 7-DoF 팔 2개와 parallel gripper를 갖춘 mobile-base bimanual 로봇. RGB, depth, proprioception(2025년에는 privileged-information track도 있었다).",
+    "scale": "2025년: 태스크 50개, teleoperation 시연 10,000건(1,200시간 이상). 2026년: 태스크 100개, 시연 20,000건(1,950시간), scene 7개",
+    "policies": "2025년에 π0.5 기반 참가작이 1위(q-score 0.2599)와 2위(0.2514)를 차지; 주최 측 baseline에는 OpenVLA와 π0 (2025), π0.5와 GR00T N1.7 (2026)이 포함됨",
+    "status": "진행 중인 대회. 2025년 결과는 NeurIPS 2025에서 발표됐고, 2026년 제출은 2026-10-16에 마감. 리더보드: https://huggingface.co/spaces/behavior-1k/2026-challenge-leaderboard",
+    "note": "주최 측 report 논문은 발견되지 않았다. 2025년 점수는 1위 solution report(arXiv 2512.06951)에서 가져왔다. 열어 본 페이지에는 로봇 이름이 명시돼 있지 않았다."
+  },
+  "robodojo-simulation-suite": {
+    "evaluates": "다섯 가지 capability 차원에서의 bimanual 정책: 일반화, 기억, long-horizon 실행, 정밀, open(unseen 태스크 명세)",
+    "improves": "기존 시뮬레이션 suite는 포화에 가까웠고 성공률 수치 하나만 보고했다. 실로봇 counterpart와 짝을 이루는, 더 어렵고 capability별로 구조화된 suite가 없었다",
+    "setup": "heterogeneous parallel simulation을 쓰는 Isaac Sim / Isaac Lab. ARX X5 bimanual 플랫폼. 정책은 XPolicyLab을 통해 연결한다.",
+    "scale": "태스크 42개(일반화 12, 기억 6, long-horizon 8, 정밀 8, open 8). 학습 trajectory 3,500건(20.66시간). 태스크당 평가 episode 50건",
+    "real_check": "bimanual 플랫폼 3종의 실세계 태스크 18개(RoboDojo-RealEval)와 짝을 이룬다. 논문은 시뮬레이션 리더보드와 실세계 리더보드가 부분적으로 일치하지만 완전히 일치하지는 않는다고 보고하며, 확보한 텍스트에는 상관계수가 없다.",
+    "policies": "π0, π0.5, X-VLA, GR00T N1.7, OpenVLA-OFT, RDT-1B, H-RDT, SmolVLA, InternVLA-A1, GO-1, MolmoAct2, Xiaomi-Robotics-0, StarVLA-α, Hy-Embodied-0.5-VLA를 포함한 정책 30개",
+    "status": "신규. 최고 정책의 평균 성공률은 8.80%, 인간 teleoperation은 76.03%. 리더보드: https://robodojo-benchmark.com/leaderboard",
+    "note": "실로봇 쪽 절반(RoboDojo-RealEval)은 이미 별도 항목으로 수록돼 있다. 점수는 논문에서 가져왔으며, 리더보드 페이지는 열어 보지 않았다."
+  },
+  "ebench": {
+    "evaluates": "generalist mobile manipulation 정책. scene, atomic skill, horizon, 정밀도, operating mode별로, 그리고 unseen 배경·물체·instruction 및 그 조합에 대한 일반화별로 profile한다",
+    "improves": "단일 전체 성공률은 정책이 어떤 capability를 갖췄는지, 어디서 학습 asset에 overfit하는지를 가린다",
+    "setup": "Isaac Sim(60 Hz). mobile base 위의 dual-arm 로봇. 224x224 RGB view 3개와 proprioception, 언어. 팔별 joint 또는 end-effector action과 base velocity.",
+    "scale": "scene 범주 9개에 걸친 태스크 26개(mobile pick-and-place 10, mobile long-horizon 9, tabletop dexterous/precise 7). 시연 episode 6,600건(91.4시간). test episode 510건",
+    "policies": "π0 (test 성공률 34.4%), π0.5 (41.0%), X-VLA (24.7%), InternVLA-A1 (27.6%)",
+    "status": "신규. 호스팅 리더보드: https://internrobotics.shlab.org.cn/eval/evaluation-list. 원 연구실 밖에서의 채택은 확인하지 못함",
+    "note": "저자들은 시뮬레이션 점수가 실로봇 성능을 예측한다고 주장하지 않는다고 밝힌다. 점수는 arXiv v3에서 추출한 그대로다."
+  },
+  "roboeval": {
+    "evaluates": "bimanual 매니퓰레이션. binary success와 함께 효율, 협응, 안전/안정성에 대한 behavioral 지표와 stage-wise progress로 평가한다",
+    "improves": "binary success는 협응 불량, 물체 slip, 비대칭적인 팔 사용 같은 failure mode를 가린다",
+    "setup": "MuJoCo. parallel gripper를 장착한 bimanual Franka Panda. proprioceptive 및 시각 관측. joint-position 또는 end-effector-delta action.",
+    "scale": "base 태스크 8개, variation 28개(static, position, rotation, position+rotation). 인간 VR 시연 3,000건 이상",
+    "policies": "GR00T N1.6, X-VLA, π0.5 (논문 v2), 그리고 ACT와 Diffusion Policy",
+    "status": "초기 채택 단계. code repo에 'In Submission'으로 표시됨. 리더보드 섹션은 project page에 있음: https://robo-eval.github.io",
+    "note": "project page는 CoRL 2026 workshop을 언급하는데, 이는 게재 venue가 아니라 발표일 수 있다. 정책별 수치는 범위로만 확보했다."
+  },
+  "simple": {
+    "evaluates": "실내 scene에서 dexterous hand를 갖춘 humanoid의 whole-body loco-manipulation. domain randomization 3단계로 평가한다",
+    "improves": "humanoid VLA 평가에는 locomotion을 위한 신뢰할 만한 contact physics와 photorealistic rendering, 다수의 whole-body 태스크를 결합한 시뮬레이터가 없었다",
+    "setup": "MuJoCo physics와 Isaac Sim rendering을 결합한 구성. dexterous hand를 장착한 Unitree G1. 32-D proprioceptive state와 36-D action(상체 target과 locomotion command).",
+    "scale": "태스크 60개, 실내 scene 50개, 물체 asset 1,000개 이상. 벤치마킹용으로 rendering한 episode 6,000건 이상(project page에는 시연 100,000건 이상으로 적혀 있음)",
+    "real_check": "태스크 2개에서의 zero-shot sim-to-real 전이(pick-and-place sim 90% 대 real 80%, handover 100% 대 80%). 저자들은 이 제한적인 테스트를 근거로 sim-real 일치도가 높다고 주장하지만, 상관 통계는 제시하지 않는다.",
+    "policies": "Ψ0, π0.5, GR00T N1.6, InternVLA, H-RDT, EgoVLA, DreamZero, 그리고 Diffusion Policy와 ACT",
+    "status": "신규. project page에 호스팅 리더보드가 언급됨. 원 연구실 밖에서의 채택은 확인하지 못함",
+    "note": "검색 결과 하나가 이 논문을 CoRL 2026과 연결짓지만, arXiv나 project page에서는 확인되지 않았다. 시연 수가 논문과 project page 사이에 다르다."
+  },
+  "mobilemanibench": {
+    "evaluates": "articulated object와 강체의 mobile manipulation(open, close, pull, push, pick)을 위한 VLA 정책. unseen 물체와 unseen scene에서 평가한다",
+    "improves": "VLA architecture는 주로 fixed-base tabletop 데이터에서 검증됐다. mobile base와 dexterous hand를 위한 simulation-first testbed가 없었다",
+    "setup": "Isaac Sim. mobile 로봇 2종(parallel gripper를 장착한 AgiBot G1, 12-DoF dexterous hand를 장착한 XHand 로봇). head 및 wrist RGB-D. 6-D wrist pose delta와 end-effector joint.",
+    "scale": "20개 범주의 물체 630종, skill 5개, 태스크 100개 이상, scene 100개, RL 정책으로 생성한 trajectory 300K건",
+    "policies": "OpenVLA (4.5%), CogACT (6.8%), π0 (11.2%), π0.5 (18.8%), MobileManiVLA (28.2%)",
+    "status": "신규. code와 데이터셋 공개됨. 원 연구실 밖에서의 채택은 확인하지 못함. 리더보드 없음",
+    "note": "arXiv 본문은 appendix의 실로봇 결과를 언급하지만, HTML과 project page 어디에서도 보이지 않았다. 시뮬레이션 전용으로 취급했다."
+  },
+  "dexverse": {
+    "evaluates": "multi-task, multi-embodiment dexterous hand 매니퓰레이션: grasping, functional tool use, articulated object, non-prehensile 및 contact-rich skill, bimanual 및 long-horizon 태스크",
+    "improves": "dexterous 벤치마크는 개별 태스크와 단일 hand만 다뤄, interaction mode, sensing 조건, embodiment에 걸친 체계적 비교가 불가능했다",
+    "setup": "Isaac Lab. 팔 3종(Franka Research 3, UR10e, xArm 7)과 hand 6종(Sharpa Wave, WUJI, Shadow, Inspire, Allegro, LEAP). proprioception, RGB, depth, point cloud, contact force. absolute joint target.",
+    "scale": "8개 범주의 태스크 100개. teleoperation 시연 3,180건. baseline은 태스크 19개에서 태스크당 episode 50건으로 실행",
+    "policies": "π0.5 (34%), OpenVLA (19%), 그리고 DP3 (34%)와 Diffusion Policy (32%)",
+    "status": "신규. 원 연구실 밖에서의 채택은 확인된 바 없음. 리더보드 없음",
+    "note": "baseline은 태스크 100개 중 19개만 다룬다. 열어 본 페이지에서는 code repository 링크를 찾지 못했다."
+  },
+  "dexjoco": {
+    "evaluates": "task-oriented dexterous hand 매니퓰레이션: tool use, bimanual 협응, long-horizon 실행, 그리고 Hanoi와 태블릿 잠금 해제 같은 reasoning 태스크",
+    "improves": "dexterous 벤치마크는 functional 태스크보다 grasping이나 in-hand reorientation에 집중했고, MuJoCo 기반의 저비용 시연 tooling이 없었다",
+    "setup": "MuJoCo. Allegro Hand를 장착한 Franka Panda 팔(1개 이상). visual, placement, dynamics domain randomization. glove-and-tracker teleoperation toolkit.",
+    "scale": "태스크 11개. teleoperation trajectory 1.1K건(태스크당 100건)",
+    "policies": "π0.5 (40.2%), GR00T N1.5 (40.2%), 그리고 ACT (54.1%)와 Diffusion Policy (47.6-50.4%)",
+    "status": "신규. 원 연구실 밖에서의 채택은 확인된 바 없음. 리더보드 없음",
+    "note": "성공률은 randomized-object 조건의 값이며, arXiv v2에서 추출한 그대로다."
+  },
+  "bicoord": {
+    "evaluates": "두 팔 사이의 spatial-temporal coupling이 긴밀한 long-horizon bimanual 태스크. stage-wise success와 협응 지표로 측정한다",
+    "improves": "기존 bimanual suite에는 두 팔이 짧은 horizon에서 독립적으로 또는 순차적으로 움직이는 태스크가 많다",
+    "setup": "RoboTwin 2.0(SAPIEN) 기반. end-effector pose와 gripper를 제어하는 dual-arm 로봇.",
+    "scale": "태스크 18개. 태스크당 trajectory 100건(총 1,800건)",
+    "policies": "π0 (46.4%), OpenVLA-OFT (40.5%), RDT (39.5%), 그리고 Diffusion Policy (33.1%)",
+    "status": "신규. 원 연구실 밖에서의 채택은 확인된 바 없음. 리더보드 없음",
+    "note": "π0 수치가 RoboTwin 2.0이 보고한 π0 Easy 점수와 일치하므로, 논문 표와 대조해 다시 확인해야 한다."
+  },
+  "lbm-eval": {
+    "evaluates": "large behavior model의 multitask 언어 지시 기반 bimanual 매니퓰레이션. seen 및 unseen 태스크에서, 다수의 rollout에 대한 통계적 검정과 함께 평가한다",
+    "improves": "multitask 정책 비교에는 사전학습에 관한 결론을 뒷받침할 만큼의 rollout과 통계 분석이 부족한 경우가 많았다",
+    "setup": "Drake. Franka FR3 팔 2개와 parallel gripper로 구성한 bimanual station. 정책은 gRPC wrapper를 통해 연결한다.",
+    "scale": "open-source 공개본은 scenario 4개에 걸친 태스크 49개. 논문은 seen 16개와 unseen 8개의 시뮬레이션 태스크를 정책별 태스크당 rollout 200회로 평가",
+    "real_check": "seen 태스크 3개를 시뮬레이션과 실세계 양쪽에서 평가했다. 저자들은 불일치가 있음을 언급하며, 체계적인 sim-real 상관은 보고하지 않는다.",
+    "policies": "TRI LBM (diffusion transformer); Foundry-VLA-1.7B와 Foundry-Qwen3VLA-2.1B (VLA Foundry)",
+    "status": "open source(GitHub star 124개)지만 결과는 Toyota Research Institute의 것만 발견됨. 리더보드 없음",
+    "note": "논문의 scenario별 태스크 수를 합하면 48개인데 repo에는 49개로 적혀 있다. 제3자 결과는 발견되지 않았다."
+  },
+  "genmanip-bench": {
+    "evaluates": "spatial, appearance, common-sense, long-horizon reasoning이 필요한 instruction following tabletop 매니퓰레이션. modular foundation model 시스템과 end-to-end 정책을 비교한다",
+    "improves": "시뮬레이션 플랫폼은 정책 일반화를 연구하기에는 instruction과 scenario의 다양성이 제한적이었다",
+    "setup": "Isaac Sim. tabletop 위의 Franka 팔 1대. annotation된 3D asset 약 10K개를 대상으로 한 LLM 기반 task-oriented scene graph 생성.",
+    "scale": "사람이 다듬은 벤치마크 scenario 200개(CVPR 목록에는 250개로 적혀 있음)",
+    "policies": "end-to-end 정책으로 GR-1과 ACT; modular 시스템으로 CoPA와 MOKA; 이후 GR00T N1/N1.5 및 π0와 함께 InternManip suite에 포함됨",
+    "status": "주로 InternRobotics(Shanghai AI Lab) tooling 안에서 사용됨. 리더보드는 발견되지 않음",
+    "note": "scenario 수가 arXiv abstract(200)와 검색 결과에서 본 학회 목록(250) 사이에 다르다."
+  },
+  "robofactory": {
+    "evaluates": "논리적·공간적·시간적 compositional constraint 아래에서 agent 1~4개가 수행하는 multi-arm 협업 매니퓰레이션",
+    "improves": "embodied multi-agent 매니퓰레이션에는 안전하고 효율적인 협업을 강제하는 벤치마크와 자동 데이터 수집이 없었다",
+    "setup": "ManiSkill(SAPIEN). Franka Panda 팔 1~4대. RGB 관측과 joint action.",
+    "scale": "태스크 11개(one-agent 3, two-agent 4, three-agent 2, four-agent 2). 태스크당 시연 150건",
+    "status": "채택은 제한적. baseline은 Diffusion Policy(평균 one-agent 49%에서 four-agent 10%까지). 리더보드 없음",
+    "note": "venue는 repository 제목과 검색 결과에서 본 CVF open-access 목록에서 가져왔다."
+  },
+  "humanoidgen": {
+    "evaluates": "five-finger hand를 갖춘 humanoid의 bimanual dexterous manipulation. 태스크는 LLM이 계획한 spatial constraint를 통해 생성되고 해결된다",
+    "improves": "시뮬레이션 태스크와 시연은 대부분 gripper 팔용으로만 있었다. dual arm과 dexterous hand를 갖춘 humanoid에는 둘 다 없었다",
+    "setup": "SAPIEN. Inspire hand를 장착한 Unitree H1-2(26-D action space). 카메라 view 6개의 RGB-D.",
+    "scale": "태스크 20개. 태스크당 생성된 시연 100건",
+    "real_check": "논문은 appendix에서 실로봇 실험을 보고한다. 세부 내용은 확보하지 못했고, 본문에는 sim-real 상관이 보고돼 있지 않다.",
+    "status": "채택은 제한적. baseline은 Diffusion Policy와 DP3. 리더보드 없음",
+    "note": "OpenReview 사본이 있지만 venue는 확인되지 않았다."
+  },
+  "agentworld": {
+    "evaluates": "procedural로 구성한 scene에서의 가정 mobile manipulation. basic skill과 거실·주방·침실의 multistage 태스크를 다룬다",
+    "improves": "가정 태스크를 위한 scene 구성과 mobile teleoperation 데이터 수집을 하나의 플랫폼에서 할 수 없었다",
+    "setup": "Isaac Sim(PhysX 5). Unitree G1과 H1, wheeled base 위의 Franka Panda, DOBOT X-Trainer. parallel gripper 또는 dexterous hand.",
+    "scale": "procedural로 생성한 가정 scene 150개, asset 9,000개 이상, teleoperation trajectory 1,000건 이상. basic 태스크 유형 3개와 multistage 태스크 유형 9개",
+    "real_check": "sim-and-real co-training뿐이다: 시뮬레이션 시연 100건과 real 시연 9건으로 pick-and-place에서 실세계 성공률 29.3%를 얻었다. sim-real 상관은 보고되지 않았다.",
+    "policies": "π0 (basic 64-82%, multistage 18-30%), 그리고 BC, ACT, Diffusion Policy",
+    "status": "원 연구실 밖에서의 채택은 제한적. 리더보드 없음",
+    "note": "성공률 범위는 arXiv v2에서 추출한 그대로다."
+  },
+  "robobenchmart": {
+    "evaluates": "빽빽한 선반과 냉장고가 있는 dark-store retail scene에서의 식료품 mobile manipulation. seen 및 unseen scene과 item에서 평가한다",
+    "improves": "매니퓰레이션 벤치마크는 tabletop과 가정 scene에 집중돼 있다. clutter가 심한 다단 retail 선반은 다뤄지지 않았다",
+    "setup": "ManiSkill3. Fetch mobile manipulator(differential-drive base, 7-DoF 팔, torso, parallel gripper). procedural로 생성한 매장 layout.",
+    "scale": "atomic 태스크 5개와 composite 태스크 2개. 21개 범주의 상품 asset 370개. motion planning으로 만든 trajectory 2,976건",
+    "policies": "Octo, SmolVLA, π0, π0.5 (최고: pick-to-basket에서 π0.5 in-domain 55%; composite 태스크에서는 모든 모델 0%)",
+    "status": "채택은 제한적. 리더보드 없음",
+    "note": "태스크별 수치는 arXiv v2에서 추출한 그대로다."
+  },
+  "autobio": {
+    "evaluates": "언어 지시에 따른 생물학 실험실 기기(tube cap, thermal cycler, mixer) 매니퓰레이션. 정밀도, visual reasoning, protocol following을 요구하는 난이도 3단계로 평가한다",
+    "improves": "범용 시뮬레이터에는 실험실 기기, threaded 및 detent mechanism, 액체, 투명 재질, 동적인 기기 display가 없었다",
+    "setup": "custom physics plugin과 선택적 Blender rendering을 갖춘 MuJoCo. ALOHA와 UR5e(Robotiq gripper 또는 dexterous hand).",
+    "scale": "난이도 3단계에 걸친 태스크 16개. 태스크당 시연 100건",
+    "policies": "π0와 RDT (easy 태스크에서 약 83-86%, medium 1-21%, hard 4-8%)",
+    "status": "도메인 특화. 이후의 lab automation 벤치마크에서 인용됨. 리더보드 없음",
+    "note": "ICLR 2026 venue는 arXiv 페이지가 아니라 검색 결과에서 본 ICLR proceedings 목록에서 가져왔다."
+  },
+  "labutopia": {
+    "evaluates": "과학 실험실 매니퓰레이션. atomic action에서 combined 태스크와 일반화 태스크를 거쳐 long-horizon mobile manipulation에 이르는 계층적 level로 평가한다",
+    "improves": "embodied 벤치마크에는 화학 실험실 scene, multi-physics(액체, 가열), 과학 실험 절차를 위한 태스크 계층이 없었다",
+    "setup": "Isaac Sim. Franka 팔(navigation 태스크에는 mobile 로봇). procedural로 생성한 실험실 scene.",
+    "scale": "repository README 기준 4개 level에 걸친 태스크 24개(basic 10, combined 6, 일반화 6, long-sequence 2)",
+    "status": "도메인 특화. baseline은 ACT와 Diffusion Policy. 리더보드 없음",
+    "note": "태스크 수와 level 수는 repository README에서 가져왔다. 논문 자체는 열어 보지 않았으며, 논문에 적힌 합계는 다를 수 있다."
+  },
+  "labimus": {
+    "evaluates": "화학 실험실에서의 humanoid dexterous manipulation. 기기 readout을 바탕으로 정량적 허용 오차에 맞는지 확인하는 powder scooping과 weighing을 포함한다",
+    "improves": "실험실 벤치마크는 태스크 완료 여부만 채점했고, protocol-level 정확도를 위한 powder physics와 closed-loop 기기 feedback이 없었다",
+    "setup": "Isaac Sim(PhysX, particle 기반 powder). BrainCo Revo 2 dexterous hand를 장착한 Tianyi 2.0 humanoid 상체.",
+    "scale": "태스크 7개(atomic operation 6개와 7단계 solid-weighing workflow 1개). 태스크당 teleoperation 시연 100건. 실험실 asset 30개 이상",
+    "policies": "π0, 그리고 ACT와 Diffusion Policy",
+    "status": "신규, 도메인 특화. 리더보드 없음",
+    "note": "저자들은 모든 실험이 시뮬레이션에서 이뤄졌으며 실세계 검증은 계획 중이라고 밝힌다."
+  },
+  "pipette": {
+    "evaluates": "sample 및 culture-ware handling, 장비 hatch 제어, 기기 배치를 포괄하는 wet-lab 매니퓰레이션. 시뮬레이션 data augmentation을 쓴 경우와 쓰지 않은 경우를 모두 평가한다",
+    "improves": "wet-lab robot learning에는 공개된 편집 가능한 실험실 asset, customize 가능한 시뮬레이션, 소수의 시연을 학습 데이터로 확장하는 pipeline이 없었다",
+    "setup": "Isaac Sim 5.1 / Isaac Lab 2.3. Franka Panda와 AgileX 팔을 포함한 팔 embodiment 3종.",
+    "scale": "태스크 12개. wet-lab asset 100개 이상. 기본 data budget은 태스크당 인간 시연 30건",
+    "policies": "π0, SmolVLA, 그리고 ACT",
+    "status": "신규, 도메인 특화. 리더보드 없음",
+    "note": "성공률은 확보하지 못했다. 추출한 텍스트에는 세 번째 embodiment의 이름이 나오지 않았다."
+  },
+  "assemble-bench": {
+    "evaluates": "VLA 및 world-action model의 contact-rich 조립: 여러 크기의 round·square peg insertion, gear meshing, nut threading",
+    "improves": "VLA 시뮬레이션 벤치마크는 tight-clearance 조립을 거의 포함하지 않으며, 이를 위한 공통 플랫폼 위의 학습·평가 loop도 없었다",
+    "setup": "Isaac Lab-Arena. DROID 플랫폼(Robotiq gripper를 장착한 7-DoF Franka 팔). 태스크는 NIST Assembly Task Boards를 본떠 만들었다.",
+    "scale": "4개 suite의 태스크 14개(round peg 4, square peg 4, gear 3, nut 3). scripted expert 시연 1,355건",
+    "real_check": "π0.5로 4 mm round peg insertion을 수행하는 실로봇 영상 1건이 제시돼 있다. 체계적인 실세계 평가나 sim-real 상관은 보고되지 않았다.",
+    "policies": "π0.5 (DROID로 fine-tuning; behavior cloning 및 CG-DAgger 변형)",
+    "status": "신규. 회사(HUD)가 논문 없이 공개함. 리더보드는 발견되지 않음",
+    "note": "arXiv 논문이 없다. 모든 세부 내용은 HUD blog 페이지에서 가져왔다."
+  },
+  "isaac-lab-arena-task-suites": {
+    "evaluates": "RoboCasa와 LIBERO 태스크를 GPU-parallel로 재구현한 환경에서의 generalist 정책. 태스크는 별개의 object, scene, embodiment, task block을 조합해 구성한다",
+    "improves": "시뮬레이션에서의 벤치마크 제작은 느렸고 suite는 하나의 시뮬레이터에 묶여 있었다. 하나의 정책을 여러 환경에 걸쳐 대규모로 병렬 평가하기가 어려웠다",
+    "setup": "Isaac Lab / Isaac Sim. GR1 humanoid와 Franka 팔. LeRobot Environment Hub와 통합돼 있다.",
+    "scale": "Lightwheel-RoboCasa-Tasks와 Lightwheel-LIBERO-Tasks suite에 걸친 태스크 250개 이상",
+    "policies": "GR00T N1.5, π0, SmolVLA가 지원 정책으로 나열돼 있음; 결과 표는 발견되지 않음",
+    "status": "이후의 suite(X2Real, RoboFinals, Assemble Bench)가 사용하는 framework. 리더보드 없음",
+    "note": "단일 벤치마크라기보다 framework다. 공개된 점수는 발견되지 않았다. 연도는 열어 본 blog post의 날짜이며, 더 이른 pre-release가 있을 수 있다."
+  },
+  "robofinals-100": {
+    "evaluates": "강체, articulated object, 변형체를 다루는 가정·공장·retail 태스크에서의 frontier robot foundation model. 난이도를 단계별로 나눈다",
+    "improves": "개발자들은 학계 시뮬레이션 벤치마크가 frontier model에 의해 포화돼, 평가가 다시 느린 실세계 테스트로 밀려난다고 말한다",
+    "setup": "Newton 또는 PhysX physics를 쓰는 Isaac Lab-Arena, 그리고 MuJoCo와 Genesis. tabletop 팔, mobile manipulator, loco-manipulation 로봇.",
+    "scale": "태스크 100개",
+    "real_check": "공급사는 asset이 Real2Sim으로 calibration됐다고 밝힌다. 실로봇 평가나 sim-real 상관은 공개되지 않았다.",
+    "status": "상용이며 일반에 공개되지 않음. 이름이 밝혀진 사용자는 Qwen뿐. 공개 리더보드 없음",
+    "note": "모든 정보는 공급사의 제품 페이지에서 가져왔다. 논문도 공개된 결과도 없다."
+  },
+  "garmentlab": {
+    "evaluates": "의류, 강체, 유체, 인체 간 상호작용을 포함하는 의류 및 변형체 조작",
+    "improves": "의류 조작에는 다양한 의류 종류, 여러 physics 기법, sim-to-real 지원을 갖춘 통합 시뮬레이션이 없었다",
+    "setup": "여러 로봇과 manipulator를 갖춘, FEM과 PBD 기법을 결합한 시뮬레이션(시뮬레이터 이름은 확보하지 못했다).",
+    "scale": "5개 그룹의 태스크 20개",
+    "real_check": "abstract는 sim-to-real 알고리즘과 실세계 벤치마크를 설명한다. sim-real 상관은 확보하지 못했다.",
+    "status": "의류 조작 연구에 사용됨. VLA 결과는 발견되지 않음. 리더보드 없음",
+    "note": "arXiv abstract 페이지만 열어 봤다. 태스크 수는 NeurIPS 논문의 검색 snippet에서 가져왔다."
+  },
+  "dexgarmentlab": {
+    "evaluates": "bimanual dexterous hand 의류 조작과, unseen 의류 형태 및 변형에 대한 일반화",
+    "improves": "의류 시뮬레이션 환경은 gripper를 대상으로 했다. dexterous bimanual 의류 태스크에는 환경과 자동 데이터 수집이 없었다",
+    "setup": "dexterous hand를 쓰는 의류 시뮬레이션(시뮬레이터 이름은 확보하지 못했다).",
+    "scale": "태스크 scenario 15개. trajectory는 태스크당 시연 1건에서 생성",
+    "status": "도메인 특화. VLA 결과는 발견되지 않음. 리더보드 없음",
+    "note": "arXiv abstract 페이지만 열어 봤다. 실로봇 관련 내용, 시뮬레이터, baseline은 확인하지 못했다."
+  },
+  "domino": {
+    "evaluates": "움직이는 물체의 매니퓰레이션(interception과 tracking). motion complexity 3단계에서 성공률과 연속적인 manipulation score로 채점한다",
+    "improves": "기존 시뮬레이션 벤치마크는 로봇만이 상태를 바꾸는 정적인 세계를 가정하며, VLA 학습용 dynamic manipulation 데이터가 부족했다",
+    "setup": "SAPIEN. RoboTwin 2.0 기반. embodiment 5종(Aloha-AgileX, Franka Panda, Piper, UR5-WSG, ARX-X5)이며, 주요 실험은 Aloha-AgileX에서 수행했다.",
+    "scale": "태스크 35개. expert trajectory 110K건 이상. dynamics level 3단계(constant velocity, polynomial, abrupt transition이 있는 multi-segment). speed coefficient alpha",
+    "real_check": "ACT, RDT-1B, π0.5, PUMA를 태스크당 teleoperation 시연 50건으로 fine-tuning하고 AgileX Piper에서 DOMINO 태스크 5개(각 20회)로 테스트했다(평균 7%, 8%, 24%, 42%). 방법을 실로봇으로 옮겨 본 것뿐이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "ACT, OpenVLA, OpenVLA-OFT, RDT-1B, π0, π0.5, InternVLA-M1, PUMA; static 데이터로 학습한 정책은 dynamic 태스크에서 성공률이 8% 아래로 떨어지고, dynamic fine-tuning은 3%p 미만을 더하며, PUMA는 SR 17.2%에 도달",
+    "status": "코드, 데이터셋, PUMA weight 공개됨. 리더보드 없음. DOMINO-Long(D2-VLA)으로 확장됐고, DSDyn-VLA appendix에서 사용됐으며, MotionForge가 prior work로 인용함. PUMA는 ReflexBench의 baseline",
+    "note": "venue는 arXiv comment와 project page에서 가져왔다. 논문이 밝힌 baseline 대비 6.3%p 향상은 추출한 표와 맞춰 볼 수 없었다."
+  },
+  "dom": {
+    "evaluates": "움직이는 물체의 매니퓰레이션. interaction, perception, 일반화의 sub-dimension 9개에서 평가하며, closed-loop reactivity와 disturbance 강건성을 포함한다",
+    "improves": "로봇 데이터셋은 대부분 static이고 teleoperation으로는 빠른 물체를 따라갈 수 없다. inference latency 때문에 실행 시점에는 action이 이미 낡은 것이 된다",
+    "setup": "물체 pose와 velocity로 구동되는 automatic demonstrator를 갖춘 Isaac Sim. 3D-FRONT scene과 Objaverse 물체. Franka Emika Panda와 AgileX PiPER.",
+    "scale": "synthetic episode 200K건. scene 2.8K개. 물체 206종. 실세계 episode 2K건. dimension 3개 x sub-dimension 3개",
+    "real_check": "이 벤치마크에는 자체 실로봇 부문이 있다: Franka와 PiPER에서 실세계 태스크 16개, 태스크당 60회(method당 960회). sim-real 상관 통계는 보고되지 않았다.",
+    "policies": "Diffusion Policy, ACT, OpenVLA-OFT, π0.5, SmolVLA, GR00T-N1.5, RTC, VLA-Adapter-Pro, VLASH, DynamicVLA; DynamicVLA의 평균 성공률 47.06% 대 최고 baseline(VLASH) 12.33%",
+    "status": "project page 있음. DynamicVLA는 ReflexBench와 DynBench의 baseline이며, DOM은 MotionForge가 prior work로 인용함. 리더보드는 발견되지 않음",
+    "note": "venue는 arXiv comment 필드('NeurIPS 2026') 기준이며, NeurIPS 사이트와 대조하지는 않았다."
+  },
+  "domino-long": {
+    "evaluates": "여러 stage에 걸쳐 움직이는 물체를 조작하면서 episode 초반에 본 cue(물체 위치, 제시 순서, 색상 instruction)를 유지하는 능력",
+    "improves": "원래 DOMINO 태스크는 short-horizon이며 long-term memory를 크게 요구하지 않는다",
+    "setup": "RoboTwin 2.0 / DOMINO. Aloha-AgileX bimanual 로봇.",
+    "scale": "multi-stage 태스크 10개. 태스크당 시연 50건(총 500건, 227,208 record). episode 길이 201-911 step",
+    "real_check": "제안된 D2-VLA를 Unitree G1D에서 long-horizon 태스크 8개(static 4개, dynamic 4개)로 π0.5 및 MemoryVLA와 비교했다. 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "성공률 PUMA 20.6%, π0.5 35.4%, D2-VLA 60.0%",
+    "status": "method 논문(D2-VLA) 안에서 소개됨. code repository와 project page가 기재돼 있음. 독립적인 채택은 보이지 않음",
+    "note": "physics engine은 추출한 텍스트에 명시돼 있지 않다. DOMINO에서 이어받았다."
+  },
+  "motionforge": {
+    "evaluates": "요인별로 분리한 domain shift(물체, 배경, 조명, motion 속도)와 latency-aware 실시간 실행 조건에서, 움직이는 물체를 다루는 long-horizon 조작",
+    "improves": "기존 dynamic 벤치마크는 다양한 motion pattern, long horizon, 체계적 domain shift, latency-aware 평가를 함께 다루지 않는다",
+    "setup": "Isaac Sim. DOM, DOMINO, PhysMani-Bench와 대비해 자신의 위치를 설정한다. 로봇 embodiment는 추출된 텍스트에 명시되지 않았다.",
+    "scale": "scene family 4개의 태스크 40개(long-horizon 17개). motion pattern 11종. 시연 episode 약 20,000건. shift 축 4개와 joint shift",
+    "policies": "Diffusion Policy, ACT, SmolVLA, X-VLA, π0.5, GR00T N1.7, FastWAM. in-domain 최고 결과는 ACT의 22.2%, joint shift에서의 최고는 5.85%. scene을 정지시키면 21.7-27.5%p 오른다",
+    "status": "신규 preprint. 코드나 project URL은 찾지 못했다"
+  },
+  "reflexbench": {
+    "evaluates": "inference latency가 인식과 실행 사이를 갈라놓는 reaction-critical 조작: conveyor pick-and-place, 공 받기, interception, 던지기, 회전하는 peg 삽입",
+    "improves": "기존 dynamic 벤치마크는 평가만 할 뿐, anticipation과 inference 효율을 함께 연구할 공통 framework를 제공하지 않는다",
+    "setup": "real-time-factor 지표를 쓰는 시뮬레이션. 시뮬레이터와 시뮬레이션 로봇은 추출된 텍스트에 명시되지 않았다. 실로봇은 AgileX Piper다.",
+    "scale": "태스크 6개. 태스크당 시연 200건",
+    "real_check": "태스크 3개(conveyor pick-and-place, 버튼 누르기, 공 받기)를 AgileX Piper에서 ReflexVLA, PUMA, SmolVLA로 태스크당 20회씩 실행했다. 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "ReflexVLA 50.4%, PUMA 50.2%, SmolVLA 38.3%, DynamicVLA 37.3%, π0.5 36.9%, OpenVLA-OFT 36.0%, VLA-Adapter 30.3%",
+    "status": "method 논문(Reflex) 안에서 제안됐다. project page가 기재돼 있다. 독립적인 채택 사례는 보이지 않는다",
+    "note": "시뮬레이터 이름은 확인하지 못했다."
+  },
+  "dynbench": {
+    "evaluates": "움직이는 물체에 대한 vision 기반 조작: conveyor picking과 sorting, 움직이는 target 위로의 dropping과 stacking, 움직이는 hole로의 삽입, 굴러가는 물체 grasping",
+    "improves": "state 기반 Kinetix 벤치마크는 dynamic scene에서 VLA의 visual pipeline을 시험하지 않는다",
+    "setup": "MuJoCo. Franka Panda. 실세계 dynamic 태스크 4개를 시뮬레이션으로 옮겨 확장했다.",
+    "scale": "태스크 9개. 태스크당 rule로 생성한 시연 100건",
+    "real_check": "태스크 4개(conveyor picking, dynamic dropping, dynamic stacking, mobile pouring)를 AgileX Piper에서 각 50회씩 실행했다. 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "평균 성공률 π0.5 9.7%, RTC 19.4%, VLASH 27.1%, DynamicVLA 34.3%, DSDyn-VLA 48.4%",
+    "status": "method 논문(DSDyn-VLA) 안에서 제안됐다. 코드 공개를 약속했으나 URL은 찾지 못했다"
+  },
+  "physmani-bench": {
+    "evaluates": "3D scene에서 빠르게 움직이는 target(움직이는 belt, 회전하는 rack)을 일반 속도와 고속으로 조작",
+    "improves": "벤치마크들이 static 또는 quasi-static 조작에 집중해 있고, dynamic target 조작은 거의 연구되지 않았다",
+    "setup": "RLBench를 확장했다. 시뮬레이션에서는 Franka Emika Panda, 실세계 테스트에는 Astribot S1.",
+    "scale": "태스크 16개(group 8개 x 속도 2종). 태스크당 trajectory 160건(총 2,560건)",
+    "real_check": "Astribot S1에서 dynamic 태스크 4개(태스크당 64회)로 PhysMani와 baseline을 비교했다. 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "평균 성공률 PhysMani 45.9%, 3DFA 37.8%, 3DDA 35.1%, Act3D 27.1%, ManiGaussian 22.5%, π0.5 8.3%",
+    "status": "method 논문 안에서 제안됐다. 코드·데이터 repository가 기재돼 있다. MotionForge가 인용한다",
+    "note": "venue는 arXiv comment에 따른 것이다. 대부분 3D 정책이며, VLA baseline은 π0.5뿐이다."
+  },
+  "libero-plus": {
+    "evaluates": "LIBERO로 학습한 VLA의, 통제된 perturbation 7종에 대한 강건성: 물체 layout, 카메라 viewpoint, 로봇 초기 상태, 언어 지시, 조명, 배경 texture, 센서 noise",
+    "improves": "ceiling에 가까운 LIBERO 점수가 취약성을 가린다. 이전 강건성 테스트는 시나리오가 적었고, perturbation 차원 내부의 세밀한 분석을 제공하지 않았다",
+    "setup": "LIBERO(robosuite / MuJoCo). Franka Panda.",
+    "scale": "perturbation을 적용한 테스트 태스크 10,030개. 7개 차원과 21개 하위 차원. 난이도 5단계. 학습용 trajectory 20K건 이상 공개",
+    "policies": "OpenVLA, OpenVLA-OFT(variant 3종), π0, π0-FAST, NORA, WorldVLA, UniVLA, RIPT-VLA. 성공률이 약 95%에서 30% 미만으로 떨어진다. 카메라와 초기 상태 shift의 타격이 가장 크고, 언어 변화의 타격이 가장 작다",
+    "status": "널리 재사용된다(LIBERO-MAX, LIBERO-Safety, IndustrialVLA-Bench, RoboTwin 2.0-Plus study). 결과 표는 GitHub README에서 관리된다",
+    "note": "arXiv 제목은 'In-depth Robustness Analysis of Vision-Language-Action Models'이고, CVPR 2026 poster 페이지에는 'A Progressive Robustness Benchmark for Visual-Language-Action Models'로 올라 있다. CVF open-access 페이지는 403을 반환했다."
+  },
+  "libero-pro": {
+    "evaluates": "LIBERO에서의 성공이 암기를 반영하는가. 물체 속성, 초기 위치, 태스크 지시, 환경에 단독으로 또는 조합해 perturbation을 가해 확인한다",
+    "improves": "표준 LIBERO의 train·test 구성에서는 overfitting된 모델이 거의 만점을 받으면서도 작은 변화에는 무너진다",
+    "setup": "LIBERO(robosuite / MuJoCo).",
+    "scale": "LIBERO suite에 적용한 perturbation 차원 4개. 태스크 수는 추출하지 못했다",
+    "policies": "OpenVLA, π0, π0.5. 표준 LIBERO에서의 90% 이상이 generalized 설정에서는 0.0%로 떨어진다. π0.5는 위치 변화에서 0.38을 유지한다",
+    "status": "코드 공개. LIBERO-MAX가 재사용했고(2,400 case), 이후의 LIBERO 변형 대부분이 인용한다",
+    "note": "arXiv record에 venue가 없다."
+  },
+  "libero-x": {
+    "evaluates": "5단계로 등급화한, 여러 요인이 결합된 multi-factor shift 하에서의 강건성: local spatial, extended spatial, scene topology, visual attribute, 의미가 동일한 지시문",
+    "improves": "기존 벤치마크는 서로 분리된 shift를 테스트하고, LIBERO test set은 다양성이 낮은 학습 데이터를 거의 그대로 닮아 있다",
+    "setup": "MuJoCo. LIBERO 스타일 환경. gripper를 단 single arm.",
+    "scale": "scene 100개의 태스크 600개. VR teleoperation 시연 2,520건. perturbation 5단계. multi-label 태스크 속성 4개",
+    "policies": "OpenVLA-OFT, π0, X-VLA, GR00T-N1.5, π0.5. π0.5는 65.2%(level 1)에서 18.0%(level 5)로 떨어진다. 3-step 태스크는 0에 가깝다",
+    "status": "project page 있음. 리더보드나 코드 URL은 찾지 못했다"
+  },
+  "libero-vpro": {
+    "evaluates": "실행 도중 visual evidence 자체가 손상될 때의 closed-loop 시각 강건성: degradation, 카메라 staleness, cross-view 불일치, 태스크와 관련된 scene 변형",
+    "improves": "이전 suite들은 scene이나 태스크 구성에 perturbation을 가하지만, observation stream은 시간적 일관성과 내부 정합성을 유지한다",
+    "setup": "LIBERO(suite 4개의 태스크 40개). 실세계 확인은 Franka Research 3에서 했다.",
+    "scale": "태스크 40개. 4개 차원, challenge 범주 12개, 설정 96개, task-condition case 3,296개. 시뮬레이션 episode 약 196,000건",
+    "real_check": "π0.5와 LaWAM을 Franka Research 3에서 그중 4개 조건으로 실행했다(조건당 10회, rollout 200회). 경향은 시뮬레이션과 대체로 일치한다고 보고됐으나, 상관계수는 없다.",
+    "policies": "OpenVLA-OFT, π0, π0.5와 world-action model 3종(FastWAM, LingBot-VA, LaWAM). nominal 92-99%가 평균 56-67%로 떨어진다. view loss와 stale 카메라의 타격이 가장 크다",
+    "status": "project page 있음. 신규 preprint"
+  },
+  "libero-occ": {
+    "evaluates": "scene으로 인해 조작 대상 물체, receptacle, 또는 둘 다가 가려지는 occlusion에 대한 강건성. 심각도 3단계를 둔다",
+    "improves": "VLA 벤치마크는 태스크 관련 물체가 입력 observation에서 완전히 보인다고 암묵적으로 가정한다",
+    "setup": "LIBERO(suite 4개). Franka 팔.",
+    "scale": "occlusion이 적용된 태스크 instance 2,000개(suite당 500개). occlusion 유형 3종 x 심각도 3단계",
+    "policies": "OpenVLA-OFT 95.75% → 47.95%, π0.5 90.00% → 40.55%, UniVLA 88.25% → 57.10%. 제안된 VIM은 65.05%에 도달한다",
+    "status": "코드 repository가 기재돼 있다. 벤치마크 + method 논문",
+    "note": "추출 결과에는 engine이 PyBullet으로 나와 있으나, 이는 다른 LIBERO 파생 논문들(robosuite / MuJoCo)과 충돌한다. engine은 미확인으로 남겨 두었다."
+  },
+  "libero-max": {
+    "evaluates": "정책이 동작을 시작한 뒤 환경이 바뀔 때의 태스크 완수: target 또는 receptacle 재배치, 카메라 shift, 조명 전환, noise 발생, distractor, 장애물 삽입",
+    "improves": "기존 벤치마크는 외부 조건을 reset 시점에 정하므로, episode 도중의 변화는 테스트되지 않는다",
+    "setup": "LIBERO. case는 LIBERO-Plus(5,600개)와 LIBERO-PRO(2,400개)에서 가져왔다.",
+    "scale": "Base/Dynamic pair 8,000개(정책당 rollout 16,000회). event 유형 8종, 각 1,000 pair",
+    "policies": "π0.5, OpenVLA-OFT, X-VLA, Xiaomi-Robotics-0, MolmoAct2, SmolVLA, GR00T N1.7, VLA-JEPA와 WAM 5종을 포함한 정책 14개. 모든 정책이 11.0-25.7%p 하락한다. WAM이 VLA보다 일관되게 낫거나 못하지는 않다",
+    "status": "project page 있음. 신규 preprint"
+  },
+  "libero-recover": {
+    "evaluates": "난이도 4단계의 실패 복구: action retry, action adaptation, object-state recovery, environmental recovery",
+    "improves": "벤치마크들은 미리 정해진 초기 상태에서의 완수를 평가할 뿐, 실패 인식, 상태 복구, replanning은 평가하지 않는다",
+    "setup": "LIBERO(robosuite / MuJoCo). Franka.",
+    "scale": "suite 4개에 걸친 subtask 130개. 복구 시나리오 2,178개. 복구 4단계. 시나리오당 10회",
+    "policies": "OpenVLA-OFT, GR00T-N1.5, π0, π0-FAST, Wan2-Policy, Cosmos-Predict2-Policy. 모두 실패 이후 성능의 절반 이상을 잃는다. 복구 성공률은 level 1에서 약 40%, level 4에서 약 3%",
+    "status": "공개를 예고했으나 URL은 찾지 못했다"
+  },
+  "libero-ctrl": {
+    "evaluates": "compound 강건성: 동시 perturbation 하의 결과를, 동일한 matched instance에서 각 단일 perturbation 하의 결과로부터 예측할 수 있는가",
+    "improves": "LIBERO-Plus는 일부 pairwise 조합을 테스트했지만, 평가 instance 단위로 구성 요소별 결과와 compound 결과를 연결하지는 않았다",
+    "setup": "LIBERO(suite 4개).",
+    "scale": "태스크 40개. 축 6개(카메라, 조명, 로봇 pose, 센서, actuation, 언어). 심각도 3단계. matched configuration 400개. checkpoint당 rollout 10,400회",
+    "policies": "π0.5, OpenVLA-OFT, UniVLA, SmolVLA, VLA-JEPA, PredVLA, MINERVA. configuration의 최대 29.0%가 single-axis conjunction과 동시 조건 사이에서 결과가 바뀌지만, aggregate 수치는 거의 움직이지 않는다",
+    "status": "코드와 rollout별 결과가 공개 repository에 있다. 신규 preprint",
+    "note": "논문 제목은 'Beyond Single-Axis Testing: Paired Evaluation of Compound Robustness in Vision-Language-Action Policies'이다."
+  },
+  "robotwin-2-0-plus": {
+    "evaluates": "noise, 조명, 카메라, 로봇 초기 상태, 배경, layout, 언어 perturbation 하에서의 bimanual 정책 강건성. world-action model과 VLA를 비교한다",
+    "improves": "LIBERO-Plus의 perturbation 프로토콜은 single-arm LIBERO에만 있었고, WAM과 VLA의 강건성은 비교된 적이 없었다",
+    "setup": "RoboTwin 2.0. Aloha-AgileX dual arm. single-arm 결과를 위해 LIBERO-Plus와 짝지어 쓴다.",
+    "scale": "perturbation 7종. 태스크 수는 추출하지 못했다",
+    "policies": "전체 기준 LingBot-VA 74.2%, Fast-WAM 72.7%, MOTUS 71.5%, π0.5 58.6%, X-VLA 53.1%. WAM은 visual perturbation에서는 버티지만 카메라와 로봇 상태 변화에는 고전한다",
+    "status": "평가 코드 페이지가 기재돼 있다. study 논문 안에서 제안됐다",
+    "note": "논문 제목은 'Do World Action Models Generalize Better than VLAs? A Robustness Study'이다."
+  },
+  "eva-vla": {
+    "evaluates": "black-box optimization으로 찾아낸, 물리적으로 타당한 변형에 대한 worst-case 강건성: 물체의 3D transformation, 조명 변화, adversarial patch",
+    "improves": "adversarial patch 연구는 물리적 타당성을 위반하거나 gradient 접근이 필요하며, 실제 물리적 변형의 범위를 다루지 못한다",
+    "setup": "LIBERO(suite 4개). 실세계 확인은 AgileX Piper에서 했다.",
+    "scale": "태스크 40개. 변형 family 3개와 연속 parameter 9개. suite당 rollout 500회",
+    "real_check": "'put A into B' 태스크 3개를 변형 유형당 하나씩 AgileX Piper에서 실행했고, 실패 양상이 시뮬레이션과 일치한다고 보고됐다. 상관 통계는 없다.",
+    "policies": "OpenVLA, OpenVLA-OFT, UniVLA, π0.5. 3D transformation 하에서 실패율이 68-88%까지 오른다. OpenVLA는 LIBERO-Long에서 실패율 90%를 넘는다",
+    "status": "코드나 project URL은 찾지 못했다"
+  },
+  "vlatest": {
+    "evaluates": "target 물체와 confounding 물체, 조명, 카메라 pose, 처음 보는 물체, instruction mutation에 걸친 VLA의 generation 기반 fuzz testing",
+    "improves": "VLA 평가는 손으로 만든 소규모 scene 세트에 의존했고, 자동화된 테스트 framework가 없었다",
+    "setup": "visual-matching rendering을 쓰는 ManiSkill2. 태스크는 Open X-Embodiment로 학습한 모델의 셋업을 따른다. 로봇은 추출된 텍스트에 명시되지 않았다.",
+    "scale": "태스크 4개. 생성된 scene 18,604개. testing operator 10개",
+    "policies": "RT-1(checkpoint 3개), RT-1-X, Octo-small, Octo-base, OpenVLA-7b. 네 태스크의 평균 성공률은 12.4%, 6.0%, 1.2%, 0.5%. 통과한 case 중 카메라 mutation에서도 살아남는 것은 34%뿐이다",
+    "status": "코드와 생성된 scene 18,604개 공개. LADEV가 같은 모델 7개를 평가한다",
+    "note": "venue는 arXiv comment에 따른 것이다."
+  },
+  "ladev": {
+    "evaluates": "자연어 설명으로부터 scene을 생성하고 지시문을 paraphrase하는 자동화된 강건성 테스트",
+    "improves": "VLA 모델을 자동으로 테스트하고 평가하는 플랫폼이 없었다",
+    "setup": "SAPIEN / ManiSkill2. SimplerEnv를 확장한다.",
+    "scale": "태스크 4개. 생성된 scene 4,000개 이상. scene당 paraphrase된 지시문 여러 개",
+    "policies": "RT-1(checkpoint 3개), RT-1-X, Octo-small, Octo-base, OpenVLA-7b. 성공률이 처음 보는 물체에서 10-30%, paraphrase에서 5-15% 떨어진다. put-on과 put-in 태스크는 0에 가깝다",
+    "status": "project site 있음. 논문 시점에 코드 공개는 예정 상태였다"
+  },
+  "pvep": {
+    "evaluates": "VLA에 대한 물리적 시각 위협: blur, noise, 밝기, typographic visual prompt, black-box부터 white-box까지의 adversarial patch",
+    "improves": "open-source VLA 모델을 물리적 보안 위협에 대해 평가한 선행 연구가 없었다",
+    "setup": "VIMA 시뮬레이터와 SimplerEnv.",
+    "scale": "태스크 20개(VIMA 14개, SimplerEnv 6개). 위협 범주 4개",
+    "policies": "LLaRA와 OpenVLA. blur는 둘 모두에서 실패율을 약 47%p 높인다. white-box patch는 실패율 94.5%(LLaRA)와 100%(OpenVLA)에 이른다",
+    "status": "project page 있음"
+  },
+  "attackvla": {
+    "evaluates": "VLA에 대한 adversarial attack과 backdoor attack의 공통 프로토콜. 효과, transferability, targeted long-horizon 오동작을 측정한다",
+    "improves": "attack들이 통합된 framework 없이 서로 다른 모델과 셋업에서 평가됐다",
+    "setup": "LIBERO(suite 4개). 실세계 테스트는 7-DoF Franka에서 했다.",
+    "scale": "태스크 40개. adversarial attack 6종과 backdoor attack 3종",
+    "real_check": "TMA, TabVLA, BackdoorVLA를 Franka 팔에서 π0-FAST를 상대로 실행했다(attack 성공률 42.5%, 20%, 50%). attack의 재현이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "OpenVLA, SpatialVLA, π0-FAST. targeted backdoor 성공률은 75.35%, 51.63%, 48.23%. π0-FAST가 adversarial attack에 가장 강건하다",
+    "status": "코드나 project URL은 찾지 못했다"
+  },
+  "robostress": {
+    "evaluates": "기구적 요인에서 비롯된 로봇 실행 오차에 대한 강건성: Stribeck friction, gear backlash, joint compliance, gravity compensation 오차",
+    "improves": "강건성 연구들은 합성 action noise를 주입할 뿐, 로봇 자체에서 비롯되는 실행 오차는 탐구하지 않은 채 남겨 둔다",
+    "setup": "MuJoCo 3.7.0과 robosuite 1.4.1. LIBERO(suite 4개). 실세계 테스트는 AgileX Piper 팔에서 했다.",
+    "scale": "태스크 40개. 오차 유형 4종을 조합한 deployment 시나리오 7개",
+    "real_check": "self-compensating VLA를 마모 정도가 다른 AgileX Piper 팔 2대에서 태스크 4개로 테스트했다(한쪽 팔에서 76% 대 base 정책 43%). 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "π0와 π0.5, 그리고 domain randomization baseline과 RobustVLA baseline. stress 하에서 base π0.5는 49.1%, π0는 41.7%. self-compensation을 적용하면 56.6%와 44.2%로 오른다",
+    "status": "코드 공개를 예고했으나 URL은 찾지 못했다",
+    "note": "논문 제목은 'Taming VLAs under Robot Execution Errors: Self-Compensation and Stress Testing'이다."
+  },
+  "robotwin-phys": {
+    "evaluates": "물리 parameter 변화에 대한 민감도: 질량, 무게중심, 마찰, restitution, joint damping, 테이블 기울기와 높이, 외력",
+    "improves": "벤치마크들은 appearance와 layout은 randomize하지만 물리 parameter는 nominal 값으로 유지한다",
+    "setup": "RoboTwin 2.0. bimanual.",
+    "scale": "태스크 50개. 물리 차원 13개. 물리 parameter가 annotation된 expert episode 5,000건 이상",
+    "policies": "Fast-WAM 91.88% → 44.24%, Motus 88.66% → 39.60%, FACT 88.40% → 39.14%, Galaxea G0.5 93.70% → 37.82%, π0.5 82.74% → 31.60%(clean 대 physical randomization)",
+    "status": "technical report. 코드 URL은 찾지 못했다",
+    "note": "arXiv comment는 이를 'technical report for a benchmark'라고 설명한다."
+  },
+  "nebula": {
+    "evaluates": "capability별 진단(control, 인식, 언어, dynamic adaptation, spatial reasoning, 강건성)과, inference frequency, latency, 안정성, 적응성에 대한 stress test",
+    "improves": "단일한 end-task 성공률 지표로는 skill 진단도, perturbation에 대한 강건성 측정도 얻을 수 없다. 데이터 format이 파편화돼 있다",
+    "setup": "SAPIEN / ManiSkill3. single-arm 태스크. ManiSkill, LeRobot, BEHAVIOR-1K format의 데이터를 통합했다.",
+    "scale": "capability family 6개, 난이도 3단계. stress test 4종, pressure 3단계. trajectory 약 216,000건",
+    "policies": "GR00T-N1.5, SpatialVLA, RDT-1B, MT-ACT, Diffusion Policy, ACT. 인식과 언어는 강하고 spatial reasoning은 약하며, dynamic adaptation과 강건성 점수는 0에 가깝다",
+    "status": "project page 있음. 리더보드나 코드 URL은 찾지 못했다",
+    "note": "태스크 수는 추출된 텍스트에 명확히 나와 있지 않았다."
+  },
+  "vla-arena": {
+    "evaluates": "태스크 구조, 언어, vision 축을 따라 구조화한 난이도. safety constraint, distractor, 처음 보는 물체와 조합으로의 extrapolation, long horizon을 다룬다",
+    "improves": "이전 벤치마크들은 강건성과 extrapolation을 통합하지 않고 safety를 간과하는 정적인 태스크 모음이다",
+    "setup": "MuJoCo. LIBERO 스타일의 BDDL 태스크 정의. Franka.",
+    "scale": "4개 차원(Safety, Distractor, Extrapolation, Long Horizon) 아래 suite 11개의 태스크 170개. level L0-L2. 언어 W0-W4, vision V0-V4. 태스크당 trajectory 10, 30 또는 50건의 데이터셋",
+    "real_check": "네 차원 모두의 태스크에 대해 정책을 Franka Research 3에서 실행했다. 난이도에 따른 성능 저하와 failure mode가 시뮬레이션과 정성적으로 일치했으며, 상관계수는 없다.",
+    "policies": "OpenVLA, OpenVLA-OFT, π0, π0-FAST, UniVLA, SmolVLA. L0에서 L2로 가면서 성능이 급격히 저하된다. 높은 성공률은 종종 safety constraint를 위반해 얻어진다",
+    "status": "project site에 리더보드가 있는 open-source framework. BeSafe-Bench가 재사용한다",
+    "note": "venue는 arXiv comment에 따른 것이다."
+  },
+  "roboview-bias": {
+    "evaluates": "grasping agent의 visual bias: 물체 색, 카메라 orientation과 pose, 거리, 모양, 초기 위치에 따라 성공률이 어떻게 달라지는가",
+    "improves": "벤치마크들은 일반화와 perturbation 강건성을 강조하며, visual bias를 체계적으로 정량화한 경우는 거의 없다",
+    "setup": "MuJoCo backend의 RoboVerse. single arm. grasping만 다룬다.",
+    "scale": "태스크 instance 2,127개. 요인에는 색 141종, 카메라 orientation 9종, 카메라 pose 21종, 거리 scale 9종이 포함된다",
+    "policies": "VLM 기반 agent인 MOKA와 SimpleAgent(GPT-4o, Qwen-VL-Max), 그리고 π0. π0는 평균 성공률 46.53%, 요인 간 변동계수 53.05%",
+    "status": "코드나 project URL은 찾지 못했다",
+    "note": "평가된 VLA는 하나(π0)뿐이다."
+  },
+  "gembench": {
+    "evaluates": "vision-language 매니퓰레이션 정책의 4단계 일반화: 새로운 배치, 새로운 강체, 새로운 articulated object, 처음 보는 long-horizon 태스크",
+    "improves": "RLBench 방식의 평가는 이미 본 태스크를 테스트한다. VIMA-Bench는 skill이 단순하고, Colosseum은 새로운 태스크가 아니라 환경 perturbation을 겨냥한다",
+    "setup": "RLBench(CoppeliaSim). 실세계 테스트는 UR5에서 했다.",
+    "scale": "학습 태스크 16개(변형 31개, 시연 3,100건). 4단계의 테스트 태스크 44개(변형 92개). action primitive 7개",
+    "real_check": "3D-LOTUS와 3D-LOTUS++를 UR5에서 실세계 변형 7개에 대해 변형당 시연 20건으로 학습시키고, 이미 본 변형 7개와 처음 보는 변형 7개에서 테스트했다. 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "Hiveformer, PolarNet, RVT-2, 3D Diffuser Actor, 3D-LOTUS, 3D-LOTUS++(원 논문에는 VLA 없음). level 1은 최대 94.3%, level 4는 17.4%인 3D-LOTUS++를 제외하면 최대 0.3%",
+    "status": "코드와 데이터셋 공개. project page는 저자들이 관리한다. 이 논문의 3D-LOTUS++는 AGNOSTOS와 ArtiBench에서 baseline으로 쓰인다",
+    "note": "venue는 arXiv comment에 따른 것이다. 추출 결과는 RLBench를 'PyBullet-based'라고 했으나, 이는 다른 RLBench 논문들(CoppeliaSim)과 충돌한다."
+  },
+  "agnostos": {
+    "evaluates": "처음 보는 태스크에 대한 2단계의 zero-shot cross-task 일반화: 학습 태스크와 의미가 부분적으로 겹치는 경우, 그리고 완전히 새로운 시나리오",
+    "improves": "기존 벤치마크는 within-task 일반화를 평가할 뿐, zero-shot cross-task 일반화는 탐구하지 않은 채 남겨 둔다",
+    "setup": "RLBench. 실세계 테스트는 DH-Robotics gripper를 단 xArm7에서 했다.",
+    "scale": "이미 본 RLBench 태스크 18개(시연 3,600건). 처음 보는 태스크 23개(level-1 13개, level-2 10개)",
+    "real_check": "제안된 X-ICM을 xArm7에서 실세계 태스크 5개에 대해, 다른 태스크의 시연을 써서 zero-shot으로 테스트했다(태스크당 20회 실행). 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "PerAct, RVT, RVT-2, Sigma-Agent, Instant Policy, R3M, D4R, OpenVLA, RDT, π0, LLARVA, SAM2Act, 3D-LOTUS++, VoxPoser, X-ICM. 처음 보는 태스크에서 π0 17.5%, X-ICM(72B) 30.1%",
+    "status": "project page와 코드 있음. arXiv record에 venue가 없다",
+    "note": "추출된 π0 대비 margin들이 서로 일관되지 않아, 절대 수치만 기재했다."
+  },
+  "himan-bench": {
+    "evaluates": "perturbation 하의 long-horizon 매니퓰레이션에서의 compositional 일반화. vanilla, decoupled, coupled 평가 mode로 planning 실패와 execution 실패를 분리한다",
+    "improves": "기존 벤치마크는 실패가 planning, execution, 환경 perturbation에 대한 민감성 중 어디에서 오는지 구분하지 못한다",
+    "setup": "CoppeliaSim / PyRep. DeCoBench 태스크를 Colosseum의 perturbation factor로 확장한다. Franka Panda.",
+    "scale": "태스크 258개(perturbation 적용 버전을 포함해 atomic 114개, compositional 144개). perturbation factor 12개. 점진적 학습 데이터 4단계",
+    "real_check": "π0.5를 Mobile ALOHA 팔에서 atomic 태스크 4개와 compositional 태스크 4개에 대해 distractor, 위치, human-intervention perturbation을 주어 실행했다(vanilla 17.5% → 10%, rule-based planner 사용 시 47.5% → 27.5%). 정성적 재현일 뿐이다.",
+    "policies": "RVT-2, 3D Diffuser Actor, π0, π0.5. planner가 없으면 compositional 태스크에서 0에 가깝다. rule-based planner를 쓰면 RVT-2가 39.5%에 도달한다. VLM planner는 rule-based planner에 뒤진다",
+    "status": "project page 있음. under review로 표기돼 있다"
+  },
+  "decobench": {
+    "evaluates": "학습한 atomic skill을 처음 보는 long-horizon 3D 매니퓰레이션 sequence로 엮는 zero-shot composition",
+    "improves": "atomic 태스크로 학습한 multi-task imitation 정책은 더 긴 composition에서 실패하는데, 이를 따로 떼어 본 벤치마크가 없었다",
+    "setup": "RLBench. Franka Emika Panda.",
+    "scale": "atomic 태스크 10개(각 시연 50건). compositional long-horizon 태스크 12개",
+    "real_check": "DeCo를 적용한 정책을 실세계 atomic 태스크 6개로 학습시키고 새로운 long-horizon 태스크 9개에서 테스트했다(53.33% 대 DeCo 없이 0%). 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "RVT-2, 3D Diffuser Actor, ARP(3D 정책, VLA 없음). baseline은 compositional 태스크에서 0%에 가깝다. DeCo를 쓰면 66.67%, 21.53%, 58.06%",
+    "status": "project page 있음. HiMan-Bench가 확장했다",
+    "note": "venue는 arXiv comment('RAL 2026')에 따른 것이다. DeCo method 논문 안에서 제안됐다."
+  },
+  "clevrskills": {
+    "evaluates": "compositional 일반화: 단순한 motor skill로 학습한 모델이 이를 조합해 intermediate 및 complex 태스크를, low-level 실행까지 포함해 수행할 수 있는가",
+    "improves": "VIMA 방식의 벤치마크는 high-level planning을 테스트할 뿐, low-level control을 포함한 closed-loop plan-and-execute는 테스트하지 않는다",
+    "setup": "ManiSkill2. vacuum gripper를 단 UFACTORY xArm 6(Franka Panda도 사용 가능).",
+    "scale": "3단계의 태스크 33개(simple 12개, intermediate 15개, complex 6개). trajectory 약 330K건",
+    "policies": "JAT, RoboFlamingo, Octo, StreamRoboLM. level-0 성공률 24-63%. level 1과 level 2는 fine-tuning 후에도 약 6% 이하에 머문다",
+    "status": "Qualcomm AI Research가 코드와 데이터셋을 공개했다",
+    "note": "venue는 arXiv comment에 따른 것이다."
+  },
+  "int-act": {
+    "evaluates": "물체 다양성, 언어 복잡도, vision-language reasoning 축에서의 VLA 일반화 경계. 올바른 intention과 성공적인 execution을 분리한다",
+    "improves": "SimplerEnv는 태스크가 적고, imitation learning 벤치마크에는 언어 변형이 없다",
+    "setup": "ManiSkill2 / SimplerEnv(BridgeV2 태스크를 4개에서 50개로 확장). WidowX.",
+    "scale": "태스크 50개. 범주 3개와 하위 범주 10개",
+    "policies": "π0(fine-tuning, from scratch, rephrasing 적용), SpatialVLA, Magma, Octo. intention은 80-100%의 경우에 올바르지만, out-of-distribution 변형에서는 태스크 성공률이 급격히 떨어진다",
+    "status": "project page와 코드 있음. arXiv comment에는 under review로 돼 있다"
+  },
+  "libero-ood": {
+    "evaluates": "학습에서 본 skill의 out-of-distribution 재조합: 함께 제시된 적이 없는 sub-trajectory들을 이어 붙여야 하는 태스크",
+    "improves": "VLA가 충분히 완수할 법하지만 현재는 완수하지 못하는 태스크로 이루어진 벤치마크가 없었다. 표준 LIBERO는 ceiling에 가깝다",
+    "setup": "LIBERO. goal, object, spatial suite에서 파생됐다.",
+    "scale": "extrapolation 태스크 20개(goal-ood 10개, spatial-ood 10개)",
+    "policies": "π0 9%, π0-FAST 15%, OpenVLA-OFT 1%, UniVLA 21%. text-latent interpolation을 쓰면 π0가 83%로 오른다",
+    "status": "코드 공개. study 논문 안에서 제안됐다",
+    "note": "논문 제목은 'VLAs are Confined yet Capable of Generalizing to Novel Instructions'이다."
+  },
+  "robocas": {
+    "evaluates": "장애물 제거와 연쇄 반응에 대한 reasoning이 필요한 scattered, orderly, stacked 물체 배치에서의 picking, selecting, searching",
+    "improves": "embodied 모델이 복잡한 물체 배치에서의 grasping으로 테스트되는 경우는 드물다",
+    "setup": "SAPIEN(PhysX). mobile base 위의 Franka Emika Panda.",
+    "scale": "태스크 3개. 배치 유형 3종. trajectory episode 7,300건",
+    "policies": "RT-1 34.2%, 23.3%, 10.2%(scattered, orderly, stacked). RoboFlamingo 15.6%, 13.3%, 0%",
+    "status": "코드와 데이터셋 공개. 이후 사용 사례는 거의 보이지 않는다"
+  },
+  "artibench": {
+    "evaluates": "5단계의 articulated object 조작: random 배치, 새로운 part, 새로운 instance, 새로운 범주, long-horizon composition",
+    "improves": "데이터셋들이 순차적 articulated interaction에서의 cross-part, cross-instance, cross-category 일반화를 평가하는 경우는 드물다",
+    "setup": "CoppeliaSim / PyRep. asset은 PartNet-Mobility, RLBench, YCB에서 가져왔다.",
+    "scale": "articulated scene 132개와 변형 449개. 5단계. 태스크당 시연 50건",
+    "real_check": "제안된 ArtiBrain을 Franka Research 3에서 문, 서랍, composed 태스크로 실행했다. 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "3D-LOTUS, 3D-LOTUS++(평균 35.8%), AffordDP, ArtiBrain(새로운 part에서 60.0%). long-horizon 단계를 완수하는 것은 ArtiBrain뿐이다",
+    "status": "채택 시 코드와 데이터셋을 공개한다고 예고했다",
+    "note": "VLA baseline이 없다."
+  },
+  "behavior-skill": {
+    "evaluates": "long-horizon 가정 태스크 내부의 skill 단위 평가. 어떤 구성 skill이 태스크 실패를 일으키는지 찾아낸다",
+    "improves": "BEHAVIOR 방식의 데이터는 태스크 단위로만 annotation돼 있어, 구성 skill을 따로 평가할 수 없다",
+    "setup": "OmniGibson. BEHAVIOR-1K. 23-DoF bimanual mobile manipulator.",
+    "scale": "가정 태스크 50개. skill 범주 34개의 skill instance 235,492개. 시연 10,000건. 평가 episode 500건",
+    "policies": "태스크 단위 점수 π0.5 42.4%, GR00T N1.7 36.9%. skill 단위 conditioning을 쓰면 48.4%와 42.5%. contact-rich skill(open lid, close door, pour)이 지속적인 bottleneck이다",
+    "status": "코드 공개. 신규 preprint"
+  },
+  "robocerebra": {
+    "evaluates": "deliberative long-horizon 매니퓰레이션: 수천 step에 이르는 episode에 걸친 planning, reflection, memory. disturbance와 observation mismatch를 포함한다",
+    "improves": "이전 long-horizon 벤치마크는 sub-task 2-5개, action step 500 미만에 그친다",
+    "setup": "LIBERO. 가정 scene. 계층적 VLM planner + VLA controller 프로토콜.",
+    "scale": "태스크 variant 100개에 걸친, 사람이 annotation한 trajectory 1,000건. 평균 2,972 step. sub-task 유형 6종(ideal, memory exploration, memory execution, random disturbance, observation mismatching, mix)",
+    "policies": "controller로 OpenVLA, planner로 GPT-4o, Qwen2.5-VL 또는 LLaVA-Next-Video. 최고 VLM planner의 평균 성공률 16.04%, ground-truth plan은 25.16%",
+    "status": "코드, 데이터셋, 벤치마크 파일 공개. 리더보드 없음",
+    "note": "venue는 arXiv comment에 따른 것이다."
+  },
+  "memorybench": {
+    "evaluates": "Markov 가정을 위반하도록 설계한 태스크에서의 spatial memory와 action recall: 동일한 observation이라도 history에 따라 다른 action이 필요하다",
+    "improves": "RLBench 방식의 태스크는 기억에 의존하는 행동을 테스트하지 않는다",
+    "setup": "RLBench(CoppeliaSim / PyRep). Franka Emika Panda.",
+    "scale": "태스크 3개(reopen_drawer, put_block_back, rearrange_block). 태스크당 학습 시연 100건과 테스트 시연 25건",
+    "real_check": "Franka Panda에서의 실세계 memory 태스크 1개('push the same button'): in-distribution에서 SAM2Act+ 70% 대 RVT-2 40%. 방법을 실로봇으로 옮겨 본 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "RVT-2 54.0%, SAM2Act 55.0%, SAM2Act+ 94.3%(3D keyframe 정책, 원 논문에는 VLA 없음)",
+    "status": "SAM2Act+는 이후의 memory 벤치마크(RoboMME, HIDE)에서 baseline으로 쓰인다. RMBench는 MemoryBench의 재현성과 태스크 설계를 비판한다",
+    "note": "SAM2Act method 논문 안에서 제안됐다. arXiv record에 venue가 없다."
+  },
+  "mikasa-robo": {
+    "evaluates": "네 범주의, 기억에 의존하는 tabletop skill: object memory, spatial memory, sequential memory, memory capacity",
+    "improves": "memory method들이 각자 따로 만든 환경에서 테스트돼 비교가 파편화됐다",
+    "setup": "ManiSkill3. tabletop 팔. Gymnasium API.",
+    "scale": "12개 group의 태스크 32개. offline learning용으로 태스크당 expert trajectory 1,000건",
+    "real_check": "태스크 3개를 SO-101 팔에서 실행했다. 결과는 시뮬레이션의 순위를 그대로 따랐고, 긴 occlusion이 도입되면 실패했다. 상관 통계는 없다.",
+    "policies": "RL baseline(PPO-MLP, PPO-LSTM, SAC, TD-MPC2, Decision Transformer, RATE, Diffusion Policy)과 VLA인 Octo, OpenVLA, π0, SpatialVLA. memory 요구가 커질수록 성공률이 0에 가깝게 떨어진다",
+    "status": "pip으로 설치 가능. 코드와 데이터셋 공개. MIKASA-Robo-VLA가 확장했다",
+    "note": "venue는 project page에 따른 것이다. 처음에는 RL용으로 만들어졌고, VLA 결과는 이후 버전에서 추가됐다."
+  },
+  "mikasa-robo-vla": {
+    "evaluates": "언어 지시 기반 정책이 무엇을 얼마나 오래 기억해야 하는가. temporal, negative, procedural, prospective, tracking을 포함한 memory type 10종을 다룬다",
+    "improves": "CALVIN과 LIBERO는 memory의 내용이나 지속 시간을 통제하지 않은 채 skill composition에 중점을 두고, memory suite들은 다루는 memory type이 적다",
+    "setup": "ManiSkill3. MIKASA-Robo를 확장한다. gripper를 단 팔, 10 Hz.",
+    "scale": "26개 family의 언어 지시 기반 태스크 90개. memory type 10종. oracle episode 22,500건(6.3M frame)",
+    "policies": "태스크 14개 subset으로 fine-tuning한 π0.5: 평균 성공률 0.211, long-split 태스크에서 0.017. OpenVLA와 muVLA 수치는 다른 연구에서 인용했다",
+    "status": "코드와 RLDS / LeRobot 데이터셋 공개. 신규 preprint"
+  },
+  "robomme": {
+    "evaluates": "매니퓰레이션에서의 네 가지 memory: temporal(개수 세기, 순서), spatial(occlusion 상황에서의 추적), object(지시 대상의 동일성), procedural(동작 재현)",
+    "improves": "기존 벤치마크는 현실적인 memory 요구를 담지 못하고, memory-augmented 정책을 위한 표준 testbed도 제공하지 않는다",
+    "setup": "ManiSkill. Franka Panda. front 및 wrist camera.",
+    "scale": "4개 suite(Counting, Permanence, Reference, Imitation)의 태스크 16개. 시연 1,600건(770K timestep)",
+    "real_check": "시뮬레이션 태스크에 대응하는 실세계 태스크 4개를 memory variant 2종으로 실행했다(성공 25/40, 19/40). 경향이 시뮬레이션과 비슷하다고 보고했으나 상관계수는 제시하지 않았다.",
+    "policies": "π0.5 기반 memory variant 14종과 π0.5, SAM2Act+, MemER. 가장 좋은 학습 기반 variant 44.51%, oracle symbolic memory 84.08%. 모든 태스크에서 앞서는 단일 memory 설계는 없다",
+    "status": "project page 있음. RoboMME-Interference와 RoboIRGBench가 이를 확장했고, MEMOBench에서 memory module이 재사용됐다",
+    "note": "venue는 arXiv comment 기준이다."
+  },
+  "robomme-interference": {
+    "evaluates": "관련 시연과 query 사이에 무관한 이전 session이 끼어 있을 때의 long-context 로봇 memory",
+    "improves": "로봇 memory 벤치마크는 단일 episode나 짧은 context를 측정할 뿐, session 간 간섭은 측정하지 않는다",
+    "setup": "RoboMME(ManiSkill)를 확장한다.",
+    "scale": "태스크 family 9개. distractor session 0, 1, 3 또는 7개",
+    "policies": "π0.5 기반 memory 시스템 12종. 한 variant는 distractor 7개에서 27.1%p 향상에서 19.3%로 떨어진다. retrieval 기반 variant는 44.7-44.9%를 유지한다",
+    "status": "project site 기재됨. 신규 preprint"
+  },
+  "rmbench": {
+    "evaluates": "유지해야 하는 과거 observation의 수에 따라 등급을 나눈 memory 의존적 bimanual 매니퓰레이션: 하나(M(1)) 또는 여러 개(M(n))",
+    "improves": "MemoryBench는 재현하기 어렵고, MIKASA는 RL을 대상으로 하며, LIBERO-Long 태스크는 모든 정보가 계속 보이므로 memory가 필요 없다",
+    "setup": "SAPIEN. RoboTwin 2.0 플랫폼(Isaac Lab-Arena에도 구현됨). dual-arm.",
+    "scale": "태스크 9개(M(1) 5개, M(n) 4개). 태스크당 시연 50건",
+    "real_check": "X-One dual-arm 플랫폼에서 시연 100건으로 태스크 3개를 실행했다(Mem-0 22.5%, π0.5 5.83%, ACT 0%). 방법을 실로봇으로 옮겨 본 것이며 sim-real 상관은 보고되지 않았다.",
+    "policies": "Diffusion Policy, ACT, π0.5, X-VLA, Mem-0. 가장 좋은 baseline인 X-VLA는 M(1)에서 11.8%, M(n)에서 7.3%. Mem-0는 전체 42.0%",
+    "status": "RoboTwin 플랫폼 organization 아래에 호스팅됨. 코드 공개"
+  },
+  "robomemarena": {
+    "evaluates": "길고 partially observable한 태스크에서의 memory: transferring, occlusion, counting, sequence. 기억해야 할 내용에 대한 keyframe 단위 annotation을 갖췄다",
+    "improves": "이전 memory 벤치마크는 memory 형성에 대한 annotation이 없고, 태스크 coverage가 제한적이며, 시뮬레이션에 머문다",
+    "setup": "시뮬레이션과 이에 대응하는 실세계 태스크. 실세계 세트는 dual-arm AgileX Cobot Mobile ALOHA.",
+    "scale": "시뮬레이션 태스크 26개와 실세계 태스크 5개. 태스크당 평균 1,076 step. 시연 2,600건. subtask의 68.9%가 memory 의존적",
+    "real_check": "실세계 태스크 5개를 각 10회 rollout했다: π0.5 20%, MemER 40%, PrediMem 52%. 이는 벤치마크를 하드웨어로 확장한 것이며, sim-real 상관은 보고되지 않았다.",
+    "policies": "태스크 성공률 π0.5 21.5%, HiF-VLA 16.9%, MemoryVLA 15.0%, MemER 27.3%, PrediMem 38.5%. frozen Qwen3-VL과 GPT-5.4 planner는 6.0%와 8.7%",
+    "status": "리더보드, 코드, 데이터셋, weight가 기재된 project page",
+    "note": "추출한 텍스트에 시뮬레이터가 명시적으로 언급되지 않았다."
+  },
+  "memobench": {
+    "evaluates": "실행 가능한 checkpoint에서 태스크 성공과 분리해 측정하는 process 수준의 memory 연산(저장, 갱신, 압축)",
+    "improves": "최종 태스크 성공 여부는 망각과 매니퓰레이션 실패를 뒤섞어, memory 오류를 진단하기 어렵게 만든다",
+    "setup": "BDDL 태스크 정의를 쓰는 LIBERO / robosuite(MuJoCo).",
+    "scale": "history 의존 태스크 30개. 시연 1,500건. checkpoint template 84개에서 나온 instance 4,200개",
+    "policies": "성공률 π0 11.2%, π0.5 30.4%, OpenVLA-OFT 10.0%, MemoryVLA 17.2%, HiF-VLA 21.0%, RoboMME memory module을 붙인 π0.5 31.9%. 저장률은 높지만 갱신율과 압축률은 낮은 수준에 머문다",
+    "status": "코드와 annotation 공개"
+  },
+  "hide": {
+    "evaluates": "비슷한 observation에 서로 다른 action이 필요한 decision point에서의 skill 수준 memory: 반복 횟수 세기, 과거 상태 회상, 실행 진행 상황 추적",
+    "improves": "벤치마크들이 완수와 일반화에 치중하고, 결정에 필요한 과거 정보를 분리해 내지 않는다",
+    "setup": "RLBench(CoppeliaSim / PyRep). Franka Emika Panda. RGB-D 카메라 4대.",
+    "scale": "태스크 15개(범주당 5개). 태스크당 시연 100건과 test episode 25개",
+    "real_check": "Franka Panda에서 실세계 태스크 4개를 각 25회 시행했다: SEEK 89%, SAM2Act+ 47%, π0.5 13%. 방법을 실로봇으로 옮겨 본 것이며 sim-real 상관은 보고되지 않았다.",
+    "policies": "OpenVLA 1.6%, π0 22.1%, GR00T-N1.7 26.4%, RVT 35.7%, RVT-2 42.9%, SAM2Act 42.7%, SAM2Act+ 51.2%, SEEK 62.9%",
+    "status": "project page 있음. 벤치마크와 방법을 함께 다룬 논문",
+    "note": "논문 제목은 'Benchmarking and Enhancing Skill-Level Memory for Partially Observable Robotic Manipulation'이다."
+  },
+  "libero-mem": {
+    "evaluates": "partial observability 하에서의 object 수준 memory: 시각적으로 동일한 물체들에 걸친 상호작용 이력 추적, object permanence, 순서",
+    "improves": "RLBench, LIBERO, RoboCasa는 short-horizon 또는 atomic 태스크에 집중하고 non-Markovian 설정을 간과한다",
+    "setup": "LIBERO. LIBERO-Goal을 확장한다.",
+    "scale": "네 가지 memory 차원에 걸친 태스크 10개. 태스크당 trajectory 120건. 태스크당 200-700 frame",
+    "policies": "baseline인 π0와 SlotVLA는 subgoal 완수율이 평균 약 5.0%. 제안된 Embodied-SlotSSM은 14.8%에 이른다",
+    "status": "데이터셋은 Hugging Face에 있음. 코드 repository 기재됨",
+    "note": "venue는 arXiv comment 기준이다. 방법 논문('Rethinking Progression of Memory State in Robotic Manipulation') 안에서 소개됐다."
+  },
+  "rulesafe": {
+    "evaluates": "long-horizon, non-Markovian articulated 매니퓰레이션: 잠금장치가 joint 간 의존성이 있는 multi-step 규칙을 따르는 금고 열기",
+    "improves": "시뮬레이션 벤치마크는 대부분 short-horizon이고 multi-joint 의존성이 없다",
+    "setup": "SAPIEN. HumanoidGen 기반. Inspire hand를 단 Unitree H1-2.",
+    "scale": "잠금 규칙 20개. 금고 instance 10개. trajectory 1,000건(평균 638 frame)",
+    "policies": "가장 단순한 규칙에서 DP3 45.0%, RDT 35.0%, CogACT 20.0%, π0 80.0%. multi-task π0는 제안된 VQ-Memory로 31.3%p 향상된다",
+    "status": "project page 있음. 방법 논문 안에서 소개됨"
+  },
+  "coin": {
+    "evaluates": "partial observability 하에서의 interactive reasoning: 정보를 모으기 위한 행동, belief 갱신, 계획 수정",
+    "improves": "기존 벤치마크는 환경과의 지속적인 상호작용에 의존하는 reasoning을 체계적으로 평가하지 않는다",
+    "setup": "ManiSkill3. Franka Emika Panda.",
+    "scale": "태스크 90개(interactive 50, primitive 20, composition 20). primitive용 시연 1,000건 이상",
+    "policies": "GR00T N1, π0 또는 CogACT를 결합한 hierarchical GPT-4o 또는 Gemini 2.0 Flash planner: COIN-50에서 1.5-2.2%. ReKep 3.26%. end-to-end VLA는 primitive에서 16-19%. 사람의 teleoperation 40%",
+    "status": "코드나 project URL을 찾지 못함"
+  },
+  "robospa": {
+    "evaluates": "공간적 모호성과 절차적 복잡도가 높아지는 다섯 난이도 level에서의 세밀한 spatial reasoning과 long-horizon procedural planning",
+    "improves": "벤치마크들은 고정된 설정에서의 완수 여부를 측정할 뿐, 공간적·절차적 복잡도가 커질 때의 reasoning에 대해서는 알려 주는 바가 거의 없다",
+    "setup": "RoboTwin 2.0 framework(SAPIEN + CuRobo). embodiment 5종(Aloha-AgileX, ARX-X5, Piper, Franka, UR5).",
+    "scale": "10개 범주의 base 태스크 56개 x 5 level = variant 280개. trajectory 527K건",
+    "policies": "Aloha-AgileX의 single-task 설정에서 본 VLA 모델 4종(이름은 추출하지 못함). 모두 최고 level에서 전체 성공률이 25% 미만에 머문다",
+    "status": "코드와 데이터셋이 GitHub와 Hugging Face에 있음",
+    "note": "venue는 arXiv comment 기준이다. arXiv HTML이 404를 반환해, 세부 내용은 abstract와 GitHub README에서 가져왔다."
+  },
+  "activearena": {
+    "evaluates": "active perception: 부족한 단서를 얻기 위해 머리와 몸통을 움직이거나 물체와 상호작용하고, 이를 여러 view에 걸쳐 유지한다",
+    "improves": "벤치마크들은 부족한 단서를 찾아 나서거나, observation이 쌓이는 동안 정보를 선택적으로 유지하도록 요구하지 않는다",
+    "setup": "RoboTwin 2.0을 확장한 자체 시뮬레이터(PhysX). 머리와 몸통을 제어할 수 있는 Astribot S1 dual-arm humanoid.",
+    "scale": "2개 family, 5개 범주의 태스크 35개. 태스크당 trajectory 100건. in-distribution 및 out-of-distribution 평가용으로 태스크당 seed 50개",
+    "real_check": "실물 Astribot에서 태스크 8개를 정책·태스크당 20회 시행했다. 순위는 시뮬레이션과 일치했으나(가장 좋은 variant 55.6%, MemER 34.4%, π0.5 23.8%) 상관계수는 제시하지 않았다.",
+    "policies": "FAST-WAM, π0.5, SaPaVe, HiF-VLA, MemER, MemoryVLA와 자체 variant 13종. 최고 성능은 in-distribution 62.97%, out-of-distribution 47.60%. MemER는 35.31%와 23.43%",
+    "status": "코드가 있는 project page. 결과 표는 논문에 있음"
+  },
+  "bavo-bench": {
+    "evaluates": "bimanual 매니퓰레이션 중 예기치 않게 외부 요인으로 생긴 occlusion에서 active camera arm을 움직여 복구하기",
+    "improves": "active vision 연구는 태스크 geometry가 정하는 viewpoint 요구를 다뤘을 뿐, 예기치 않은 시야 상실로부터의 복구는 다루지 않았다",
+    "setup": "AV-ALOHA 시뮬레이션 플랫폼. manipulation arm과 camera arm.",
+    "scale": "multi-stage 태스크 5개. 태스크당 VR 시연 100건. visibility 조건 3가지(clean, stage occlusion, random-time occlusion)",
+    "real_check": "camera arm을 갖춘 Piper 팔에서 제안된 A-FAR의 대표 rollout 하나를 보였다. demo에 그치며, 정량적인 sim-real 비교는 없다.",
+    "policies": "ACT, ManiFlow, π0.5, A-FAR. random-time occlusion에서 A-FAR 18.7% 대 ManiFlow 15.0%. π0.5는 42%에서 4.0%로 떨어진다",
+    "status": "project page 있음"
+  },
+  "vlabench": {
+    "evaluates": "world knowledge, 의도가 암시적으로 담긴 지시, 공간·물리 이해, multi-step reasoning이 필요한 language-conditioned 매니퓰레이션",
+    "improves": "RLBench, CALVIN, LIBERO는 template 형태의 지시를 쓰며, VLA의 knowledge transfer나 long-horizon reasoning을 테스트하지 않는다",
+    "setup": "MuJoCo + dm_control. 기본 로봇은 Franka Emika Panda.",
+    "scale": "태스크 범주 100개(primitive 60, composite 40). 163개 범주의 물체 2,164종. 평가 차원 6개",
+    "policies": "OpenVLA는 seen 11.74%, unseen 7.93%, Octo는 1.34%와 0.77%, RDT-1B는 15.37%와 9.08%. VoxPoser와 CoPA workflow, VLM 7종도 테스트했다",
+    "status": "이후 VLA 논문들이 평가 suite로, HazardArena가 기반으로 사용함. repository에 표준 평가 track이 있음",
+    "note": "venue는 GitHub README 기준이다."
+  },
+  "libero-para": {
+    "evaluates": "action 표현과 object 지칭을 독립적으로 바꿔 가며 보는 paraphrase 강건성. 난이도 가중 지수(PRIDE)로 채점한다",
+    "improves": "이전 테스트는 paraphrasing을 구조화되지 않은 문장 수준의 변화로 취급하거나, 태스크 의미의 변화와 섞는다",
+    "setup": "LIBERO-Goal(CALVIN에서 교차 검증).",
+    "scale": "지시 10개에 대한 paraphrase 4,092개. 2개 축의 paraphrase 유형 조합 43개",
+    "policies": "OpenVLA-OFT, π0.5, Xiaomi-Robotics-0, X-VLA, VLA-Adapter(구성 7개). 성공률이 22.8-51.9%p 하락한다. object 수준의 어휘 변화가 가장 큰 타격을 준다. 실패의 79.5-95.5%가 planning 수준이다",
+    "status": "코드와 벤치마크 공개. IndustrialVLA-Bench에서 재사용됨",
+    "note": "venue는 arXiv comment 기준이다(main conference, oral)."
+  },
+  "langgap": {
+    "evaluates": "정책이 지시를 읽는지 여부: 의미가 서로 다른 여러 태스크가 하나의 tabletop layout을 공유한다",
+    "improves": "LIBERO는 layout당 태스크 하나를 배정하므로, 언어 없이 시각적 암기만으로 태스크를 풀 수 있다",
+    "setup": "LIBERO(robosuite).",
+    "scale": "4개 perturbation 차원에 걸친 태스크 99개(기존 40, 추가 59): 물체 범주, 목표 위치, 공간 묘사, 서랍 동작",
+    "policies": "π0.5, π0, π0-FAST, SmolVLA. π0.5는 93.8%에서 추가 태스크에서는 21.4%로, 목표 위치를 바꾼 경우에는 0%로 떨어진다",
+    "status": "코드 repository 기재됨"
+  },
+  "libero-cf": {
+    "evaluates": "counterfactual instruction following: 익숙한 LIBERO layout에서 시각적으로는 그럴듯하지만 언어적으로 다른 지시",
+    "improves": "language following을 scene별 visual shortcut과 분리해 본 체계적인 벤치마크가 없었다",
+    "setup": "LIBERO. 실세계 테스트는 Franka Research 3 + Robotiq 2F-85.",
+    "scale": "4개 suite의 태스크 50개(CF-Spatial 15, CF-Object 10, CF-Long 10, CF-OOD 15)",
+    "real_check": "제안된 guidance를 적용한 π0.5와 적용하지 않은 π0.5를 Franka Research 3에서 다섯 차원에 걸쳐 지시당 10회씩 테스트했다. 방법에 대한 테스트이며 sim-real 상관은 보고되지 않았다.",
+    "policies": "counterfactual 태스크 성공률 OpenVLA-OFT 0.4%, π0 9.6%, π0.5 13.2%, X-VLA 13.8%. in-domain에서는 65-97%",
+    "status": "project page 있음. arXiv record에 venue 없음",
+    "note": "논문 제목은 'When Vision Overrides Language: Evaluating and Mitigating Counterfactual Failures in VLAs'이다."
+  },
+  "simplerenv-instruct": {
+    "evaluates": "closed-loop control에서의 zero-shot instruction following과 situated reasoning. task aggregation split과 situated reasoning split으로 나뉜다",
+    "improves": "매니퓰레이션 벤치마크는 atomic 명령과 low-level control에 집중하고 contextual reasoning을 소홀히 한다",
+    "setup": "SimplerEnv. Google Robot과 WidowX.",
+    "scale": "태스크 80개(task aggregation 50, situated reasoning 30). 1.1K회 시행",
+    "real_check": "InstructVLA 논문은 방법에 대해 zero-shot WidowX-250 실험과 few-shot Franka Research 3 실험도 보고한다. 이 실험들은 벤치마크를 검증하지 않는다.",
+    "policies": "InstructVLA 46.2%, fine-tuning과 GPT를 더한 OpenVLA 35.6%, Magma 23.8%, SpatialVLA 16.5%, π0 12.0%",
+    "status": "InstructVLA 논문 안에서 소개됨. project page 있음",
+    "note": "arXiv record에 venue가 없다(comment 필드: '48 pages')."
+  },
+  "instructmove": {
+    "evaluates": "시각적·물리적으로 그럴듯한 distractor 가운데에서 고르려면 언어가 필요한 instruction following. target이 없거나 지시가 비어 있는 counterfactual 테스트",
+    "improves": "벤치마크에는 target을 선택하는 데 지시가 반드시 필요한 episode가 거의 없다",
+    "setup": "Isaac Lab / Isaac Sim. dual-arm PiperX와 single-arm Franka.",
+    "scale": "태스크 family 4개(category, attribute, spatial, compositional pick-place). 103개 범주의 물체 1,757종. 태스크당 학습 episode 100개와 held-out episode 100개",
+    "real_check": "π0.5를 dual-arm PiperX에서 실제 물체 5종으로 테스트했다. 실세계 시연 200건에 시뮬레이션 시연 2,000건을 더하자 reach가 26/50에서 34/50으로 올랐다. sim-to-real co-training 연구이며 상관은 보고되지 않았다.",
+    "policies": "π0.5, GR00T N1.7, π0, Motus. π0.5는 category picking에서 reach 0.82, lift 0.57. target이 없어도 99%의 경우 여전히 어떤 물체로든 reach한다",
+    "status": "코드나 project URL을 찾지 못함"
+  },
+  "conflictvla-bench": {
+    "evaluates": "태스크 전제가 성립하지 않을 때 VLA가 행동을 멈추는지 여부: instruction-internal, object-grounding, spatial-relation, physical-feasibility conflict",
+    "improves": "평가가 최종 결과만 본다. 태스크가 실패했다고 해서 정책이 성립하지 않는 goal에서 물러났음을 보여 주지는 않는다",
+    "setup": "통제된 conflict injection을 적용한 LIBERO.",
+    "scale": "conflict 태스크 2,826개. conflict 유형 4가지. structural level 4개. 모델당 rollout 14,530회",
+    "policies": "OpenVLA, OpenVLA-OFT, π0, π0-FAST, π0.5, GR00T N1.7, VLA-JEPA, UniVLA. 정책들은 원래 target에 계속 접근한다(approach ratio 0.586-0.741). 전제를 확인하게 하는 prompt는 일관된 도움이 되지 않는다",
+    "status": "코드 repository 기재됨"
+  },
+  "roboirgbench": {
+    "evaluates": "implicit referential grounding: 대명사, 공간적 지칭, 맥락, reasoning을 통해서만 지칭되는 태스크 관련 entity를 식별한다",
+    "improves": "RLBench, CALVIN, LIBERO, RoboCasa의 지시는 target을 명시적으로 지칭한다",
+    "setup": "RoboMME 시뮬레이터(ManiSkill) 기반. 실세계 테스트는 Franka Research 3.",
+    "scale": "태스크 11개의 variant 40개. grounding 범주 4개. 난이도 level 3개",
+    "real_check": "π0.5와 memory variant 하나를 Franka Research 3에서 태스크 2개에 대해 조건당 10회 실행했다: 명시적 지칭에서는 70-85%, reasoning을 거쳐야 하는 지칭에서는 5-10%. 소규모 재현이며 상관은 보고되지 않았다.",
+    "policies": "π0.5, FrameSamp-Modul, TTT-Expert, GroundSG-QwenVL, MemER. 한 variant는 45.82%(explicit)에서 16.85%(reasoning-mediated)로 떨어진다",
+    "status": "project page 있음"
+  },
+  "robosemanticbench": {
+    "evaluates": "지시의 의미가 action까지 전달되는지 여부: 로봇이 정답 블록을 집어 객관식 수학·지식 문제에 답한다",
+    "improves": "template 형태의 명령으로는 pretrained backbone의 semantic 역량이 로봇 fine-tuning 뒤에도 남아 있는지 알 수 없다",
+    "setup": "Aloha-AgileX dual-arm을 쓰는 tabletop 시뮬레이션. 추출한 텍스트에 시뮬레이터 이름이 언급되지 않았다.",
+    "scale": "문제 domain 3개(500, 7,473, 10,000문항), 각각 4지선다와 10지선다 형식(6개 suite)",
+    "policies": "OpenVLA-OFT, GO1, DexVLA, TinyVLA, PD-VLA, π0, π0.5, GR00T N1.7, QwenGR00T. grasp 성공률은 85-99%이지만 태스크 성공률은 chance 수준에 머문다. 최고는 π0.5의 21.8%",
+    "status": "코드 repository 기재됨"
+  },
+  "better": {
+    "evaluates": "causal intervention 하에서의 embodied reasoning: 공간 layout 변화, primitive 재조합, adversarial distractor 물체, temporal extrapolation",
+    "improves": "평가가 그 바탕의 reasoning은 확인하지 않은 채 행동상의 역량에 점수를 주고, 정적인 asset은 태스크 의미의 체계적인 변화를 제한한다",
+    "setup": "시뮬레이션(추출한 텍스트에 engine 이름이 언급되지 않음). 실세계 검증은 SO-101.",
+    "scale": "base 태스크 10개를 variation 60개로 확장. perturbation 유형 4가지",
+    "real_check": "target-absence와 phase-conflict intervention을 적용한 short-horizon 및 long-horizon 태스크를 SO-101에서 실행했다. 시뮬레이션에서의 발견이 그대로 유지된다고 보고했으나 상관 통계는 제시하지 않았다.",
+    "policies": "π0.5, GR00T-N1.6, Being-H0.5. GR00T-N1.6은 spatial 지시는 100% 따르지만 semantic 지시는 5%만 따른다. unseen subgoal 조합에서 52.5% 하락",
+    "status": "project page 있음",
+    "note": "논문 제목은 'Unmasking the Illusion of Embodied Reasoning in Vision-Language-Action Models'이다."
+  },
+  "libero-vifo": {
+    "evaluates": "scene에 배치된 승인된 visual cue(텍스트, 기호, ghost trajectory, 제스처, 표지판, 코드)는 따르고 승인되지 않은 cue는 무시하기",
+    "improves": "이전의 cue-following 테스트는 다룬 cue 형태가 적고, 최종 성공만 채점했으며, 모든 cue를 승인된 것으로 취급했다",
+    "setup": "LIBERO(MuJoCo). 실세계 검증은 AgileX PiPER.",
+    "scale": "태스크 40개. cue family 8개. cue instance 1,347개. 함께 제공되는 VQA 질문 5,388개",
+    "real_check": "π0.5를 AgileX PiPER에서 승인된 cue와 상충하는 cue를 두고 컵 쌓기 태스크로 실행했다. 단일 태스크 재현이며 상관은 보고되지 않았다.",
+    "policies": "OpenVLA-OFT, π0.5, MolmoAct2, Action-Sketcher, InstructVLA, InternVLA-A1.5, Xiaomi-Robotics-0. full-chain accuracy는 최대 17.6%. 언어가 없는 조건에서 승인되지 않은 cue가 32.2-60.1%의 경우에 action을 유발한다",
+    "status": "코드나 project URL을 찾지 못함"
+  },
+  "kinder": {
+    "evaluates": "인식과 언어로부터 분리한 physical reasoning: 공간 관계, nonprehensile multi-object 매니퓰레이션, 도구 사용, 조합적 기하 제약, 동적 제약",
+    "improves": "기존 벤치마크에서는 physical reasoning 능력이 인식·언어와 얽혀 있고, 합의된 state of the art가 없다",
+    "setup": "backend 4종(pure Python 2D, Pymunk, PyBullet, MuJoCo). 3D 로봇은 Kinova Gen3 팔을 단 TidyBot++이다.",
+    "scale": "procedural 생성 환경 25개(2D 10개, 3D 15개). 환경 10개에 대한 시연",
+    "real_check": "시뮬레이터에서 계획하고 하드웨어에서 실행한 real-to-sim-to-real demo를 TidyBot++에서 보였다. 실로봇에서의 정책 벤치마크는 없고 상관도 없다.",
+    "policies": "baseline 13종: 평균 성공률 bilevel planning 0.57, LLM 및 VLM in-context 0.43, fine-tuning한 π0.5 0.32, Diffusion Policy 0.24, PPO 0.13, SAC 0.02",
+    "status": "코드가 있는 open-source site",
+    "note": "venue는 arXiv comment 기준이다. planning과 learning 방법 전반을 대상으로 하며, VLA는 π0.5뿐이다."
+  },
+  "imbench": {
+    "evaluates": "세 단계(제약 이해, action 제안, closed-loop 실행)로 보는 intuitive physical 매니퓰레이션: geometry, dynamics, causal chain, 도구 사용, hidden state, replanning, stability",
+    "improves": "벤치마크들은 physical reasoning을 실행과 따로 테스트하거나, reasoning을 요구하지 않은 채 정책을 측정한다",
+    "setup": "Robosuite(MuJoCo). parallel-jaw 및 suction gripper를 쓰는 single-arm·bimanual Franka.",
+    "scale": "7개 범주의 태스크 35개. trajectory 약 14K건",
+    "policies": "fine-tuning 후 평균 성공률 Diffusion Policy 0.24, π0.5 0.15, GR00T N1.5 0.02(zero-shot은 최대 0.02). GPT 기반 agent는 vision을 쓸 때 11.3%에 이른다",
+    "status": "project site 있음. 전체 데이터와 코드 공개는 대기 중",
+    "note": "venue는 arXiv comment 기준이다(workshop 논문)."
+  },
+  "safevla-bench": {
+    "evaluates": "성공과 안전한 성공 사이의 격차: 과도한 contact, 주변 물체 건드리기, 쥐고 있는 물체의 불안정화, self-contact를 temporal-logic specification으로 사후 검사한다",
+    "improves": "VLA 벤치마크는 binary 완수 여부를 기록하고, trajectory 도중의 안전 관련 행동을 놓친다",
+    "setup": "MuJoCo. LIBERO와 RoboCasa-365를 wrapping한다. Franka 셋업과 Panda-with-Omron 셋업.",
+    "scale": "태스크 58개(LIBERO 40개, RoboCasa-365 family 18개). 제약 family 8개. 약 18,000 episode. 지표에는 success-but-unsafe rate와 violation severity index가 포함된다",
+    "real_check": "SO-101 팔에서 제약 family 2개를 영상 labeling으로 검사한 pilot에서, 성공한 rollout 26회 중 안전하지 않은 성공이 4회 나왔다. pilot일 뿐이며 상관은 보고되지 않았다.",
+    "policies": "LIBERO에서 정책 18개, RoboCasa-365에서 9개. OpenVLA, π0, π0.5, GR00T N1.6/N1.7, X-VLA, SmolVLA, Cosmos-Policy 포함. 성공률 90%를 넘는 정책도 episode의 18-28%가 안전하지 않다. RoboCasa-365 성공의 38-56%가 제약을 위반한다",
+    "status": "project site 있음. 코드와 데이터 공개가 예고됨"
+  },
+  "libero-safety": {
+    "evaluates": "physical safety와 semantic safety: affordance-aware grasping, human-robot interaction, tabletop 회피, free-space에서의 손·물체 회피, semantic safety reasoning",
+    "improves": "안전 방법들이 단순한 tabletop 장애물이 놓인 정적 scene에서 일관되지 않은 프로토콜로 테스트된다",
+    "setup": "LIBERO-Plus를 확장한다. Panda 팔. CuRobo keypose 파이프라인으로 만든 충돌 없는 시연.",
+    "scale": "태스크 75개(5 suite x 5 태스크 x 3 level). 충돌 없는 시연 19,664건",
+    "policies": "OpenVLA, OpenVLA-OFT, π0, π0.5, UniVLA, VLA-JEPA, GR00T N1.5 및 N1.6, 그리고 refusal용으로 RoboBrain2.0과 RynnBrain-CoP. π0.5가 suite에 따라 35-88%로 가장 좋다",
+    "status": "project page 있음",
+    "note": "venue는 arXiv comment 기준이다."
+  },
+  "safelibero": {
+    "evaluates": "LIBERO 태스크를 수행하는 동안의 충돌 회피. 장애물을 target 근처나 동작 경로 위에 둔다",
+    "improves": "원래의 LIBERO에서는 물체가 팔과 충돌하는 일이 드물어, safety-critical 시나리오가 없다",
+    "setup": "Robosuite. LIBERO. Franka Emika Panda.",
+    "scale": "태스크 16개. 시나리오 32개(태스크당 장애물 level 2개). 1,600 episode",
+    "real_check": "π0.5-DROID와 제안된 safety layer로 Franka Panda에서 태스크 2개를 두 안전 level에서 실행했다. 방법을 실로봇으로 옮겨 본 것이며 sim-real 상관은 보고되지 않았다.",
+    "policies": "π0.5는 충돌 회피 18.7%, 성공률 50.9%. OpenVLA-OFT는 15.1%와 22.8%. AEGIS는 77.9%와 68.1%",
+    "status": "VLSA / AEGIS 방법 논문 안에서 소개됨. 코드와 project page 공개",
+    "note": "venue는 arXiv comment 기준이다."
+  },
+  "safety-chores": {
+    "evaluates": "mobile manipulation에서의 안전 제약: 모서리, 사각지대, fragile collection, critical point, 위험한 장비",
+    "improves": "Safe-RL 벤치마크는 단순화된 dynamics를 쓰고, VLA 벤치마크는 내장된 안전 제약 없이 성공을 측정한다",
+    "setup": "ProcTHOR scene과 Objaverse asset을 쓰는 AI2-THOR. 팔이 달린 mobile 로봇.",
+    "scale": "태스크 유형 3가지(Safety-ObjNav, Safety-PickUp, Safety-Fetch). procedural 생성 scene 150K개. safety-critical component 유형 5가지",
+    "real_check": "aligned 정책을 Realman RM75-6F 팔 두 개를 갖춘 플랫폼에서 Safety-PickUp에 배치했다. 방법을 실로봇으로 옮겨 본 것이며 sim-real 상관은 보고되지 않았다.",
+    "policies": "SPOC variant들, EmbCLIP, Embodied-Codebook, FLaRe, PoliFormer, 그리고 제안된 ISA. ISA는 태스크 성능을 유지하면서 safety cost를 83.58% 줄인다",
+    "status": "SafeVLA 방법 논문 안에서 소개됨. 데이터와 모델이 있는 project page",
+    "note": "venue는 arXiv comment 기준이다(spotlight). navigation 비중이 큰 mobile manipulation이다. baseline은 tabletop VLA가 아니라 SPOC 계열 정책이다."
+  },
+  "hazardarena": {
+    "evaluates": "semantic safety: 동작 자체는 안전한 action과 동일하지만 visual-linguistic 맥락상 안전하지 않은 action을 정책이 자제하는지 여부",
+    "improves": "평가가 완수 여부를 측정할 뿐, 그 action이 맥락상 허용되는 것이었는지는 측정하지 않는다",
+    "setup": "MuJoCo. VLABench 태스크 framework 기반. Franka Panda.",
+    "scale": "safe twin과 unsafe twin을 둔 risk 시나리오 51개(태스크 10개의 main suite). hazard 범주 7개. safe 시연 1,000건",
+    "real_check": "위험을 완화한 소품을 써서 Franka Panda에서 태스크 family 5개를 조건당 100회 시행했다: safe-only fine-tuning은 safe 성공률 46.0%, unsafe 성공률 39.6%를 보였다. refusal-augmented 학습은 unsafe 성공률을 0.4%로 낮췄다.",
+    "policies": "OpenVLA-OFT, VLA-Adapter, NORA, π0. safe-only fine-tuning은 safe 성공률과 함께 unsafe twin 실행도 높인다(π0: safe 0.47, unsafe 0.44)",
+    "status": "코드나 project URL을 찾지 못함. submitted로 기재됨"
+  },
+  "foresightsafety-vla": {
+    "evaluates": "physical interaction(force, thermal, spatial boundary, collaboration, sequencing), instruction 측 hazard, perception 측 hazard에 걸친 process 수준의 안전",
+    "improves": "VLA 벤치마크에서 안전은 아예 빠져 있거나, sparse한 충돌 검사로 축소되거나, 일반적인 태스크 실패와 섞여 있다",
+    "setup": "RoboTwin asset과 태스크 primitive. embodiment 5종.",
+    "scale": "safety-augmented 시나리오 66개. 3개 family의 범주 13개. structure level L0-L2, language W0-W4, vision V0-V4",
+    "policies": "전체 지표를 낸 OpenVLA-OFT, RDT, Diffusion Policy, ACT(안전한 성공률 0.42, 0.30, 0.24, 0.20). π0.5, π0, DexVLA 등은 부분 실행. 완전히 안전한 baseline은 없다",
+    "status": "코드나 project URL을 찾지 못함"
+  },
+  "safemanip": {
+    "evaluates": "low-level rollout에서 모니터링하는 temporal safety property: 충돌과 contact, grasp 및 release 안정성, cross-contamination, action onset, mechanism, containment, enclosure",
+    "improves": "벤치마크들은 물리적 결과나 안전한 행동의 semantic 구조 중 하나를 다룰 뿐, 실행된 동작에 대한 temporal specification은 다루지 않는다",
+    "setup": "RoboCasa365와 LIBERO.",
+    "scale": "태스크 90개(RoboCasa365 50개, LIBERO 40개). property 범주 8개. 태스크당 rollout 50회",
+    "policies": "π0, π0.5, GR00T N1.5 및 N1.6, RLDX-1, Cosmos Policy, OpenVLA. RoboCasa365에서는 능력이 높은 정책일수록 더 많이 위반하고(r = +0.66), LIBERO에서는 그 반대다(r = -0.99)",
+    "status": "코드 repository 기재됨"
+  },
+  "safestage": {
+    "evaluates": "태스크 lifecycle 전반의 안전하지 않은 성공: 초기 상태에 존재하는 hazard, 실행 중의 hazard, 최종 상태에 남는 hazard",
+    "improves": "벤치마크들은 관계에 의존하는 precondition, 실행 중의 상호작용, 완수 후의 물리적 상태를 검사하지 않는다",
+    "setup": "Isaac Sim(PhysX). Franka Panda와 Robotiq gripper로 구성한 시뮬레이션 DROID 셋업.",
+    "scale": "시나리오 97개(initial-state 27, execution-time 40, final-state 30). prompt 조건 3가지",
+    "policies": "fine-tuning 없이 쓴 π0.5, GR00T N1.7, DreamZero, Cosmos3 Nano Policy. 종합 성공률은 33.74%이지만 안전한 성공률은 9.84%. 성공한 rollout의 약 71%가 안전하지 않다",
+    "status": "코드 repository 기재됨"
+  },
+  "oopsieverse": {
+    "evaluates": "가정 매니퓰레이션 중에 발생하는 손상: 시뮬레이터 plugin으로 측정하는 기계적(충격, 압축, 인장)·열·유체 손상",
+    "improves": "시뮬레이터는 안전하지 않은 상호작용이 일으킬 손상을 감지하거나 정량화하지 않는다",
+    "setup": "OmniGibson(BEHAVIOR-1K)과 MuJoCo(RoboCasa)에 올린 DamageSim plugin. 실세계 테스트는 Franka Panda.",
+    "scale": "태스크 32개(두 시뮬레이터에 걸쳐 고유 design 21개). 학습 실험용 시연 450건",
+    "real_check": "Franka Panda에서 shelving과 pouring을 실행했다: damage-aware 정책은 안전한 완수율 65%에 이르렀고 baseline은 5%였다. 방법을 실로봇으로 옮겨 본 것이며, 손상의 일치 여부는 정성적으로 기술됐다.",
+    "policies": "GR00T: OmniGibson 태스크에서 완수율 8-92%이지만 안전한 완수율은 0-8%. π0: RoboCasa 태스크에서 완수율 17.5%, 안전한 완수율 0%. health feedback을 쓰는 imitation 및 RL baseline도 테스트했다",
+    "status": "코드가 있는 project site"
+  },
+  "maniguard-bench": {
+    "evaluates": "specification에 기반한 안전: contact-rich tabletop 태스크 중에 모니터링하는 LTLf spatial invariant와 temporal ordering 제약. in-distribution과 out-of-distribution을 모두 본다",
+    "improves": "매니퓰레이션 벤치마크는 실행 중의 안전을 정의하거나 모니터링하지 않고, formal specification 벤치마크에는 contact-rich trajectory와 안전 annotation이 달린 데이터가 없다",
+    "setup": "Isaac Sim / OmniGibson(PhysX). BDDL predicate. Franka Panda.",
+    "scale": "base 태스크 200개를 시나리오 1,000개로 확장(각각 in-distribution 조건 1개와 shifted 조건 4개). 태스크 family 6개. 시연 8,000건",
+    "real_check": "fine-tuning한 정책 3개를 실물 Franka에서 태스크 family 2개에 대해 실행했다(cell당 rollout 30회). sim-real 상관이 보고된다: 성공률 r = 0.91, 안전한 성공률 0.88, 위반율 0.09.",
+    "policies": "π0.5, π0, SmolVLA, GR00T N1.6. 안전한 성공률은 zero-shot 0.0-1.8%, fine-tuning 후 7.5-29.8%. 성공한 rollout의 상당수가 specification을 위반한다",
+    "status": "project page, 코드, Hugging Face collection 기재됨",
+    "note": "이 slice에서 수치로 된 sim-real 상관이 있는 유일한 항목이다."
+  },
+  "besafe-bench": {
+    "evaluates": "LIBERO 매니퓰레이션 중 VLA의 operational safety. 성공률, 안전율, success-and-safe 비율로 보고한다",
+    "improves": "agent safety 벤치마크는 작동하는 환경에서 action을 실행하는 경우가 드물고, embodied 평가는 행동상의 안전을 무시한다",
+    "setup": "VLA-Arena를 통해 확장한 LIBERO-90 태스크. 7-DoF 팔.",
+    "scale": "태스크 1,312개의 agent safety 벤치마크에 있는 track 4개 중 하나. VLA track의 규모는 추출하지 못했다",
+    "policies": "OpenVLA는 성공률 49.81%, success-and-safe 30%. OpenVLA-OFT는 56.85%와 35.19%. π0.5는 23.89%와 13.89%",
+    "status": "코드나 project URL을 찾지 못함",
+    "note": "주로 web, mobile, LLM agent 벤치마크이며, VLA track은 작은 일부다. arXiv ID는 2603.25747인데 API에는 첫 버전 날짜가 2026-01-30으로 표기돼 있다."
+  },
+  "softvtbench": {
+    "evaluates": "변형체를 안전하게 다루기: 떨어뜨림이 없고 최대 변형량이 보정된 threshold 미만일 때만 rollout을 안전한 것으로 친다",
+    "improves": "성공 여부만 보는 평가는 성능을 과대평가한다. goal을 달성한 rollout 중 다수가 물리적 안전 한계를 위반하기 때문이다",
+    "setup": "PhysX 5 FEM soft body를 쓰는 Isaac Sim 4.5.0. GelSight Mini tactile sensor를 단 Franka Panda.",
+    "scale": "서로 대응하는 4개 suite의 태스크 40개. 시연 episode 2,000건. asset 33개(강체 19, 변형체 14)",
+    "policies": "π0.5 vision-only: soft-object suite에서 goal success 70.4%, safety success 21.4%. π0.5 visuo-tactile: 71.8%와 35.6%",
+    "status": "project page 있음. 초기 버전이라고 기술됨",
+    "note": "venue는 arXiv comment 기준이다('Accepted by ECCVW')."
+  },
+  "wirecraft": {
+    "evaluates": "산업용 deformable linear object 매니퓰레이션: 명시된 plug–socket clearance 3 mm에서의 connector 삽입, clip routing, channel seating. reach 성공과 삽입 성공을 나눠 보고한다",
+    "improves": "이전 cable·wire 벤치마크는 RL, imitation, VLA 정책에 걸쳐 시뮬레이션 태스크, 실로봇 데이터, 하나의 평가 프로토콜을 맞추지 않았다",
+    "setup": "Isaac Lab 2.2.1 / Isaac Sim 4.5. connector geometry 4종(cylinder, cuboid, Ethernet, DisplayPort), clip 1–3개 routing, 직선 및 곡선 channel seating. DLO physics model 2종. 공용 정책 interface.",
+    "scale": "태스크 family 3개. imitation / VLA 학습용 scripted trajectory 1,000건. state 기반 RL용 scripted transition 약 150,000건",
+    "real_check": "실세계 데이터와 시뮬레이션 데이터를 섞어 학습한 ACT로 UR5 Ethernet 삽입을 수행해 삽입 4/10을 기록했다. sim–real 상관 통계는 보고되지 않았다.",
+    "policies": "Ethernet 삽입: π0.5 reach 6.2% / 삽입 0.0%. Diffusion Transformer VLA 정책 삽입 3.13%. 비교용으로 state PPO 삽입 95.86%",
+    "status": "신규(2026년 6월). 저자들은 채택 시 벤치마크, 데이터, 도구를 공개한다고 밝힘. 리더보드 없음",
+    "note": "수치는 arXiv HTML v1에서 읽었다. ACT와 Diffusion Policy 값은 figure로만 제시돼 있어 여기에 인용하지 않았다."
+  },
+  "bench2dex": {
+    "evaluates": "arm–hand embodiment 12종에 걸친 multi-fingered hand bimanual 매니퓰레이션: tool use, articulated object, jigsaw 조립, 피아노 건반, pouring, box loading. 손가락 contact에는 공용 촉각 이미지를 쓴다",
+    "improves": "dexterous hand 벤치마크는 하나의 hand에 묶여 있었고 공통된 촉각 관측 형식이 없어, hand morphology에 걸쳐 정책을 비교할 수 없었다",
+    "setup": "NVIDIA Isaac Lab / Isaac Sim. dexterous hand 12종. contact 거리를 ray-cast해 8-bit 이미지로 만드는 표준화된 촉각 interface. invariance 그룹과 equivariance 그룹으로 나눈 perturbation factor 7개.",
+    "scale": "bimanual 태스크 26개. 사람의 teleoperation 시연 약 1,300건(Manus glove + ARKit). 평가 rollout 20,800회로, task–embodiment–channel당 50회",
+    "policies": "matched scene, 각 rollout 1,300회: GR00T N1.5 48.5%, ACT 29.5%, π0.5 27.3%, Diffusion Policy 12.9%. combined perturbation: GR00T N1.5 19.8%, π0.5 19.7%, ACT 13.0%, Diffusion Policy 3.8%",
+    "status": "신규 technical report(2026년 9월). 코드와 데이터는 GitHub, Hugging Face, ModelScope에 있음. 공개 리더보드는 발견되지 않음",
+    "note": "시뮬레이션뿐이다. hand와 촉각 모델은 하드웨어에 맞춰 보정되지 않았다. 대부분의 태스크가 loading, sorting, pouring이어서, 요구되는 정밀도는 좁은 clearance가 아니라 손가락 coordination이다. project page는 shift 조건에서 π0.5를 25.5%로 적고 있으나, 논문 표는 19.7%로 제시한다."
+  },
+  "surgvla-bench": {
+    "evaluates": "내시경 view에서 복강경 기구를 다루는 VLA control: needle 및 gauze 집기, 전기응고, 혈관 clipping, 지혈. 얇은 물체에 대한 작은 위치 오차가 태스크 실패로 이어진다",
+    "improves": "VLA 모델에는 atomic action부터 full procedure까지의 태스크 hierarchy를 갖춘 수술 평가가 없었다",
+    "setup": "장기 모델을 추가한 SurRoL(PyBullet). 3개 level(atomic, distractor가 있는 conditional, composite)의 태스크 8개. step 제한 100–150.",
+    "scale": "태스크 8개. LoRA fine-tuning용 시뮬레이션 trajectory 800건 이상(약 40,000 frame). 모델별 태스크당 50회",
+    "policies": "OpenVLA는 Level 1에서 36–76%, Level 3에서 0%. π0는 Level 1에서 0–76%. π0.5는 Level 1에서 0–78%, Level 3에서 0–12%. SmolVLA는 모든 level에서 0–8%",
+    "status": "신규(2026년 6월). 코드와 데이터는 GitHub에 있음. 리더보드 없음",
+    "note": "범위는 arXiv HTML을 통해 Table 2에서 읽은 태스크별 구간이다. 성공은 binary이며 위치 오차 지표는 보고되지 않았다. 시뮬레이션뿐이다."
+  },
+  "univtac-benchmark": {
+    "evaluates": "태스크 8개에서의 visuo-tactile gripper 매니퓰레이션. 그중 4개는 fingertip contact로 정렬을 보정해야 하는 contact-rich 삽입 또는 추출(hole, HDMI, tube, key)이다",
+    "improves": "촉각 정책 학습에는 대규모 촉각 데이터셋을 생성하면서 visuo-tactile 정책의 공통 벤치마크도 제공하는 시뮬레이터가 없었다",
+    "setup": "IPC soft body contact를 쓰는 NVIDIA Isaac Sim 기반 TacEx. 시뮬레이션 GelSight Mini, ViTai GF225, Xense WS 센서. 자동 데이터 생성.",
+    "scale": "태스크 8개. 태스크당 시연 50건. 태스크당 평가 rollout 100회",
+    "real_check": "Tianji Marvin 팔에서 실세계 태스크 3개(Insert Tube, Insert USB, Bottle Upright)를 수행했다: vision만 쓸 때 43.3%, 시뮬레이션으로 pretrain한 촉각 encoder를 쓸 때 68.3%였다. sim–real 상관 통계는 보고되지 않았다.",
+    "policies": "벤치마크 논문에는 없음. 이후의 N0-VTLA 논문은 태스크 8개 평균으로 N0-VTLA 83.1%, 가장 강한 baseline인 InternVLA-A1 67.1%를 보고",
+    "status": "2026년 2월 project page와 함께 공개됨. 논문 baseline은 ACT, VITaL, ACT + UniVTAC encoder(평균 30.9%, 40.5%, 48.0%). N0-VTLA와 NeoSim(2026)에서 재사용됨",
+    "note": "명시된 삽입 clearance는 확인되지 않았다. VLA 수치는 벤치마크 저자들이 아니라 다른 논문(arXiv 2607.23782)에서 나온 것이다."
+  },
+  "dexholdem": {
+    "evaluates": "UR 팔에 장착한 실제 ShadowHand로 얇은 playing card(약 0.3 mm)와 chip을 다루는 primitive 14개: pickup, placement, revealing, chip 이동. task completion과 scene-preserving success를 채점한다",
+    "improves": "dexterous hand 벤치마크와 embodied agent 벤치마크는 따로 존재했다. action마다 바뀌는 실제 scene에서 perception, game state tracking, multi-fingered control을 함께 요구하는 것은 없었다",
+    "setup": "실물 Texas Hold'em 테이블에 놓인, UR 팔에 장착한 ShadowHand. manipulation primitive 14개. 정책, perception(VLM), closed-loop system 벤치마크를 따로 둔다.",
+    "scale": "primitive 14개. teleoperation 시연 1,470건(primitive당 105건). 정책당 80회, 정책 시행 총 720회. closed-loop hand 33판",
+    "policies": "task completion / scene-preserving success: π0.5 61.2% / 47.5%, π0 57.5% / 47.5%, RDT 46.2% / 30.0%, Diffusion Policy (DINO) 36.2% / 26.2%. ACT, BAKU 및 다른 DP variant는 1.2–20.0%. full-hand completion 12.1%",
+    "status": "Preprint(v3, 2026년 10월). 데이터셋은 Hugging Face에, 코드는 GitHub에 있음. 단일 연구실 하드웨어, 리더보드 없음",
+    "note": "수치는 arXiv HTML v3에서 가져왔다. ShadowHand가 필요하므로 다른 연구실이 재현하려면 비용이 많이 든다. 이전 버전의 arXiv listing 제목은 다르다('Playing Texas Hold'em with Dexterous Embodied System')."
+  },
+  "metafine": {
+    "evaluates": "understanding, perception, behaviour로 나눈 fine-grained 매니퓰레이션. 위치·각도 공차 아래의 Align과 Insert를 포함한 atomic skill 10개의 stage별 성공과 trajectory smoothness를 보고한다",
+    "improves": "binary 태스크 성공 여부는 어떤 sub-skill이 실패하는지를 가린다. 저자들은 binary 성공만 쓸 때 최대 70%의 capability inflation이 있다고 보고한다",
+    "setup": "RoboTwin, CALVIN, LIBERO의 시뮬레이션 태스크를 하나의 skill-graph 형식으로 재구성했다. label이 붙은 part 1,078개를 가진 물체 431종. viewpoint와 조명에 대한 perturbation level.",
+    "scale": "atomic skill 10개. task instance 45개 이상. 태스크당 시연 100건. 정책 7개",
+    "real_check": "정책당 20–25회의 paired 실세계 rollout을 prediction-powered inference로 시뮬레이션과 결합해 추정치의 분산을 줄였다(π0.5의 경우 11.5%에서 2.6%로). 상관계수는 보고되지 않았다.",
+    "policies": "ACT, DP3, Octo, OpenVLA, OpenVLA-OFT, π0, π0.5를 평가. peg-in-hole Align stage: Octo 4%, OpenVLA-OFT 19%, π0.5 0%(visual encoder를 바꾼 뒤 32%). part-substitution 지시문에서는 VLA 5종 모두 0%로 떨어진다",
+    "status": "신규(2026년 5월). 코드는 GitHub에, 데이터는 Hugging Face에 있음. 리더보드 없음",
+    "note": "skill별 수치는 arXiv HTML의 자동 요약을 통해 읽은 것이므로, 인용하기 전에 논문 표와 대조해 확인해야 한다."
+  },
+  "workbenchmark": {
+    "evaluates": "흩어진 brick으로 LEGO Duplo 구조물을 만드는 end-to-end 조립. 맞물리는 stud 때문에 정렬된 배치와 끝까지 눌러 끼우기가 필요하며, 조립 성공과 connection별 execution accuracy로 채점한다",
+    "improves": "조립 벤치마크에는 RoboCup Smart Manufacturing League 태스크와 연계되고 planning pipeline과 end-to-end VLA를 모두 돌릴 수 있는 단계별 복잡도 척도가 없었다",
+    "setup": "시뮬레이션은 LIBERO를 통한 MuJoCo. 실세계 subset은 wrist RGB-D 카메라를 단 UR5. brick 2개 stack부터 서로 맞물리는 brick 3–12개 구조물까지 4개 tier.",
+    "scale": "시뮬레이션 태스크 400개(tier당 100개). 실세계 subset은 tier당 태스크 10개",
+    "real_check": "planning pipeline을 UR5에서 Tier 1–3에 대해 실행했다(성공률 90%, 90%, 70%). VLA baseline은 실로봇에서 실행하지 않았으며, sim–real 상관은 보고되지 않았다.",
+    "policies": "fine-tuning한 π0.5의 tier 1–4별 성공률: 82%, 63%, 23%, 2%. zero-shot Gemini 2.5 Flash + π0.5: 70%, 59%, 19%, 5%. planning pipeline: 94%, 87%, 67%, 62%",
+    "status": "신규(2026년 6월). project page 있음. RoboCup Smart Manufacturing League와 연계됨. 리더보드 없음",
+    "note": "Duplo brick은 기계적으로 오차에 관대하므로(저자들도 그렇게 말한다), 요구되는 정밀도는 좁은 clearance가 아니라 stud grid에 대한 정렬이다."
+  },
+  "forcebench": {
+    "evaluates": "6축 wrist force 신호를 VLA에 어떻게 입력해야 하는지를, 물리적 속성 추론, 저항에 의존하는 interaction(수도꼭지, 스토브 knob, 서랍), contact-rich 조립(nut threading)을 아우르는 태스크 8개에서 살펴본다",
+    "improves": "force-aware VLA 논문들은 각자 자체 태스크와 fusion 설계를 써서, force 통합 전략이 하나의 프로토콜 아래에서 비교된 적이 없었다",
+    "setup": "physics 60 Hz / control 15 Hz의 시뮬레이션이며, π0.5 backbone과 force-fusion variant 6종을 쓴다. 실세계 평가는 KWR75B force/torque 센서와 Robotiq gripper를 단 Franka Research 3에서 별도로 수행한다.",
+    "scale": "시뮬레이션 태스크 8개. 시연 1,600건(태스크당 200건). 시뮬레이션 episode 16,000건. 실세계 태스크 5개에서 실세계 trial 800회(태스크–시스템 쌍당 20회)",
+    "real_check": "별도로 학습한 실세계 태스크 5개(Weight Sort, Plate Retrieve, Stamp Press, Plug Insert, Block Insert)에서 force 없는 π0.5는 40%, 가장 좋은 force variant들은 63%였다. 이는 sim-to-real 전이가 아니며 상관은 보고되지 않았다.",
+    "policies": "태스크 8개의 시뮬레이션 평균: force 없는 π0.5 23.25%, prompt-fusion force를 쓴 π0.5 35.31%. π0, ForceVLA, ForceFlow가 reference 모델로 포함됨",
+    "status": "2026-10 기준 project page만 있음. 논문, 코드, 데이터 링크는 아직 활성화되지 않음",
+    "note": "project page만으로 확인했다. arXiv 논문은 찾지 못했고, 시뮬레이터 이름은 페이지에 명시돼 있지 않다. 모든 수치는 잠정적인 것으로 봐야 한다."
+  },
+  "tabero": {
+    "evaluates": "시뮬레이션 GelSight 센서를 달아 replay한 LIBERO 태스크에서의 force-controlled grasping. 성공 여부 외에 평균 및 최대 grip force와, 'gentle' 대 'firm' 지시에서 가해진 force를 보고한다",
+    "improves": "VLA 벤치마크는 태스크 성공만 채점하고 촉각 신호가 없어, 정책이 물체를 적절한 force로 다뤘는지 알 수 없다",
+    "setup": "Isaac Lab 2.2+ / Isaac Sim 5.0+와 Taxim / FOTS 촉각 시뮬레이션. LIBERO trajectory를 촉각 이미지, marker field, force와 함께 다시 생성했다. hybrid force–position control 인터페이스.",
+    "scale": "LIBERO에서 파생한 태스크 세트. 보고된 평가는 태스크 9개와 trial 450회를 사용. force 수준이 다른 데이터셋 3종",
+    "policies": "Tabero-VTLA(LoRA와 촉각 입력을 쓴 π0): firm 지시에서 평균 grip force 32.4 N에 성공률 86%. gentle 지시에서 3.7 N에 성공률 52%",
+    "status": "신규(2026년 5월). 코드와 weight 공개됨. 리더보드 없음. 제3자 결과는 찾지 못함",
+    "note": "위치 정밀도가 아니라 force 정밀도를 측정한다. 전체 벤치마크의 총 태스크 수는 확인하지 못했다. 저자 자신의 모델만 보고돼 있다."
+  },
+  "manifeel": {
+    "evaluates": "삽입(peg, USB, power plug, gear), screwing(nut–bolt, 전구), exploration 태스크에서의 visuotactile imitation 정책. vision-only, tactile-RGB, tactile force-field 입력을 비교한다",
+    "improves": "sensing modality와 정책 architecture에 걸친 supervised visuotactile 정책 학습을 위한, 재현 가능한 시뮬레이션 벤치마크가 없었다",
+    "setup": "IsaacGym과 TacSL 촉각 시뮬레이션. GelSight R1.5 센서를 단 Franka Panda. baseline은 Diffusion Policy, Equivariant Diffusion Policy, Flow Matching이다.",
+    "scale": "시뮬레이션 셋업 99개와 실세계 셋업 44개. 태스크당 teleoperation 시연 20–100건. 셋업당 시뮬레이션 rollout 약 1,500회. configuration당 실세계 rollout 15회",
+    "real_check": "gear 조립, 전구 설치, 공 분류를 실제 Franka에서 반복했다. 저자들은 시뮬레이션의 경향이 재현됐다고 밝히지만, 상관 통계는 제시하지 않았다.",
+    "status": "코드, 데이터, checkpoint 공개됨. project page에 CVPR 2026 Sense of Space workshop의 Best Paper Award가 기재돼 있음. VLA baseline 없음",
+    "note": "명시된 clearance는 찾지 못했다. 태스크 수가 project page(태스크 11개 기재)와 논문 요약(셋업 99개) 사이에 다르다. 주 게재 venue는 확인하지 못했다."
+  },
+  "prism": {
+    "evaluates": "force/torque 및 visuotactile sensing을 쓰는 실세계 산업용 contact-rich skill: connector plug/unplug, bearing 설치, NIST task-board 조작, caliper 포장, conveyor 분류. baseline 프로토콜은 태스크 3개에서 성공률을 보고한다",
+    "improves": "대규모 로봇 데이터셋은 짧고 contact가 적은 pick-and-place에 치중하며, 공차가 좁은 산업 공정을 위한 동기화된 force, 촉각, multi-view 데이터가 없다",
+    "setup": "Franka Panda, bimanual Realman RM75-6F, LEJU humanoid. end-effector는 parallel, visuotactile, dexterous hand다. multi-view RGB-D, 100 Hz의 6축 F/T, visuotactile 이미지. baseline 평가는 Realman 플랫폼에서 수행했다.",
+    "scale": "태스크 25개. teleoperation trajectory 5,000건 이상(약 45시간)과 그에 짝지어진 human 시연. baseline은 태스크당 시연 200건, configuration당 trial 20회 사용",
+    "policies": "pretraining 사용, 시연 200건: plug/unplug ACT 10%, Diffusion Policy 10%, π0 25%. caliper 포장 55%, 55%, 85%. conveyor 분류 30%, 20%, 85%",
+    "status": "데이터셋과 project page 공개됨. 기본적으로 데이터셋이며 태스크 3개짜리 baseline 프로토콜이 딸려 있음. 리더보드 없음",
+    "note": "IROS 2026 venue는 arXiv 페이지가 아니라 GitHub repository 제목에서 가져왔다. 공차는 tight하다고 기술돼 있지만 밀리미터 단위로 제시되지는 않았다."
+  },
+  "neosim": {
+    "evaluates": "태스크 12개(single-arm 4개, dual-arm 8개)에서의 visuo-tactile gripper 매니퓰레이션: charger 및 USB 꽂기, screw 삽입, gear 배치, chip grasping, pouring, handover, stacking과 unstacking",
+    "improves": "촉각 VLA 모델에는 contact force field가 학습에 쓰인 실제 센서의 형식과 일치하는 시뮬레이션 suite가 없어, sim과 real의 촉각 결과를 비교할 수 없었다",
+    "setup": "UniVTAC framework(Isaac Sim) 안에 구축했다. contact별 3축 force field를 NeoForce 센서 형식으로 렌더링한다. 태스크당 고정된 언어 prompt를 쓴다.",
+    "scale": "태스크 12개. 학습용으로 태스크당 시연 100건",
+    "real_check": "짝을 이루는 실세계 suite인 NeoReal(contact-rich 태스크 9–10개)은 π0.5 29.4% 대 N0-VTLA 47.2%를 보고한다. sim-real 상관은 보고되지 않았다.",
+    "policies": "평균 성공률: N0-VTLA 50.8%, π0.5 45.8%, Xiaomi-Robotics-0 23.4%, StarVLA-alpha 23.2%, GigaWorld-Policy 10.8%, InternVLA-A1 8.6%. 함께 나온 data report에서는 LingBot-VA 32.1%",
+    "status": "신규(2026년 7월). NeoteAI와 Fudan의 model 논문 안에서 제안됨. code repository 링크 있음. 리더보드나 제3자 사용 사례는 찾지 못함",
+    "note": "벤치마크는 method 논문과 회사 report에 기술돼 있다. 평가 trial 수와 태스크 asset의 공개 여부는 확인하지 못했다. NeoReal 태스크 수는 두 report 사이에 다르다(9 대 10)."
+  },
+  "fact-contact-rich-task-suite": {
+    "evaluates": "wrist force/torque 센서를 쓰는 VLA용 실세계 contact-rich 태스크 5개: occlusion 상태에서 sub-millimetre 정렬이 필요한 plug, USB, key 삽입, force threshold까지 버튼 누르기, whiteboard 지우기",
+    "improves": "contact-rich 태스크에서의 VLA 실패는 하나의 수치로 보고돼 왔다. 이 연구는 precision 실패와 force 실패를 분리하고, force-aware VLA들을 같은 태스크에서 비교한다",
+    "setup": "Bota SensONE 6축 F/T 센서(400 Hz)를 단 Franka Research 3, 15 Hz의 external 카메라와 wrist 카메라. π0.5를 LoRA로 fine-tuning했다. fixture는 bill of materials와 3D 프린트 가능한 파일로 기술돼 있다.",
+    "scale": "태스크 5개. 태스크·방법당 rollout 40회. 실세계 rollout 총 2,500회 가까이",
+    "policies": "태스크 5개 평균: FACT(π0.5 backbone) 66%. 가장 좋은 기존 baseline인 ForceVLA 40.5%. π0.5와 TA-VLA도 비교됨. FACT 태스크별: plug 57.5%, USB 47.5%, key 60%, button 75%, board 90%",
+    "status": "신규(2026년 8월). task suite는 Stanford IPRL의 method 논문 안에 들어 있음. 하드웨어 파일과 코드 공개가 예고됐으나, 실제 이용 가능 여부는 확인되지 않음",
+    "note": "저자들이 벤치마크로 제시한 것은 아니다. ForceVLA 평균을 제외한 baseline별 수치는 추출하지 않았다."
+  },
+  "dextoolbench": {
+    "evaluates": "실세계 multi-fingered tool use: 도구를 grasping하고, in-hand로 90도 회전시킨 뒤 사용한다(hammer 휘두르기, marker로 쓰기, screwdriver 돌리기, brush, eraser, spatula). 추적한 goal pose의 비율로 채점한다",
+    "improves": "dexterous tool use 결과는 도구별로 task-specific 정책을 써서 보고돼 왔다. 대응하는 시뮬레이션 환경을 갖춘 공유 실세계 태스크 세트가 없었다",
+    "setup": "22-DoF Sharpa five-fingered hand를 단 7-DoF KUKA iiwa 14. 도구 범주 6개, 물체 instance 12개. digital-twin 시뮬레이션 환경과 물체 구매 링크를 제공한다.",
+    "scale": "태스크 24개. 태스크당 실세계 rollout 5회, 총 120회",
+    "status": "project page(simtoolreal.github.io)와 함께 공개됨. baseline은 kinematic retargeting, fixed grasp, specialist RL 정책. VLA나 generalist 정책 결과는 찾지 못함",
+    "note": "벤치마크는 method 논문 안에서 정의돼 있다. Sharpa hand와 KUKA 팔이 필요해 재현이 제한된다."
+  },
+  "dexcraft": {
+    "evaluates": "multi-fingered hand를 이용한 articulated tool use: 도구를 goal pose로 쥔 채 손가락으로 도구의 joint를 구동한다(spray trigger, lighter 뚜껑, pump, pliers, stapler, pen click)",
+    "improves": "dexterous hand suite는 grasping과 relocation에 치중한다. 이 태스크들은 안정적인 grasp와 독립적인 손가락 동작을 동시에 요구하며, 이는 parallel gripper로는 할 수 없다",
+    "setup": "ManiSkill3. 16-DoF LEAP Hand를 단 xArm6(22차원 action). 성공하려면 도구 pose가 일치하고 joint가 threshold 이상으로 구동돼야 한다.",
+    "scale": "태스크 6개. 태스크당 teleoperation 시연 5건을 MimicGen으로 100건으로 확장",
+    "real_check": "실세계 태스크 3개(syringe, spray bottle, scissors)에서 시연 50건, episode 18건으로 제안 방법은 40.7%, DP3는 7.4%였다. 이들은 다른 태스크이므로 sim-real 상관은 보고되지 않았다.",
+    "status": "신규(2026년 6월). baseline은 Diffusion Policy, DP3, hierarchical variant(DP3 19.1%, 제안 방법 64.6%). VLA baseline 없음",
+    "note": "벤치마크는 CMU의 method 논문 안에서 정의돼 있다. RSS venue는 자동 요약이 알려 준 것이며 확인되지 않았다."
+  },
+  "automate": {
+    "evaluates": "부품 geometry 100종에 걸친, contact-rich 삽입을 수반하는 plug-into-socket 조립. specialist 정책과 generalist 정책을 시뮬레이션과 실로봇에서 assembly별 성공률로 채점한다",
+    "improves": "기존 조립 시뮬레이션 연구(Factory, IndustReal)는 소수의 부품 유형만 다뤘다. 정책을 학습하고 비교할, simulation-ready이면서 3D 프린트 가능한 대규모 assembly 세트가 없었다",
+    "setup": "Isaac Gym 환경(Isaac Lab에도 통합됨). 시뮬레이션과 호환되면서 3D 프린트도 가능한 assembly 100종.",
+    "scale": "assembly 100종. 실세계 평가는 assembly 20종에서 policy-only trial 200회, assembly 5종에서 perception-initialized trial 100회",
+    "real_check": "zero-shot sim-to-real이다: 시뮬레이션 성공률은 약 80%, perception-initialized 실세계 trial의 평균은 86–90%다. 저자들은 실세계 성능이 시뮬레이션과 비슷하거나 더 좋다고 보고한다.",
+    "status": "환경이 IsaacGymEnvs와 Isaac Lab에 포함돼 배포됨. RL 조립 test bed로 쓰임. VLA 결과는 찾지 못함",
+    "note": "열어 본 페이지에는 clearance가 명시돼 있지 않다. baseline은 VLA가 아니라 RL specialist와 distill한 generalist다."
+  },
+  "qbit": {
+    "evaluates": "clearance 1 mm와 0.1 mm에서의 peg-in-hole 및 USB 삽입 품질. 성공 여부, 완료 시간, force energy, force smoothness, 최대 contact force로 측정한다",
+    "improves": "삽입 벤치마크는 성공률만 보고했다. contact 품질과, 무작위화한 contact 파라미터가 sim-to-real 전이에 미치는 영향은 측정되지 않았다",
+    "setup": "stiffness, damping, friction을 무작위화한 MuJoCo를 Kubernetes에서 ROS 2 container로 대규모 실행한다. 실로봇은 SCHUNK FTN-AXIA80 force/torque 센서를 단 UR5e다.",
+    "scale": "방법당 실세계 반복 100회. randomization study당 시뮬레이션 실행 1,000회 이상. 방법 3종 비교",
+    "real_check": "같은 삽입 방법 3종을 실제 UR5e에서 실행했다. 논문은 시뮬레이션의 contact가 실로봇과 얼마나 가깝게 일치하는지로 mesh-decomposition 선택지를 비교하며, 상관 통계는 제시하지 않는다.",
+    "status": "코드는 GitHub에 있음. 공개 submission portal은 찾지 못함. baseline은 position control, impedance control, InsertionNet. VLA 결과 없음",
+    "note": "IEEE에 투고된 것으로 기재돼 있으며, 최종 venue는 확인되지 않았다. force 품질 지표를 갖춘 몇 안 되는 삽입 벤치마크 중 하나다."
+  },
+  "vtdexmanip": {
+    "evaluates": "태스크 6개에서 vision과 binary 촉각 입력을 쓰는 multi-fingered 매니퓰레이션: 병뚜껑 돌리기, 수도꼭지 screwing, lever sliding, table 및 in-hand reorientation, bimanual hand-over",
+    "improves": "복잡한 dexterous hand skill에서 representation을 pretraining하고 비교할 visual-tactile 데이터셋과 벤치마크가 없었다",
+    "setup": "IsaacGym. multi-finger hand. pretraining용 human visual-tactile 데이터셋. pretrained 및 non-pretrained encoder 18종 위에서 RL 정책을 학습한다.",
+    "scale": "태스크 6개. 데이터셋의 물체 182종. 방법 18종 비교",
+    "status": "코드와 데이터셋은 GitHub에 있음. VLA나 imitation baseline이 없는 RL 벤치마크",
+    "note": "세부 사항은 GitHub README와 ICLR 논문의 검색 요약에서 읽었다. 논문 PDF는 파싱하지 않았고 arXiv abs URL도 찾지 못해, Paper 링크는 ICLR proceedings PDF를 가리킨다."
+  },
+  "robopianist": {
+    "evaluates": "24-DoF Shadow hand 2개로 하는 피아노 연주. 각 건반을 정확한 시점에 눌러야 하며, MIDI 악보 대비 건반 누름의 precision, recall, F1으로 채점한다",
+    "improves": "dexterous hand 벤치마크에는 고차원 control, 엄격한 공간적·시간적 정밀도, 해석 가능한 연속 지표를 갖춘 태스크가 없었다",
+    "setup": "MuJoCo. 시뮬레이션 피아노 위에 놓인 Shadow Dexterous Hand 2개. fingering annotation이 붙은 MIDI 곡.",
+    "scale": "150곡(Repertoire-150)이며, 12곡짜리 Etude-12 subset이 있음. RL baseline은 Etude-12에서 F1 0.79에 도달",
+    "status": "dexterous RL 연구에서 쓰이는 open-source 환경. VLA 결과는 찾지 못함",
+    "note": "task-specific reward를 쓰는 state-based RL을 사용한다. language-conditioned 프로토콜이나 image-based 프로토콜이 없어, VLA 평가에는 adapter가 필요할 것이다."
+  },
+  "rtc-kinetix-dynamic-benchmark": {
+    "evaluates": "inference delay d(control step 0-4)와 execution horizon s를 sweep할 때, force-controlled dynamic 태스크 12개(던지기, 받기, 균형 잡기)에서 action chunking 정책의 solve rate",
+    "improves": "흔히 쓰는 imitation learning 시뮬레이터는 quasi-static이어서, 긴 open-loop chunk가 거의 완벽한 성공률에 도달하고 inference delay의 비용을 가린다",
+    "setup": "Kinetix 2D physics 시뮬레이터(JAX)이며, Gaussian action noise가 있는 force-based control을 쓴다. 시뮬레이션된 inference delay 동안에도 world가 계속 step하므로, 기다리는 동안 위치를 유지할 방법이 없다.",
+    "scale": "환경 12개(기존 Kinetix level 10개 + 신규 2개). 환경당 RPO expert로 만든 1M transition 데이터셋. data point당 rollout 2,048회",
+    "real_check": "같은 논문이 +0/+100/+200 ms의 latency를 주입한 조건에서 π0.5로 실세계 bimanual 태스크 6개를 실행하지만(episode 480건, 28시간), sim-real 상관은 보고되지 않았다.",
+    "policies": "시뮬레이터 자체에서는 VLA가 실행되지 않음(정책은 소형 MLP-Mixer flow 정책). 원 논문의 비교 대상: RTC, BID, temporal ensembling, naive async. 이후 training-time RTC, VLASH, A2C2, FASTER, DEFLECT, DSDyn-VLA, Real-Time EXPO-FT 등이 이 벤치마크에서 결과를 보고함",
+    "status": "real-time chunking 연구의 사실상 표준 delay 벤치마크(이번 조사에서 열어 본 후속 논문 중 최소 14편이 사용). MIT license 코드, 리더보드 없음",
+    "note": "태스크는 로봇 팔 매니퓰레이션이 아니라 추상적인 2D rigid-body level이며, 언어나 vision 입력이 없다. delay는 측정된 wall-clock latency가 아니라 고정된 수의 control step이다."
+  },
+  "rtc-real-world-latency-protocol": {
+    "evaluates": "+0, +100, +200 ms의 inference latency를 주입한 50 Hz control의 bimanual 태스크 6개에서의 sub-step score와 throughput(단위 시간당 완료한 태스크 비율)",
+    "improves": "실로봇 VLA 평가는 보통 latency 설정 하나로만 실행하고 성공률만 보고하므로, inference가 느려질수록 성능과 속도가 어떻게 저하되는지 보여 주지 못한다",
+    "setup": "6-DoF 팔 2개와 parallel gripper를 갖춘 bimanual 로봇(태스크 2개는 mobile base 위)이며, π0.5는 20 ms 간격의 50-step chunk를 쓴다. 실세계이므로 inference 중에도 scene이 계속 변한다.",
+    "scale": "태스크 6개(성냥으로 초 켜기, ethernet 꽂기, 침대 정리, 셔츠 개기, batch folding, 싱크대에 그릇 넣기). 태스크·방법·delay당 trial 10회. episode 480건, 28시간",
+    "policies": "RTC를 쓴 π0.5는 +200 ms까지 throughput 손실이 없음. synchronous inference는 delay에 따라 선형으로 저하됨. temporal ensembling variant 2종은 모두 +100/+200 ms에서 protective stop을 유발함",
+    "status": "프로토콜은 논문에 기술돼 있고 후속 연구가 그 취지를 따라 재사용함. 태스크와 하드웨어는 Physical Intelligence 내부용이며, 공유된 task kit 없음",
+    "note": "패키지화된 벤치마크가 아니다: 공개된 태스크 세트가 없어, 다른 연구실은 delay 주입 프로토콜은 따라 할 수 있어도 태스크는 따라 할 수 없다. throughput 값은 표가 아니라 그림으로 제시돼 있다."
+  },
+  "async-vla-inference": {
+    "evaluates": "Kinetix에서 최대 control step 15, LIBERO에서 최대 20 step의 inference delay 아래에서 asynchronous inference 방법 4종(inference-time RTC, training-time RTC, VLASH, A2C2)의 성공률",
+    "improves": "이 네 방법은 서로 다른 base 정책을 쓴 별개의 codebase에서, 최대 4 step(50 Hz에서 80 ms)의 delay로만 평가돼 왔다",
+    "setup": "Kinetix(JAX, MLP-Mixer flow 정책)와 LIBERO(PyTorch/LeRobot, SmolVLA). delay는 control step d개로 주입하며, 그동안 이전 chunk가 계속 실행된다.",
+    "scale": "Kinetix 환경 10개, chunk size 16과 30, configuration당 rollout 2,048회. LIBERO 태스크 40개, 태스크·delay당 rollout 10회, delay 0-20",
+    "policies": "LIBERO에서의 SmolVLA: d=0에서 inference-time RTC 약 75%, A2C2 약 70%. d>=4부터는 A2C2가 앞섬. Kinetix에서는 A2C2가 d=8까지 solve rate 90% 이상을 유지",
+    "status": "코드가 공개된 단독 저자의 학사 논문 preprint. 리더보드 없음",
+    "note": "LIBERO의 VLASH 결과는 ground-truth 미래 state를 사용하며, 저자는 이를 upper bound라고 밝힌다. LIBERO scene은 quasi-static이므로, 거기서 delay는 로봇 state의 staleness에만 영향을 준다."
+  },
+  "dynagrasp-32": {
+    "evaluates": "독립적으로 움직이는 물체를 intercept해 place하는 성공률. family 6개에 걸친다: basic interception, object transfer, 충돌로 인한 경로 변화, scene 변화, multi-object sequencing, episode별 속도 변화",
+    "improves": "움직이는 물체 interception에서 heterogeneous한 frozen base VLA들을 비교할 공통 diagnostic suite의 부재",
+    "setup": "Isaac Sim, Franka Panda, 256x256 RGB 카메라 3대, 30 Hz 환경. 논문은 정책 inference 중에 시뮬레이션이 일시 정지되는지 밝히지 않는다.",
+    "scale": "6개 family의 태스크 32개. 태스크당 closed-loop episode 50건(모델당 1,600건). teleoperation 시연 1,600건, 약 510K control step의 DynaGrasp-1600 데이터셋",
+    "policies": "fine-tuning한 base VLA: SmolVLA 62.50%, X-VLA 36.56%, π0 72.56%, π0.5 64.63%. DynaWM wrapper를 쓰면 69.69%, 81.88%, 74.44%, 75.56%",
+    "status": "신규. 논문에 코드, 데이터셋, project 링크 없음",
+    "note": "m/s 단위의 물체 속도는 논문 본문에서 찾지 못했다. 같은 VLA 4종의 coarse-tuned checkpoint는 37.69-48.44%를 기록한다(Table 2)."
+  },
+  "tidal-dynamic-interception": {
+    "evaluates": "무작위로 90도 방향을 바꾸며 움직이는 target을 intercept해 서랍에 넣고 서랍을 닫는 성공률. 50 Hz control에서 paused physics와 non-paused physics 양쪽으로 보고한다",
+    "improves": "표준 시뮬레이션은 VLA가 연산하는 동안 physics를 일시 정지시키므로, replanning을 많이 하는 정책은 실로봇에서라면 latency 때문에 action이 stale해질 텐데도 좋아 보인다",
+    "setup": "RoboCasa GR-1 humanoid tabletop 시뮬레이션. 프로토콜은 두 가지다: paused(환경이 inference를 기다린다)와 non-paused(Jetson AGX Orin의 latency 수치를 써서 inference 중에도 physics가 진행된다).",
+    "scale": "Easy와 Hard tier로 나뉜 태스크 1개. paused-simulation oracle로 수집한 fine-tuning episode 2,000건",
+    "real_check": "trial 100회에 걸친 실로봇 rolling-target 테스트가 보고돼 있다(motion-augmented open-loop baseline 34%, TIDAL은 대략 2.5배). sim-real 상관은 보고되지 않았다.",
+    "policies": "GR00T N1.5 backbone, Easy tier: open-loop은 paused 0.31 대 non-paused 0.09. compute-heavy replanning은 0.63 대 0.17. TIDAL은 0.61 대 0.30",
+    "status": "method 논문 안에서 정의됨. 코드나 태스크 공개는 찾지 못함",
+    "note": "이름이 없는 suite이며, 이 명칭은 설명용으로 붙인 것이다. 시뮬레이션 표의 cell당 rollout 횟수는 본문에서 찾지 못했다."
+  },
+  "ahead-dynamic-scenario-suite": {
+    "evaluates": "움직이는 물체 시나리오 20개(conveyor, beam, pole push, rolling ball, air hockey, ballistic catch, pinball deflection, plinko)에서의 성공률. conveyor 속도를 0에서 40 cm/s까지 sweep한다",
+    "improves": "VLA 평가는 observation과 실행 사이에 scene이 정지해 있다고 가정한다. 이 시나리오들에서는 latency가 grasp에 쓸 수 있는 시간을 넘어선다",
+    "setup": "Franka Panda를 쓰는 custom MuJoCo 환경이며, 물체 위치, motion 파라미터, 조명을 procedural하게 무작위화한다. 논문은 시뮬레이션 시간이 inference 시간과 어떻게 연동되는지 밝히지 않는다.",
+    "scale": "4개 motion 범주의 시나리오 20개. cell당 학습 seed 5개 x rollout 100회. UFactory xArm 7에서 대응하는 실세계 태스크 5개, 각 30회 시도",
+    "real_check": "실세계 xArm 7 태스크 5개에서 conveyor와 rolling ball은 29/30-30/30, paddle interception은 23/30, projectile catching은 19/30이었다. sim-real gap은 태스크별로 논의되지만 상관 통계는 없다.",
+    "policies": "frozen 7B OpenVLA: open-loop은 약 0%, fast replanning을 쓰면 constant-velocity scene에서 16-33%, AHEAD world-model wrapper를 쓰면 79-97%로 시나리오 그룹별 가장 강한 baseline의 31-58%와 대비됨",
+    "status": "method 논문 안에서 정의됨. PDF에서 코드나 환경 공개는 찾지 못함",
+    "note": "이름이 없는 suite이며, 이 명칭은 설명용으로 붙인 것이다. baseline 수치는 flatten된 표에서 읽은 것이어서 인용하기 전에 다시 확인해야 한다."
+  },
+  "robot-air-hockey-challenge": {
+    "evaluates": "빠른 puck으로 상대와 겨루는 hit, defend, prepare sub-task와 full game. 성공 여부와, step당 연산 시간 0.02 s 미만 조건을 포함하는 deployability penalty로 채점한다",
+    "improves": "실세계 robot learning 벤치마크는 quasi-static motion을 가정하며, 안전하지 않거나 너무 느린 controller에 penalty를 주지 않는다",
+    "setup": "air hockey table 위 KUKA LBR iiwa 14 팔 2대의 MuJoCo 기반 시뮬레이션(시뮬레이션 1000 Hz, control 50 Hz)이며, 이후 상위 팀들을 실제 table에 배포했다.",
+    "scale": "2023년 qualifying stage: sub-task당 episode 1,000건. tournament: 15분 경기(45,000 step). 상위 3개 팀(2025년에는 상위 4개 팀)을 대상으로 한 실로봇 stage",
+    "real_check": "2023년에는 상위 3개 solution을 실제 two-arm 플랫폼에서 실행했다. 모두 시뮬레이션에서보다 성능이 상당히 나빴고, 추가 safety layer와 수동 tuning이 필요했다.",
+    "status": "두 차례 개최(2023, 2025). 코드와 문서 공개. challenge site에 리더보드 있음",
+    "note": "태스크는 grasping이 아니라 mallet으로 치는 것이다. 참가작은 state 입력을 쓰는 RL 및 optimal-control agent였으며, VLA 결과는 찾지 못했다. 2025년 최종 결과는 열어 본 페이지에서 찾지 못했다. 별도의 회고 논문에 따르면 2023년 순위는 시뮬레이션 태스크만으로 정해졌다."
+  },
+  "robot-air-hockey-testbed": {
+    "evaluates": "빠른 puck을 다루는 reaching, striking, juggling, puck-to-target 태스크. 대략 20 Hz에서 behaviour cloning, offline RL, RL from scratch를 사용한다",
+    "improves": "매니퓰레이션 testbed는 quasi-static pick-and-place가 대부분이다. 느린 로봇 motion에 의존하는 정책은 빠른 물체 dynamics에 노출되지 않는다",
+    "setup": "소형 air hockey table 위에서 paddle을 단 UR5 팔과 60 Hz overhead 카메라. 여기에 같은 domain의 Box2D 및 robosuite(MuJoCo) 시뮬레이터가 더해진다.",
+    "scale": "Box2D 태스크 10개, robosuite 6개, 실로봇 5개. teleoperation human 시연 데이터셋",
+    "status": "project page가 있는 연구용 testbed. 저자 외의 채택은 확인되지 않음",
+    "note": "baseline은 VLA가 아니라 state 기반 또는 puck detection 기반의 BC 및 RL 정책이다. 게재 venue는 확인하지 못했다(arXiv listing에 venue가 없다)."
+  },
+  "hribench": {
+    "evaluates": "scripted human이 태스크 도중 로봇에게 지시하거나, 물건을 건네거나, 끼어들 때의 collaboration 성공률, 완료 시간, temporal synchronization, response latency, 안전성",
+    "improves": "VLA 벤치마크는 혼자 행동하는 로봇을 평가하며, 움직이는 사람에 맞춘 timing과 사람의 방해 이후의 recovery를 측정하지 않는다",
+    "setup": "시뮬레이션 Franka Panda와, timing과 motion이 episode마다 달라지는 scripted human agent. 시뮬레이터와, 시뮬레이터가 inference 시간과 어떻게 연동되는지는 본문에 명시되지 않았다.",
+    "scale": "role-conditioned 태스크 13개(Instructor, Collaborator, Intruder), 평가 episode 650건 이상. 태스크당 학습용 trajectory 50건과 held-out trajectory 10건",
+    "real_check": "소규모 실로봇 study(태스크 3개, 각 10회)에서 HRIBench 데이터를 추가하면 GR00T N1.5의 성공률이 0.10에서 0.43으로 오른다. sim-real 상관은 보고되지 않았다.",
+    "policies": "GR00T N1.5-LoRA, π0.5-LoRA, ACT: 세 정책을 통틀어 가장 좋은 collaboration 성공률은 Instructor 태스크에서 0.533, Collaborator에서 0.500, Intruder에서 0.100",
+    "status": "신규 preprint. PDF에서 코드 링크는 찾지 못함",
+    "note": "여기서 timing은 control frequency가 아니라 사람의 cue에 알맞은 순간에 반응하는 것을 뜻한다. inference latency는 모델링되지 않는다."
+  },
+  "magiclab-real-time-vla-execution-study": {
+    "evaluates": "bimanual 의류 개기에서 real-time execution 방법 6종의 성공률, 평균 완료 시간, 시간당 성공 태스크 throughput, action continuity 지표. end-to-end 시스템 latency를 측정해 함께 제시한다",
+    "improves": "async execution 방법들은 각기 다른 로봇과 태스크에서 테스트됐고, 로봇 측 delay(카메라, 통신, actuation)는 모델 latency와 함께 측정되지 않았다",
+    "setup": "π0.5를 구동하는 bimanual 실물 로봇이며, inference(1-3 Hz), action publication(30-50 Hz), control rate가 분리돼 있다. latency는 visual time code와 100 Hz state logging으로 보정했다.",
+    "scale": "long-horizon 태스크 1개, 의류 3종, 방법 6종, 의류·방법당 trial 10회(실물 trial 180회)",
+    "policies": "π0.5 base: Legato 29/30 (73.6 s, 47.3 tasks/h). VLASH 28/30 (43.2/h). temporal smoothing 23/30 (29.4/h). training-time RTC와 naive async 19/30. inference-time RTC는 63.3%를 넘지 못함",
+    "status": "open-source framework가 있는 신규 preprint. 단일 연구실, 단일 태스크",
+    "note": "의류 개기는 moving-target 태스크가 아니다. timing 요구는 asynchronous execution과 throughput 채점에서 나온다. trial은 unpaired이며 저자들은 유의성 검정을 수행하지 않는다."
+  },
+  "dynamicmanip-benchmark": {
+    "evaluates": "moving-target 태스크 5개(tapping, belt picking, object catching, mole whacking, goal blocking)에서의 성공률과 end-to-end policy-query latency. 매 action 전에 측정된 inference 시간만큼 시뮬레이터를 진행시킨다",
+    "improves": "기존 시뮬레이션에서는 inference 시간이 실행에 영향을 주지 않아, 움직이는 물체 태스크에서 느린 정책이 불이익을 받지 않는다",
+    "setup": "SAPIEN 위의 RoboTwin 2.0이며, ARX-X5 팔 2대와 head 카메라를 쓴다. 예측된 action이 적용되기 전마다 시뮬레이터가 round(t_infer / dt_sim) step만큼 앞으로 진행하므로, inference 중에 scene이 변한다.",
+    "scale": "시뮬레이션 태스크 5개에 각 expert 시연 200건, 태스크당 평가 trial 100회. AgileX Piper 팔에서 실세계 태스크 4개에 각 시연 50건, 태스크당 trial 30회",
+    "real_check": "AgileX Piper 팔에서 실세계 태스크 4개(dynamic tapping, belt picking, boat loading, bottle catching)를 각 30회씩 평가한다. sim-real 상관은 보고되지 않았다.",
+    "status": "project page가 있는 method 논문 안에서 정의됨. 코드 공개는 확인되지 않음",
+    "note": "point-cloud diffusion 정책만 평가된다(DP3: 44-61 ms에서 성공률 20-78%. 저자들의 정책: 31-38 ms에서 42-88%). VLA baseline은 없다. 물체 속도는 읽은 본문에 명시돼 있지 않다."
+  },
+  "radar": {
+    "evaluates": "조명, 배경, 센서 noise가 바뀔 때 실물 팔에서의 VLA 일반화. block-placement와 spatial-reasoning 태스크 split에 걸쳐 본다",
+    "improves": "정적이고 사람이 리셋하며 사람이 판정하는 실세계 VLA 테스트. binary 수동 채점을 3D-IoU 기반 자동 성공 측정과 자동 scene 리셋으로 대체한다",
+    "setup": "자급형 로봇 셀: 협동 로봇 팔(제시된 예: Robotiq 2F-85를 단 UR5e), wrist RealSense D435, 3D reconstruction용 고정 RealSense D415 카메라 2대, 자동 리셋을 위해 mechanical stage 위에 놓인 구동식 task platform. client-server-worker 아키텍처가 정책 제출과 실행을 분리한다.",
+    "scale": "태스크 split 4개(SingleBlock, TwoBlock, ThreeBlock, Spatial), 모델당 32회. 정책 5개(π0, π0-FAST, π0.5, RDT, OpenVLA). 최고는 π0.5 17/32, π0와 π0-FAST 2/32, RDT와 OpenVLA 0/32",
+    "note": "project page, 코드, 공개 제출 endpoint를 찾지 못했으므로 외부 그룹이 제출할 수 있는지는 확인되지 않았다. 제출 아키텍처를 근거로 호스팅으로 분류했다."
+  },
+  "labdex": {
+    "evaluates": "화학 실험실 물체에 대한 dexterous hand 매니퓰레이션을 세 수준에서 본다: atomic skill, compositional skill, long-horizon 실험실 workflow",
+    "improves": "실세계 플랫폼과 시뮬레이션 플랫폼이 태스크 정의를 공유하는, 실험실 자동화용 실세계 dexterous 벤치마크의 부재",
+    "setup": "XHand를 장착한 Franka Research 3, RealSense D435i 카메라 3대(wrist, left-front, head). Manus Quantum glove와 VIVE tracker를 쓰는 teleoperation. 같은 태스크 정의를 따르는 대응 시뮬레이션 플랫폼.",
+    "scale": "atomic skill 범주 7개를 물체 20개 이상에 대한 atomic skill 30개 이상으로 구체화, compositional skill 10개 이상, long-horizon workflow 1개. 기본적으로 태스크당 시연 200건. atomic skill instance 26개를 각각 실세계 50회로 평가. 전체 평균 π0.5 0.57, ACT 0.34, DP 0.02",
+    "note": "데이터셋 homepage가 논문에 언급돼 있지만 코드와 데이터의 공개 상태는 확인하지 않았다."
+  },
+  "cebench": {
+    "evaluates": "single-arm(CALVIN), bimanual(RoboTwin), 실제 bimanual mobile 로봇에서의 VLA 모델 cross-embodiment 실용성. domain randomization이 있을 때와 없을 때를 모두 본다",
+    "improves": "한 번에 embodiment 하나만 다루고 domain randomization을 적용한 실세계 테스트를 빠뜨리는 VLA 평가",
+    "setup": "실세계 부분: Piper 팔을 단 Cobot-Magic dual-arm mobile 로봇. fixed-base 태스크 8개와 mobile manipulation 태스크 2개. 색/texture, distractor, 작업 공간 layout에 대한 domain randomization. 시뮬레이션 부분: CALVIN과 RoboTwin.",
+    "scale": "실세계 expert trajectory 1.6k건(fixed-base 태스크당 200건). 평가 episode는 fixed-base 태스크당 100건, mobile 태스크당 10건. LLaVA-VLA는 seen 44.2%, domain randomization 적용 시 30.7%",
+    "note": "벤치마크는 method 논문(LLaVA-VLA) 안에서 제안됐다. 실세계 데이터셋은 게재 승인 시 공개하겠다고 약속했으며, 공개 여부는 확인하지 않았다."
+  },
+  "robochess-challenge": {
+    "evaluates": "체스판을 인식하고, 규칙에 맞는 수를 고르고, 실물 체스 말을 옮기는 single-arm 정책. GPU 가속 시뮬레이터와 실로봇에서 평가한다",
+    "setup": "시뮬레이션 track(MuJoCo, Isaac Lab, Genesis)과 실세계 track(LeRobot SO-101, Franka, UR, Piper, Yam/Rebot). baseline에는 pi, GR00T, Cosmos 기반 정책이 포함된다. CoRL 2026 Workshop on GPU-Accelerated Simulation to Scalable and Generalizable Robot Policy Learning이 주최한다.",
+    "scale": "track 2개. 수상자는 2026년 11월 9일 Austin에서 발표 예정. 팀 수는 명시되지 않음",
+    "note": "workshop 페이지를 열어 보았다. 제출 마감일은 placeholder이며, 누가 실로봇을 운용하는지와 실세계 track 실행을 어떻게 채점하는지는 페이지에 나와 있지 않다."
+  },
+  "suturebot": {
+    "evaluates": "수술 로봇에서의 end-to-end 자율 봉합: needle pickup, pull-through를 포함한 조직 삽입, knot tying. 성공 여부, 삽입 지점 오차, 시간으로 채점한다",
+    "improves": "imitation learning 및 VLA 정책의 long-horizon, 밀리미터 정밀도 수술 매니퓰레이션을 위한 반복 가능한 실물 벤치마크가 없었다",
+    "setup": "DeBakey forceps와 large needle driver를 단 Da Vinci Research Kit (dVRK) Si, wrist 카메라. 삽입 오차와 exit 오차는 UV marker로 측정한다. 데이터셋과 fixture STL 파일을 공개했다.",
+    "scale": "시연 1,890건(needle pickup 628, needle throw 310, knot tying 952. recovery 예시 454건). 정책당 전체 봉합 절차 10회. π0, GR00T N1, OpenVLA-OFT, multitask ACT. 최고는 end-to-end 3/10",
+    "note": "arXiv comment에는 NeurIPS 2025라고 돼 있다. Datasets & Benchmarks track이라는 표기는 제3자 목록에서 가져온 것이며 proceedings 페이지에서는 확인되지 않았다."
+  },
+  "humanoidtoolbench": {
+    "evaluates": "humanoid의 도구 사용. 후보와 decoy 가운데 알맞은 도구를 고르는 것부터 제자리에서 또는 걸으면서 그 도구를 쓰는 것까지 다룬다",
+    "improves": "기존 벤치마크는 humanoid에서 도구 선택, 매니퓰레이션, locomotion을 함께 테스트하지 않는다",
+    "setup": "실세계에서는 Dex3 hand와 head 카메라를 단 Unitree G1. 이에 대응하는 MuJoCo 시뮬레이션. 도구 asset 55개. ToolBook 시연 데이터셋.",
+    "scale": "scenario 3개, 실행 level 3개, tool-set mode 2개에 걸친 태스크 18개. 시뮬레이션 시연 3,003건과 실세계 시연 91건. 시뮬레이션에서 정책 7개, 실로봇에서 3개",
+    "note": "실로봇 평가는 태스크의 작은 일부(level-1 ball 태스크)만 다루며, 결과 대부분은 시뮬레이션이다."
+  },
+  "taco": {
+    "evaluates": "어떤 촉각 센서 modality(resistive, magnetic, vision-based, acoustic)가 imitation learning으로 학습한 정책에 도움이 되는지. 질량을 모르는 물체의 pick-and-place, 물체 reorientation, 가려진 plug 삽입에서 본다",
+    "improves": "하나의 하드웨어 셋업과 정책 pipeline 아래에서 촉각 센서를 태스크 중심으로 실증 비교한 사례가 없었다",
+    "setup": "2,000 miles 이상 떨어진 두 기관의, fin-ray finger를 단 Franka Panda 팔. 센서 6종(FSR, FlexiTac, eGaIn, eFlesh, Daimon, contact microphone). 센서별로 ACT 정책을 학습한다. open-source repeatability test kit.",
+    "scale": "태스크 3개. 태스크당 시연 50-60건. 예: pick-and-place는 FlexiTac 0.85 대 vision-only 0.75. plug 삽입은 contact microphone 0.70 대 vision-only 0.2",
+    "note": "정책이 아니라 센서를 벤치마크한다. 하드웨어, 코드, 데이터를 project website에서 공개하겠다고 약속했으나 그 URL은 찾지 못했다."
+  },
+  "eval-actions": {
+    "evaluates": "binary 성공 여부를 넘어선 실로봇 매니퓰레이션 episode의 실행 품질. expert grade, rank-guided label, 진단 설명을 사용하며, 이를 예측하는 학습된 평가기(AutoEval)도 함께 다룬다",
+    "improves": "binary 성공률은 같은 태스크를 완수한 실행들 사이의 과정 수준 차이를 가린다. 사람의 채점은 확장되지 않는다",
+    "setup": "ARX R5와 UR5 팔(single-arm 및 bimanual)에서 teleoperation으로 얻었거나 정책이 생성한 episode로 이루어진 offline 벤치마크. RGB-D 영상과 로봇 state를 포함한다. AutoEval은 RGB frame과 kinematic summary를 입력으로 받는다.",
+    "scale": "episode 13K건 이상, 태스크 150개 이상, 약 52시간. annotation된 subset은 태스크 50개 이상에 걸친 episode 6K건 이상. AutoEval-S Spearman 0.81(expert grading), 0.84(rank-guided), 성공 판정 90.6-91.0%",
+    "note": "평가 도구 항목이다: 기록된 실세계 episode를 채점하며 정책을 실행하지는 않는다. 이전 제목은 'Trustworthy Evaluation of Robotic Manipulation: A New Benchmark and AutoEval Methods'이다."
+  },
+  "worldcomposer": {
+    "evaluates": "실세계 panorama에서 생성한 시뮬레이션 scene에서의 매니퓰레이션 정책. unseen scene 및 unseen object 일반화를 위한 편집된 'digital cousin' scene도 포함한다",
+    "improves": "시뮬레이션 평가 scene을 수작업으로 만드는 일은 느리고, 실세계 일반화 테스트에는 새 실물 asset과 방 재구성이 필요하다",
+    "setup": "panorama-to-scene 생성(Marble)으로 NVIDIA Isaac Sim에 scene을 넣는다. top-down RGB 카메라를 갖춘 bimanual LeRobot SO-101 follower 팔에서 검증했다.",
+    "scale": "태스크 3개(Set Tableware, Open Microwave, Fold Cloth). 정책 4개(ACT, Diffusion Policy, SmolVLA, π0). 일반화 level 4단계. configuration당 시뮬레이션 100회, 실세계 20회",
+    "agreement": "시뮬레이션 성공률과 실세계 성공률 사이 Pearson r = 0.91",
+    "note": "code repository URL은 확인되지 않았다."
+  },
+  "toto": {
+    "evaluates": "처음 보는 물체, 위치, 조명에서의 scooping과 pouring에 대한 offline imitation 및 offline-RL 정책과 사전학습된 visual representation",
+    "improves": "로봇을 보유한 연구실이 적고 연구실마다 다른 로봇을 쓴다. 공용 원격 로봇과 공통 offline 데이터셋으로 하드웨어 없이도 동일 조건 비교가 가능해진다",
+    "setup": "주최 측 연구실에 있는, RealSense D435를 갖춘 Franka Emika Panda 1대. 사용자는 공개된 데이터셋으로 학습하고 form으로 정책을 제출한다. engineer가 실행을 감독하고 영상, reward, 성공률을 돌려준다(회신까지 약 12시간).",
+    "scale": "태스크 2개. 초기 공개분은 태스크당 trajectory 1,000-2,000건. seen 위치와 unseen 위치 각각에 대해 method당 18회(물체 2개 x 위치 3개 x seed 3개). 초기 baseline은 5개 기관에서 나옴. 이후 NeurIPS 2023 대회로 운영됨",
+    "note": "원격 평가 서비스가 2026년에도 제출을 받고 있는지는 확인하지 않았다."
+  },
+  "abc-sim-abc-eval": {
+    "evaluates": "실세계 bimanual 태스크를 본떠 만든 MuJoCo 태스크에서의 behavior cloning 정책 checkpoint(DiT 및 VLA). 채점된 실세계 rollout의 공개 세트가 함께 제공된다",
+    "improves": "모델 및 학습 선택에 대한 실세계 ablation은 비용이 크다. 하드웨어가 없는 그룹은 아예 평가할 수 없다",
+    "setup": "MuJoCo 태스크. VR sim-teleoperation 데이터 400시간을 실세계 ABC-130K 데이터셋과 co-training한다. ABC-Eval은 rubric 점수가 달린 실세계 policy rollout 약 100시간을 공개한다. 하드웨어 설계, 학습 코드, 시뮬레이션 코드는 open-source로 공개한다고 예고했다.",
+    "scale": "태스크 3개(병을 bin에 넣기, 접시를 dishrack에 넣기, 머그잔 바로 세우기)에서 checkpoint 12개 비교, 태스크당 50회. ABC-130K: 3,500시간, episode 130K건, 태스크 195개. ABC-Sim: 태스크 20개",
+    "agreement": "strict success는 Pearson r = 0.85(p = 4.2e-4, n = 12), task progress는 r = 0.91(p = 5.0e-5, n = 12)",
+    "note": "상관은 sim 데이터로 co-training한 정책에 대해 성립한다. 공개 상태는 확인하지 않았다."
+  },
+  "oscar": {
+    "evaluates": "RoboArena 리더보드의 DROID generalist 정책. 여러 로봇 embodiment를 다루는 skeleton-conditioned video world model 안에서 rollout해 평가한다",
+    "improves": "평가기로 쓰이는 video world model은 action을 부정확하게 따르고 하나의 embodiment에 묶여 있다",
+    "setup": "선별한 로봇 데이터와 egocentric human 데이터로, 2D kinematic-skeleton conditioning을 적용해 fine-tuning한 Cosmos-Predict2.5-2B. rollout은 기록된 RoboArena 첫 frame에서 시작하며 추정한 camera calibration을 쓴다.",
+    "scale": "정책 7개(π0-flow, π0-FAST, PaliGemma variant 5개). RoboArena session 65개를 남김",
+    "agreement": "RoboArena 순위 대비: Pearson r = 0.852, Spearman 0.750, MMRV 0.571(skeleton conditioning)",
+    "note": "session 65개는 camera calibration 추정이 좋은 것을 사람이 직접 골라낸 것이어서 일치도에 유리하게 작용했을 수 있다."
+  },
+  "icra-2026-ai-for-robotic-surgery-competition": {
+    "evaluates": "수술 로봇에서의 peg transfer. challenge 2개로 이루어진다: 사람의 teleoperation, 그리고 학습되거나 프로그래밍된 알고리즘의 자율 실행",
+    "setup": "ICRA 2026 현장의 Da Vinci Research Kit (dVRK). 준비용으로 AMBF 시뮬레이션을 쓴다. 자율 부문 출전작은 ROS 2로 연동한다. 점수는 제한 시간 안에 옮긴 peg 수다.",
+    "scale": "2026년 6월 2-4일. 실제 dVRK teleoperation 참가자 21명, 시뮬레이션 teleoperation 참가자 18명, autonomous challenge 등록 5팀. 총상금 EUR 2,100",
+    "note": "대회 페이지를 열어 보았다. autonomous challenge 결과는 페이지에서 찾지 못했다."
+  },
+  "world-humanoid-robot-games": {
+    "evaluates": "공장 자재 운반, 의약품 분류 및 조제, 호텔 객실 청소 같은 scenario 종목에서의 humanoid 로봇. 운동 종목과 나란히 열린다",
+    "setup": "팀이 자체 humanoid를 가져오는 Beijing 현장 종목. 2026년에는 scenario 종목에서 완전 자율 실행이 만점을, teleoperation 실행이 절반을 받는다.",
+    "scale": "2025년: 280팀, 로봇 500대 이상, 종목 26개. 2026년: 666팀, 로봇 2,056대, 종목 51개(그중 21개가 scenario 기반)",
+    "note": "Wikipedia와 Sixth Tone 보도만으로 확인했다. 종목별 공식 규칙과 매니퓰레이션 종목 결과는 찾지 못했으며, 2025년 자율성 규칙은 확인되지 않았다."
+  },
+  "robocurve-inspect-robots": {
+    "evaluates": "실물 팔과 bimanual station에서의 frontier 모델(VLA, LLM agent, coding agent). block stacking, Tower of Hanoi, Jenga, bimanual manipulation 같은 태스크를 단계별 rubric으로 채점한다",
+    "improves": "로봇 능력에 대한 지속적이고 독립적이며 표준화된 실세계 측정이 없다. 공개되는 demo는 cherry-picking된 것이다",
+    "setup": "자체 로봇 station을 운영하는 독립 평가 기관(Public Benefit Corporation, Y Combinator 투자). I2RT YAM bimanual 셀을 포함한다. benchmarking agreement에 따른 의뢰 평가를 수행한다. YAM, Franka, SO-100/101, WidowX, Unitree G1 팔, AgiBot A2, ROS 팔용 adapter를 갖춘 open-source MIT framework Inspect Robots.",
+    "scale": "결과는 단일 리더보드가 아니라 report와 trial별 결과 페이지로 공개됨. 의뢰 연구 1건: 태스크 5개 x 정책 2개(π0.5, MolmoAct2) x 실세계 20회 = 채점된 trial 200회. 2026년 9월 14일 USD 10M seed 발표",
+    "note": "회사 사이트, GitHub repository, 그리고 이곳의 trial을 사용한 제3자 논문을 열어 보았다. 개별 평가 report는 열어 보지 않았으므로 report별 태스크 수와 모델 목록은 확인되지 않았다."
+  },
+  "kaedim-real-to-sim-reconstruction-study": {
+    "evaluates": "물체 및 scene reconstruction 품질(metric-scale geometry, authored physics, scene splat)이 하나의 bimanual 셀에서 매니퓰레이션 정책의 시뮬레이션 점수와 실세계 점수 사이 일치도를 어떻게 바꾸는지",
+    "improves": "real-to-sim 평가 pipeline은 sim-real 일치도에 미치는 영향을 측정하지 않은 채 물체 geometry와 physics를 generative 또는 engine 기본값으로 둔다",
+    "setup": "I2RT YAM bimanual 셀의 시뮬레이션 twin 2개(authored 대 기본 open-source recipe)를 동일한 실세계 trial에 대조해 채점한다. 이 실세계 trial은 제3자 평가 기관 Robocurve가 단계별 rubric으로 실행하고 채점했다. harness, trial별 점수, asset, scene을 공개했다.",
+    "scale": "태스크 5개 x 정책 2개(π0.5, MolmoAct2) = cell 10개. 각 reconstruction에서 cell당 20회. paired 실세계 trial 200회",
+    "agreement": "Pearson r = 0.90(authored reconstruction) 대 0.51(기본). 평균 점수 오차 6.97 대 17.54%p",
+    "note": "저자들은 Kaedim 소속이며, Kaedim은 authored asset pipeline을 판매하고 실세계 trial 비용을 지불했다. cell이 10개여서 상관 차이는 통계적으로 구분되지 않는다."
+  },
+  "roboart": {
+    "evaluates": "off-nominal 조명, distractor, 배경, 물체 배치에서 visuomotor 정책의 성공률이 얼마나 떨어질지. 로봇을 실행하지 않고 예측한다",
+    "improves": "환경 요인에 대한 정책의 취약점을 드러내려면 조건마다 많은 하드웨어 trial이 필요하다",
+    "setup": "generative image editing으로 환경 요인별로 nominal observation을 바꾼다. 편집된 observation에 대한 정책별 anomaly detector가 성공을 예측한다. 실제 하드웨어의 visuomotor diffusion policy에서 검증했다.",
+    "scale": "off-nominal 조건 12개에 걸친 하드웨어 trial 500회 이상",
+    "agreement": "예측 성공률과 실제 성공률 사이 평균 절대 차이 0.19 미만",
+    "note": "abstract 페이지를 열어 보았다(Google DeepMind와 Princeton). 로봇 플랫폼, 태스크 수, peer review를 거친 venue가 있는지는 확인하지 않았다."
+  },
+  "geniworld": {
+    "evaluates": "URDF로 렌더링한 action-conditioned video world model에서의 fine-tuning된 π0 정책 checkpoint. visual distractor가 있는 scene을 포함한다",
+    "improves": "평가기로 쓰이는 action-conditioned world model은 action controllability를 잃고 out-of-distribution scene에서 무너진다",
+    "setup": "렌더링한 로봇 motion에 조건화한 autoregressive video model. 각 rollout은 실세계 trial과 같은 첫 frame에서 시작한다. 성공 여부는 사람이, plausibility는 VLM이 판정한다.",
+    "scale": "in-domain 및 distractor 설정에서 여러 매니퓰레이션 태스크에 대한 실세계 비교. 별도의 데이터 생성 연구는 태스크 4개 x 설정 5개 x 실세계 20회",
+    "agreement": "실세계 성공률 대 world model 성공률의 scatter plot을 강한 양의 상관이라고 기술. 본문에 계수는 제시되지 않음",
+    "note": "일치도는 figure로만 제시된다. 상관 연구의 정책 수와 태스크 수는 추출하지 못했다."
+  },
+  "biassemble-real-world-benchmark": {
+    "evaluates": "bimanual geometric 조립: 깨진 물체의 조각 2개를 집어 정렬하고 원래 형태로 결합한다",
+    "improves": "물체가 깨질 때마다 깨진 조각이 달라지므로 fracture 조립의 실세계 결과를 연구실 간에 비교할 수 없다",
+    "setup": "시판 물품(와인잔, 접시, 맥주병, 그릇, 머그잔, 찻주전자)으로 이루어진 물체 세트. 깨진 조각을 재현할 수 있고, 시뮬레이션에서 쓸 수 있는 scan 3D mesh가 있다. Franka Panda 팔 2대와 Azure Kinect.",
+    "scale": "물체 범주 6개. 논문의 실로봇 결과는 대부분 정성적",
+    "note": "벤치마크는 method 논문의 한 section이다. 깨진 조각을 어떻게 재현하는지와 물체가 몇 개 포함되는지는 추출하지 못했다."
+  },
+  "the-imitator-game": {
+    "evaluates": "human 시연 영상을 본 정책이, 로봇의 scene이 시연에서 4개 level에 걸쳐(다른 물체로 대체하는 데까지) 멀어질 때 시연된 의도를 재현하는지",
+    "improves": "human video로부터의 학습을 다루는 평가는 거의 동일한 scene에서 trajectory replay를 테스트하며, motion 복제와 태스크 이해를 구분하지 않는다",
+    "setup": "ZED2i 카메라를 갖춘 dual-arm Realman 로봇의 실세계 domain과 별도의 ManiSkill3 시뮬레이션 domain. paired human-robot 데이터셋. Imitator Arena는 시뮬레이션에서의 자동 채점과 rollout에 대한 blind A/B 사람 평가를 제공한다.",
+    "scale": "paired episode 20,000건 이상, 태스크 50개 이상, domain 6개. 평가 태스크 10개(seen 5, unseen 5)를 4개 level에서 평가. 모델 9개(학습된 variant 15개). 모든 모델이 unseen 태스크에서 zero-shot 성공률 13% 미만",
+    "note": "태스크-level 쌍당 실세계 trial 수와 Arena의 공개 여부는 추출하지 못했다."
+  },
+  "perception-challenge-for-bin-picking": {
+    "evaluates": "산업용 bin picking을 위한 6-DoF 물체 pose estimation. 결선에서는 제출된 추정값으로 로봇 셀이 pick-and-place를 완수하는지로 판정한다",
+    "setup": "OpenCV가 Intrinsic 및 파트너들과 함께 주최한다. 첫 phase에는 공개 산업 데이터셋을 쓴다. Intrinsic 플랫폼을 통해 실제 하드웨어를 원격으로 쓸 수 있게 했으며, 결선 진출팀의 코드는 실제 로봇 셀에서 실행된다.",
+    "scale": "450팀 이상. 수상자는 CVPR 2025에서 발표. 상금 규모는 USD 60,000로 보도됨",
+    "note": "Intrinsic blog 글을 열어 보았다. OpenCV 결과 페이지는 HTTP 403을 반환했으므로 상금 액수와 phase 구조는 검색 snippet에서 가져왔다. 출전작은 매니퓰레이션 정책이 아니라 perception module이다."
+  },
+  "food-topping-challenge": {
+    "evaluates": "로봇의 실제 식품 취급: 덮밥 그릇에 연어알을 담는 작업과 쌓인 더미에서 닭튀김 조각을 집는 작업. 양과 담음새로 채점한다",
+    "setup": "Yokohama에서 열린 ICRA 2024 현장에서 진행했으며, Robotics Society of Japan의 working group이 지원했다. 팀은 각자의 방식을 가져오며, Foodly Type R dual-arm 로봇이 권장된다.",
+    "scale": "연습 2024년 5월 14-15일, 대회 2024년 5월 16일. 팀 수는 찾지 못했다",
+    "note": "ICRA 2024 competitions 페이지와 참가자 논문 한 편의 abstract를 열어 보았다. 대회 웹사이트는 더 이상 접속되지 않으며, 이후 대회가 열렸는지는 확인되지 않았다."
+  },
+  "robotic-sim2real-challenge": {
+    "evaluates": "시뮬레이션에서 개발한 mobile manipulation의 실로봇 전이: AgileX mobile manipulator로 하는 접시 배열과 RoboMaster 플랫폼으로 하는 mineral cube 탐색 및 grasping",
+    "setup": "Tsinghua AIR가 ICRA에서 주최한다. 팀은 제공된 시뮬레이터에서 개발하고, 그 솔루션은 이후 주최 측의 실로봇에서 실행된다. 2025년 대회는 mobile manipulation track을 유지하고 flying-robot track을 추가했다.",
+    "scale": "ICRA 2025에서 네 번째 대회. 팀 수는 찾지 못했다",
+    "note": "ICRA 2024와 ICRA 2025 competition 페이지를 열어 보았다. challenge site인 sim2real.net이 연결을 거부했으므로, 단계 구성과 결과는 확인되지 않았다."
+  },
+  "benjie-s-humanoid-olympic-games": {
+    "evaluates": "종목 5개의 가정 내 과업에서의 자율 general-purpose mobile manipulator: 문, 빨래, 도구 사용, fingertip manipulation, wet manipulation. 종목마다 동메달, 은메달, 금메달 태스크가 있다",
+    "setup": "Benjie Holson이 게시한 공개형 자가 보고 challenge다: 참가자는 자율 수행을 편집 없이 1x 속도로 담은 영상을 제출한다. 로봇은 저자 본인이 걸린 시간의 최대 10x까지 쓸 수 있다. 태스크를 처음 완수한 쪽이 메달을 가져가며, 이후에 메달을 주장하려면 25% 더 빨라야 한다.",
+    "scale": "Round 1: 종목 5개 x 메달 태스크 3개(태스크 15개). Part II(2026년 1월 27일)는 달걀, 도구 사용, 침실 skill, fingertip challenge, full body 등 새 종목을 추가한다. 첫 메달은 2025년 10월 16일 IHMC Robotics가 차지했다",
+    "note": "Substack post 두 건을 모두 열어 보았다. 검증은 영상으로만 이뤄진다. Physical Intelligence가 3개월 안에 태스크 11개를 완수했다는 주장은 post가 아니라 언론 기사 검색 snippet에서 나온 것이다."
+  },
+  "robotic-construction-challenge": {
+    "evaluates": "건설 규칙에 따라 기울어진 탑(Abu Dhabi의 Capital Gate)을 재현하기 위한, 팔 1개 또는 2개에 의한 building block의 자율 식별, grasping, stacking",
+    "setup": "연습과 현장 결선 모두 실로봇으로만 진행한다. 팀은 single-arm 또는 dual-arm 시스템을 가져온다. 각 경기는 10분간 진행되며, 배치한 block에 대한 점수로 팀 순위를 매긴다. 주최 측은 Tsinghua, SYSU/MBZUAI, QIYUAN Lab, DISCOVER Robotics, RIT Dubai 소속이다.",
+    "scale": "연습 2024년 8월 1일 - 10월 14일, 결선 2024년 10월 15-16일. 순위에 든 16팀에 시상(상위 3팀에 USD 2,000 / 1,000 / 500)",
+    "note": "competition 페이지를 열어 보았다. 참가 팀 수와 수상팀은 페이지에 없었다. 페이지에는 첫 번째 대회로 기술돼 있다."
+  },
+  "astm-f45-mobile-manipulator-test-method": {
+    "evaluates": "S자 경로 추종, peg 삽입 같은 pose-constrained 태스크에서 mobile manipulator의 팔과 base가 보이는 위치 결정 정밀도와 정확도",
+    "improves": "공급업체와 사용자가 공유할 수 있는, 정량화 가능하고 재현 가능한 mobile manipulator 성능 in-situ 테스트의 부재",
+    "setup": "NIST 연구를 바탕으로 개발한 표준 test table로, 저가 부품으로 제작한다. 테이블 상판은 수평으로 눕히거나 45도로 기울이거나 수직으로 세울 수 있으며, 선택 사양인 shaker로 움직임과 진동을 더할 수 있다.",
+    "scale": "경로 추종 및 peg 삽입 태스크를 갖춘 장치 1종. 2024년 11월 30일 보도 시점에는 아직 위원회 합의 절차 중",
+    "note": "업계 전문지 기사로만 확인했다(ASTM 보도자료는 HTTP 403을 반환했다). 이 표준은 학습된 정책의 평가가 아니라 시스템 정확도를 대상으로 하며, 2026년 시점의 승인 여부는 알 수 없다."
+  },
+  "ct-benchmark": {
+    "evaluates": "수작업, 완전 자동, human-robot 협업으로 각각 수행하는 표준 model set 조립. 조립 시간과 사람의 작업 부하(NASA-TLX)로 측정한다",
+    "improves": "human-robot 협업 조립 셋업을 수작업 및 자동 baseline과 비교하기 위한, 공유되고 재현 가능한 model set이 없다",
+    "setup": "구성 부품이 여러 난이도의 일반적인 조립 작업을 포괄하는 실물 model set이다. 실험 셋업은 3가지(수작업, 자동, 협업)다.",
+    "scale": "협업 조립은 수작업 조립보다 시간이 70.8% 더 걸렸으나 보고된 작업 부하는 낮췄다",
+    "note": "abstract 페이지만 열어 보았다. 로봇 하드웨어, 부품 수, 참가자 수는 추출하지 못했으며, journal 버전이 있지만 열어 보지 않았다."
+  },
+  "roboreward": {
+    "evaluates": "vision-language model이 실로봇 rollout 영상에 episode 종료 시점의 progress score(1-5)를 얼마나 잘 매기는지, 그리고 그 용도로 학습한 4B/8B reward model",
+    "improves": "실세계 rollout의 성공 여부를 사람이 labelling하는 일은 느리고, off-the-shelf VLM이 실로봇 데이터에서 자동 judge로서 얼마나 신뢰할 만한지는 알려져 있지 않았다",
+    "setup": "Open X-Embodiment와 RoboArena의 실로봇 영상으로 만든 데이터셋과 벤치마크로, negative 및 near-miss 예시는 counterfactual relabelling과 temporal clipping으로 생성했다. 데이터셋, 모델, evaluation suite가 공개돼 있다.",
+    "scale": "두 source corpus의 여러 태스크와 embodiment를 포괄한다(정확한 수는 추출하지 못했다). 8B 모델은 실로봇 강화학습의 reward로도 쓰였다",
+    "note": "abstract 페이지를 열어 보았다. 평가 도구 항목이다: 녹화된 실세계 episode를 채점하며 정책을 실행하지는 않는다. 데이터셋 크기와 정확도 수치는 추출하지 못했다."
+  },
+  "failbench": {
+    "evaluates": "여러 데이터 source에 걸쳐, 로봇 매니퓰레이션 시도의 성공 여부를 판정하는 VLM 기반 judge의 신뢰성",
+    "improves": "VLM success detector는 domain 간에 일반화되는지, 자연 발생하는 실패를 다룰 수 있는지에 대한 근거가 거의 없는 채로 평가에 채택되고 있다",
+    "setup": "공개 source 14개(실세계 12개, 시뮬레이션 2개)에서 가져온 매니퓰레이션 시도로 구성한 offline 벤치마크다. 실패의 75%는 자연 발생한 것이다. VLM 기반 detector 13개를 balanced accuracy로 비교한다.",
+    "scale": "시도 2,197회. 최고 detector의 평균 balanced accuracy 0.77. contact-intensive 조립 태스크에서는 0.60 미만",
+    "note": "abstract 페이지만 열어 보았다. 벤치마크의 공개 위치는 찾지 못했다. 정책이 아니라 judge를 테스트하는 평가 도구 항목이다."
+  },
+  "prm-as-a-judge-1-5": {
+    "evaluates": "process 수준에서의 매니퓰레이션 rollout: process reward model이 rollout 영상을 progress curve로 바꾸고, 이로부터 failure-side progress, recovery, success-side quality 지표를 계산한다",
+    "improves": "binary 성공률과 손으로 작성한 stage score는 실패한 실행이 어디까지 진행됐는지, 성공한 실행이 얼마나 깔끔하게 수행됐는지를 보여주지 못한다",
+    "setup": "지표 구현과 시각화를 갖춘 open-source toolkit이다. RoboDojo 실세계 및 시뮬레이션 리더보드의 rollout 영상에 적용했다. RoboPulse++ 벤치마크가 rollout 구간에서 process reward model을 검증한다.",
+    "scale": "2026년 7월 3일에 동결된 RoboDojo 리더보드의 모델에 적용. 영상 수와 모델 수는 추출하지 못했다",
+    "note": "평가 도구 항목이다. project URL과 process reward model의 정확도는 추출하지 못했다."
+  },
+  "weaver": {
+    "evaluates": "reward도 예측하는 multi-view latent world model 안에서 rollout해 평가하는 매니퓰레이션 정책(base 및 fine-tuning한 π0.5). 최대 40초 길이의 long-horizon 태스크를 다룬다",
+    "improves": "평가기로 쓰이는 world model은 fidelity, long-horizon 일관성 또는 속도가 부족하고, 사전학습된 world model은 정책 성능을 과소평가한다",
+    "setup": "flow matching으로 학습해 미래 latent와 reward를 예측하는 multi-view world model이다. imagined rollout에 사람이 label한 성공 여부를, 태스크당 20회 시행으로 평균한 실제 성공률과 비교한다. Ctrl-World와 비교했다.",
+    "scale": "pouring과 pick-and-place stacking을 포함한 실세계 태스크 여러 개. 태스크당 실세계 시행 20회. 정확한 태스크 수와 정책 수는 추출하지 못했다",
+    "agreement": "fine-tuning 후 실세계 성공률과의 Pearson 상관 0.87. Ctrl-World보다 상관이 높고 MMRV가 낮다",
+    "note": "정책 평가는 method 논문에 실린 세 가지 응용 중 하나다. MMRV 값과 로봇 플랫폼은 추출하지 못했다."
+  },
+  "hi-wm": {
+    "evaluates": "action-conditioned world model 안에서 closed loop로 rollout한 generalist 정책의 태스크 성공. 사람의 correction이 필요한 지점을 정하는 데 쓰인다",
+    "improves": "human-in-the-loop post-training과 그 평가는 모두 로봇 시간, scene 셋업, 리셋을 소모한다",
+    "setup": "학습된 world model 안에서 사람의 intervention, rollback, branching을 곁들인 closed-loop policy rollout을 수행한다. world model 성공률을 같은 태스크의 실제 성공률과 비교한다.",
+    "scale": "강체와 변형체를 아우르는 실세계 태스크 3개. policy backbone 2개",
+    "agreement": "world model 성공률과 실세계 성공률 사이 Pearson r = 0.953",
+    "note": "평가는 post-training method 논문의 하위 실험이다. 상관 계산에 쓰인 data point 수와 로봇 플랫폼은 추출하지 못했다."
+  },
+  "mem-world": {
+    "evaluates": "long-horizon 태스크에서 end-effector occlusion과 wrist camera 움직임에도 일관성을 유지하도록 만든 memory-augmented multi-view world model 안에서의 매니퓰레이션 정책",
+    "improves": "world model 평가기는 긴 rollout 동안 scene의 세부를 잊거나 hallucinate하며, 이 때문에 long-horizon 태스크에서 일치도가 떨어진다",
+    "setup": "wrist-view surfel-indexed memory를 갖춘 multi-view action-conditioned video model이다. post-training한 모델을 정책 평가에 쓰고 Ctrl-World와 비교한다.",
+    "scale": "상관 분석에 쓰인 실세계 태스크 5개",
+    "agreement": "태스크 5개에 걸쳐 Pearson r = 0.97(p < 0.001), Ctrl-World는 r = 0.85. world model 안의 절대 성공률은 실제보다 낮다",
+    "note": "CoRL 2026은 arXiv comment에서 가져왔다. 정책 수와 로봇 플랫폼은 추출하지 못했다."
+  },
+  "robosnap-droid-sim": {
+    "evaluates": "실제 scene의 RGB 이미지 한 장으로 생성한 시뮬레이션 scene에서의 fine-tuning한 π0.5 정책",
+    "improves": "물리적으로 안정적이면서 시각적으로도 충실한 시뮬레이션 scene을 만드는 일은 느리고, 이 때문에 real-to-sim 평가가 수작업으로 만든 소수의 scene에 머문다",
+    "setup": "layered real-to-sim 방식이다: interaction을 위한 collision-aware foreground asset에, 배경 appearance를 위한 3D Gaussian splatting layer를 더한다. companion 데이터셋인 DROID-Sim은 DROID scene으로 만들었다.",
+    "scale": "DROID-Sim: 실세계 DROID scene 564개. 실세계 데이터만으로 fine-tuning한 π0.5 정책으로 실로봇 태스크에서 상관 분석",
+    "agreement": "실제 성공률과 시뮬레이션 성공률 사이 Pearson r = 0.887, MMRV 0.0066",
+    "note": "상관 분석의 태스크 수와 checkpoint 수는 추출하지 못했다."
+  },
+  "agentic-real2sim": {
+    "evaluates": "VLM agent가 로봇-물체 interaction의 실세계 녹화본으로부터 자동으로 구성하는 physics simulation twin 안에서의 매니퓰레이션 정책",
+    "improves": "real-to-sim 변환에는 scene마다 perception tool의 수동 tuning, mesh cleanup, frame alignment가 필요하다",
+    "setup": "VLM agent가 geometry, 물체 state, 물리 parameter를 복원해 실행 가능한 시뮬레이션 episode를 만든다. DROID episode, 변형체 scene, humanoid motion scene에서 실증했다.",
+    "scale": "pick-and-place 태스크 6개에 대한 상관 분석",
+    "agreement": "시뮬레이션과 실제의 태스크 성공률 사이 Pearson r = 0.920(p = 0.009)",
+    "note": "이 상관은 정책 간이 아니라 태스크 간에 계산한 것이다. 정책 수와 시행 횟수는 추출하지 못했다."
+  },
+  "vitacworld": {
+    "evaluates": "로봇 action으로부터 camera 이미지와 촉각 feedback을 함께 예측해 평가하는, contact-rich 태스크에서의 촉각 매니퓰레이션 정책 checkpoint",
+    "improves": "vision-only world model은 촉각 입력이 필요한 정책을 rollout할 수 없고, 실세계 촉각 평가 데이터는 비용이 많이 든다",
+    "setup": "공개된 실세계 촉각 데이터셋과 시뮬레이션으로 사전학습하고 실세계 policy rollout으로 fine-tuning한 action-conditioned visuo-tactile world model이다. imagined 성공을 50회 시행에 걸친 실제 성공과 비교한다.",
+    "scale": "task-checkpoint 쌍 12개. 각 50회 시행. 태스크에 오이 껍질 벗기기 포함",
+    "agreement": "Pearson r = 0.863, Spearman 0.790, 평균 절대 오차 12.33%p. 성공률을 평균 9.0%p 과소평가한다",
+    "note": "저자들은 이 결과가 테스트한 checkpoint들의 상대 비교만을 뒷받침한다고 밝힌다."
+  },
+  "dextouch-wm": {
+    "evaluates": "RGB와 full-hand 촉각 신호를 함께 예측하며 최대 100시간의 인간 촉각 데이터로 학습한 world model 안에서의 dexterous hand 정책",
+    "improves": "촉각 world model에는 수집 비용이 크고 sensor 하나에 묶이는 dense한 로봇 촉각 데이터가 필요하다",
+    "setup": "사람 손과 로봇 손에 같은 layout의 piezoresistive 촉각 array를 쓴다. 사람의 motion은 로봇 action으로 retargeting한다. imagined rollout은 사람 평가자 5명이 채점해 실세계 평가와 비교한다.",
+    "scale": "태스크 4개(신발 놓기, 휴대폰 놓기, 그릇 쌓기, 병 세우기). 로봇 데이터 5시간에 인간 데이터 0-100시간 추가",
+    "agreement": "human+robot 모델의 태스크별 Pearson 0.972, 0.939, 0.889, 0.577(MMRV 0에서 0.067). robot-only 모델은 0.400에서 0.945",
+    "note": "workshop 논문이다. 상관은 태스크당 소수의 정책으로 계산됐다."
+  },
+  "hapticworld": {
+    "evaluates": "이미지와 함께 joint torque를 예측하는 학습된 world simulator 안에서, contact-rich 태스크에 대한 force-conditioned 정책",
+    "improves": "vision-only world simulator는 force나 torque를 입력으로 받는 정책을 실행할 수 없다",
+    "setup": "teleoperator에게 실시간 torque feedback을 주는 interactive world model이다. 시뮬레이션 데이터와 실세계 데이터로 학습한 정책에 대해 simulator 내 성공률을 실제 성공률과 비교한다.",
+    "scale": "contact-rich 태스크 3개(전자레인지 열기, 화이트보드 닦기, 상자 뒤집기). 태스크·configuration당 실세계 시행 20회",
+    "agreement": "정성적으로 보고됨: simulator 내 평가가 정책 순위를 보존하고 실제 성공을 가깝게 따라간다. 계수는 제시되지 않음",
+    "note": "일치도 주장은 상관 지표로 정량화되지 않았다."
+  },
+  "reboot": {
+    "evaluates": "phase별(pick을 위한 align과 engage, transport, place를 위한 align과 engage)로 본 정밀 조립 정책과, 주입한 실패로부터의 recovery",
+    "improves": "실세계 벤치마크는 성능을 binary success로 축약하고 데이터셋은 거의 성공한 시연만 담고 있어, 정밀 태스크가 어디서 실패하는지가 가려진다",
+    "setup": "RGB-D viewpoint 4개와, phase별 성공·실패에 대한 language description을 갖춘 실로봇 데이터셋이다. 태스크에는 symmetry, clearance tier, 방향(install/remove 쌍)이 annotation돼 있다. 시연의 절반은 expert, 절반은 recovery다.",
+    "scale": "정밀 조립 태스크 18개에 걸친 시연 2,160건. baseline은 action-chunked transformer, diffusion policy, π0-FAST이며 phase-level completion rate로 채점한다",
+    "note": "abstract와 HTML 일부를 열어 보았다. 로봇 하드웨어와 평가 시행 횟수는 추출하지 못했다."
+  },
+  "benchmarking-study-of-vision-based-robotic-grasping-algorithms": {
+    "evaluates": "조명, 배경 texture, camera noise, gripper가 바뀌는 조건에서의 vision 기반 grasp planner 4종(학습 기반 2종, analytical 2종)",
+    "improves": "grasping 알고리즘은 한 연구실의 조건에서 비교되므로, 셋업 요인에 대한 민감도와 연구실 간 반복성을 알 수 없다",
+    "setup": "문헌에 있는 기존 benchmarking 프로토콜을 실로봇과 그에 대응하는 시뮬레이션에서 실행한다. 일부 실험은 두 연구실에서 같은 프로토콜로 반복했다. 녹화본과 benchmarking software를 공개했다.",
+    "scale": "실험 5,040회",
+    "note": "abstract 페이지만 열어 보았다(arXiv 2503.11163과 그 이전 버전 2307.11622). 로봇 하드웨어와 프로토콜 이름은 추출하지 못했다."
+  },
+  "dexh2r": {
+    "evaluates": "움직이는 사람이 건네는 물체를 dexterous robot hand로 잡는 dynamic grasping. 처음 보는 물체와 처음 보는 사람을 대상으로 한다",
+    "improves": "handover 데이터셋은 static grasp나 합성된 handover motion을 다루며, dynamic handover를 위한 실제 로봇 측 dexterous motion이 없다",
+    "setup": "human-to-robot handover 중에 ShadowHand를 teleoperation해 수집한 실세계 데이터셋이다. train split과 test split이 고정돼 있다(처음 보는 물체 및/또는 처음 보는 피험자). baseline에는 autoregressive 방법과 diffusion-policy 방법이 포함된다.",
+    "scale": "handover 시행 4,282회, 참가자 39명, 물체 56종. test set은 trajectory 803건",
+    "note": "벤치마크 비교는 대부분 녹화된 test split에서 이뤄진다. live 실로봇 평가의 범위와 시행 횟수는 추출하지 못했다."
+  },
+  "robocup-work-smart-manufacturing-league": {
+    "evaluates": "산업 시나리오에서의 자율 mobile manipulator: 선반, platform, conveyor belt 사이에서 이뤄지는 소형 부품의 grasping, 운반, 정밀 배치",
+    "setup": "공용 arena에서 팀이 각자의 mobile manipulator로 참가하는 현장 RoboCup Industrial league다. 2026년부터 RoboCup@Work와 Logistics League가 Smart Manufacturing League로 통합되며, 2026년은 전환의 해다.",
+    "scale": "RoboCup에서 매년 열리는 league(예: Salvador, 2025년 7월). 팀 수와 결과는 찾지 못했다",
+    "note": "Smart Manufacturing League 페이지를 열어 보았다. 태스크 설명은 RoboCup@Work 사이트의 검색 snippet과 2015년 논문 abstract에서 가져왔다. 현행 rulebook과 결과는 열어 보지 않았다."
   }
 }

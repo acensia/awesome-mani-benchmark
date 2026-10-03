@@ -1,0 +1,329 @@
+[
+  {
+    "name": "RTC Kinetix dynamic benchmark",
+    "group": "simulation",
+    "year": 2025,
+    "venue": "NeurIPS 2025",
+    "evaluates": "Solve rate of action-chunking policies on 12 force-controlled dynamic tasks (throwing, catching, balancing) as inference delay d (0-4 control steps) and execution horizon s are swept",
+    "improves": "Common imitation-learning simulators are quasi-static, so long open-loop chunks reach near-perfect success and hide the cost of inference delay",
+    "setup": "Kinetix 2D physics simulator (JAX), force-based control with Gaussian action noise; the world keeps stepping during the simulated inference delay, so there is no way to hold position while waiting",
+    "scale": "12 environments (10 existing Kinetix levels + 2 new); 1M-transition dataset per environment from RPO experts; 2,048 rollouts per data point",
+    "real_validation": "The same paper runs 6 real bimanual tasks with pi0.5 under +0/+100/+200 ms injected latency (480 episodes, 28 h), but no sim-real correlation is reported.",
+    "vla_results": "No VLA runs on the simulator itself (policies are small MLP-Mixer flow policies). Original comparison: RTC, BID, temporal ensembling, naive async. Later reported on by training-time RTC, VLASH, A2C2, FASTER, DEFLECT, DSDyn-VLA, Real-Time EXPO-FT and others.",
+    "status": "De facto standard delay benchmark for real-time chunking work (at least 14 follow-up papers opened in this search use it); MIT-licensed code, no leaderboard",
+    "agreement": "",
+    "note": "Tasks are abstract 2D rigid-body levels, not robot-arm manipulation, and there is no language or vision input. Delay is a fixed number of control steps, not measured wall-clock latency.",
+    "tags": [
+      "Dynamic",
+      "Imitation learning",
+      "Robustness"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2506.07339"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/Physical-Intelligence/real-time-chunking-kinetix"
+      },
+      {
+        "label": "Project",
+        "url": "https://pi.website/research/real_time_chunking"
+      }
+    ]
+  },
+  {
+    "name": "RTC real-world latency protocol (injected delay)",
+    "group": "physical",
+    "year": 2025,
+    "venue": "NeurIPS 2025",
+    "evaluates": "Sub-step score and throughput (task fraction completed per unit time) on six bimanual tasks at 50 Hz control with +0, +100 and +200 ms injected inference latency",
+    "improves": "Real-robot VLA evaluations normally run one latency setting and report success only, so they cannot show how performance and speed degrade as inference gets slower",
+    "setup": "Bimanual robot with two 6-DoF arms and parallel grippers (two tasks on a mobile base), pi0.5 with 50-step chunks at 20 ms; real world, so the scene keeps evolving during inference",
+    "scale": "6 tasks (light candle with a match, plug ethernet, make bed, shirt folding, batch folding, dishes in sink); 10 trials per task per method per delay; 480 episodes, 28 h",
+    "real_validation": "",
+    "vla_results": "pi0.5 with RTC shows no throughput loss up to +200 ms; synchronous inference degrades linearly with delay; both temporal-ensembling variants trigger protective stops at +100/+200 ms",
+    "status": "Protocol described in the paper and reused in spirit by later work; tasks and hardware are Physical Intelligence internal, no shared task kit",
+    "agreement": "",
+    "note": "Not a packaged benchmark: there is no released task set, so other labs can copy the delay-injection protocol but not the tasks. Throughput values are shown in a figure, not a table.",
+    "tags": [
+      "Generalist / VLA",
+      "Throughput",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2506.07339"
+      },
+      {
+        "label": "Project",
+        "url": "https://pi.website/research/real_time_chunking"
+      }
+    ]
+  },
+  {
+    "name": "async-vla-inference (bt-kinetix / bt-libero)",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "Success of four asynchronous-inference methods (inference-time RTC, training-time RTC, VLASH, A2C2) under inference delays up to 15 control steps on Kinetix and 20 steps on LIBERO",
+    "improves": "The four methods had been evaluated in separate codebases with different base policies and delays of at most 4 steps (80 ms at 50 Hz)",
+    "setup": "Kinetix (JAX, MLP-Mixer flow policies) and LIBERO (PyTorch/LeRobot, SmolVLA); delay injected as d control steps during which the previous chunk keeps executing",
+    "scale": "10 Kinetix environments, chunk sizes 16 and 30, 2,048 rollouts per configuration; 40 LIBERO tasks, 10 rollouts per task per delay, delays 0-20",
+    "real_validation": "",
+    "vla_results": "SmolVLA on LIBERO: inference-time RTC about 75% and A2C2 about 70% at d=0; A2C2 leads from d>=4. On Kinetix A2C2 stays above 90% solve rate up to d=8.",
+    "status": "Single-author bachelor-thesis preprint with public code; no leaderboard",
+    "agreement": "",
+    "note": "LIBERO VLASH results use ground-truth future states, which the author flags as an upper bound. LIBERO scenes are quasi-static, so delay there affects only robot-state staleness.",
+    "tags": [
+      "Generalist / VLA",
+      "Dynamic",
+      "Robustness"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2605.08168"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/TheAyos/async-vla-inference"
+      }
+    ]
+  },
+  {
+    "name": "DynaGrasp-32",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-07",
+    "evaluates": "Success at intercepting and placing independently moving objects across six families: basic interception, object transfer, collision-induced path change, scene variation, multi-object sequencing, per-episode speed variation",
+    "improves": "Lack of a common diagnostic suite for comparing heterogeneous frozen base VLAs on moving-object interception",
+    "setup": "Isaac Sim, Franka Panda, three 256x256 RGB cameras, 30 Hz environment; the paper does not state whether simulation is paused during policy inference",
+    "scale": "32 tasks in 6 families; 50 closed-loop episodes per task (1,600 per model); DynaGrasp-1600 dataset of 1,600 teleoperated demonstrations, about 510K control steps",
+    "real_validation": "",
+    "vla_results": "Fine-tuned base VLAs: SmolVLA 62.50%, X-VLA 36.56%, pi0 72.56%, pi0.5 64.63%; with the DynaWM wrapper 69.69%, 81.88%, 74.44%, 75.56%",
+    "status": "New; no code, dataset or project link in the paper",
+    "agreement": "",
+    "note": "Object speeds in m/s were not found in the paper text. Coarse-tuned checkpoints of the same four VLAs score 37.69-48.44% (Table 2).",
+    "tags": [
+      "Generalist / VLA",
+      "Dynamic",
+      "Dataset"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.02604"
+      }
+    ]
+  },
+  {
+    "name": "TIDAL Dynamic Interception (RoboCasa-GR1)",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-01",
+    "evaluates": "Success at intercepting a target that moves with random 90-degree turns, placing it in a drawer and closing it, reported under both paused and non-paused physics at 50 Hz control",
+    "improves": "Standard simulation pauses physics while the VLA computes, so replanning-heavy policies look good although their latency would make actions stale on a real robot",
+    "setup": "RoboCasa GR-1 humanoid tabletop simulation; two protocols: paused (environment waits for inference) and non-paused (physics advances during inference, using Jetson AGX Orin latency figures)",
+    "scale": "One task in Easy and Hard tiers; 2,000 fine-tuning episodes collected with a paused-simulation oracle",
+    "real_validation": "A real-robot rolling-target test over 100 trials is reported (motion-augmented open-loop baseline 34%, TIDAL roughly 2.5x); no sim-real correlation.",
+    "vla_results": "GR00T N1.5 backbone, Easy tier: open-loop 0.31 paused vs 0.09 non-paused; compute-heavy replanning 0.63 vs 0.17; TIDAL 0.61 vs 0.30",
+    "status": "Defined inside a method paper; no code or task release found",
+    "agreement": "",
+    "note": "Unnamed suite; the label is descriptive. Rollout counts per cell for the simulation table were not found in the text.",
+    "tags": [
+      "Generalist / VLA",
+      "Dynamic",
+      "Humanoid"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2601.14945"
+      }
+    ]
+  },
+  {
+    "name": "AHEAD dynamic scenario suite",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "Success on 20 moving-object scenarios (conveyor, beam, pole push, rolling ball, air hockey, ballistic catch, pinball deflection, plinko) with conveyor speed swept from 0 to 40 cm/s",
+    "improves": "VLA evaluation assumes the scene is stationary between observation and execution; these scenarios make latency exceed the time available to grasp",
+    "setup": "Custom MuJoCo environments with a Franka Panda, procedurally randomized object positions, motion parameters and lighting; the paper does not state how simulation time is coupled to inference time",
+    "scale": "20 scenarios in four motion categories; 5 training seeds x 100 rollouts per cell; five matching real tasks on a UFactory xArm 7 with 30 attempts each",
+    "real_validation": "Five real xArm 7 tasks: 29/30-30/30 on conveyor and rolling ball, 23/30 paddle interception, 19/30 projectile catching; sim-real gap discussed per task, no correlation statistic.",
+    "vla_results": "Frozen 7B OpenVLA: open-loop about 0%, with fast replanning 16-33% on constant-velocity scenes, with the AHEAD world-model wrapper 79-97% versus 31-58% for the strongest baseline per scenario group",
+    "status": "Defined inside a method paper; no code or environment release found in the PDF",
+    "agreement": "",
+    "note": "Unnamed suite; the label is descriptive. Baseline figures are read from flattened tables and should be rechecked before quoting.",
+    "tags": [
+      "Generalist / VLA",
+      "Dynamic",
+      "Robustness"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.02486"
+      }
+    ]
+  },
+  {
+    "name": "Robot Air Hockey Challenge",
+    "group": "competition",
+    "year": 2023,
+    "venue": "NeurIPS 2023 competition (retrospective: NeurIPS 2024 D&B); second edition with IROS 2025 workshop",
+    "evaluates": "Hit, defend and prepare sub-tasks and full games against an opponent with a fast puck, scored on success and a deployability penalty that includes per-step computation time under 0.02 s",
+    "improves": "Real-world robot learning benchmarks assume quasi-static motion and do not penalise unsafe or too-slow controllers",
+    "setup": "MuJoCo-based simulation of two KUKA LBR iiwa 14 arms on an air hockey table (1000 Hz simulation, 50 Hz control), then the top teams deployed on the real table",
+    "scale": "2023 qualifying stage: 1,000 episodes per sub-task; tournament: 15-minute games (45,000 steps); real-robot stage for the top three teams (top four in 2025)",
+    "real_validation": "In 2023 the top three solutions were run on the real two-arm platform; all performed considerably worse than in simulation and needed extra safety layers and hand tuning.",
+    "vla_results": "",
+    "status": "Two editions (2023, 2025); public code and documentation; leaderboard on the challenge site",
+    "agreement": "",
+    "note": "The task is striking with a mallet, not grasping; entrants were RL and optimal-control agents with state input, and no VLA result was found. 2025 final results were not found on the pages opened. A separate retrospective says the 2023 ranking relied only on the simulated tasks.",
+    "tags": [
+      "Dynamic",
+      "Reinforcement learning",
+      "Safety"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2411.05718"
+      },
+      {
+        "label": "Site",
+        "url": "https://air-hockey-challenge.robot-learning.net/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/AirHockeyChallenge/air_hockey_challenge"
+      }
+    ]
+  },
+  {
+    "name": "Robot Air Hockey testbed",
+    "group": "physical",
+    "year": 2024,
+    "venue": "arXiv 2024-05",
+    "evaluates": "Reaching, striking, juggling and puck-to-target tasks with a fast puck, using behaviour cloning, offline RL and RL from scratch at roughly 20 Hz",
+    "improves": "Manipulation testbeds are dominated by quasi-static pick-and-place; policies that rely on slow robot motion are not exposed to fast object dynamics",
+    "setup": "UR5 arm with a paddle on a small air hockey table and a 60 Hz overhead camera, plus Box2D and robosuite (MuJoCo) simulators of the same domain",
+    "scale": "10 tasks in Box2D, 6 in robosuite, 5 on the real robot; teleoperated human demonstration dataset",
+    "real_validation": "",
+    "vla_results": "",
+    "status": "Research testbed with a project page; adoption beyond the authors not verified",
+    "agreement": "",
+    "note": "Baselines are state- or puck-detection-based BC and RL policies, not VLAs. Publication venue was not confirmed (arXiv listing shows no venue).",
+    "tags": [
+      "Dynamic",
+      "Reinforcement learning",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2405.03113"
+      },
+      {
+        "label": "Project",
+        "url": "https://rlairhockey.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "HRIBench",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-07",
+    "evaluates": "Collaboration success, completion time, temporal synchronization, response latency and safety when a scripted human instructs, hands over to, or interrupts the robot mid-task",
+    "improves": "VLA benchmarks evaluate a robot acting alone and leave timing relative to a moving human, and recovery after human interference, unmeasured",
+    "setup": "Simulated Franka Panda with a scripted human agent whose timing and motion vary per episode; the simulator and its coupling to inference time are not stated in the main text",
+    "scale": "13 role-conditioned tasks (Instructor, Collaborator, Intruder), over 650 evaluation episodes; 50 training and 10 held-out trajectories per task",
+    "real_validation": "A small real-robot study (3 tasks, 10 trials each) shows adding HRIBench data raises GR00T N1.5 success from 0.10 to 0.43; no sim-real correlation is reported.",
+    "vla_results": "GR00T N1.5-LoRA, pi0.5-LoRA and ACT: best collaboration success 0.533 on Instructor, 0.500 on Collaborator and 0.100 on Intruder tasks for all three policies",
+    "status": "New preprint; no code link found in the PDF",
+    "agreement": "",
+    "note": "Timing here means responding to human cues at the right moment, not control frequency; inference latency is not modelled.",
+    "tags": [
+      "Generalist / VLA",
+      "Dynamic",
+      "Safety",
+      "Robustness"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.13056"
+      }
+    ]
+  },
+  {
+    "name": "Magiclab real-time VLA execution study",
+    "group": "physical",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "Success, mean completion time, successful-task throughput per hour and action-continuity metrics for six real-time execution methods on bimanual garment folding, with measured end-to-end system latency",
+    "improves": "Async execution methods were each tested on different robots and tasks, and robot-side delays (camera, communication, actuation) were not measured alongside model latency",
+    "setup": "Bimanual physical robot running pi0.5 with separate inference (1-3 Hz), action-publication (30-50 Hz) and control rates; latency calibrated with a visual time code and 100 Hz state logging",
+    "scale": "1 long-horizon task, 3 garments, 6 methods, 10 trials per garment per method (180 physical trials)",
+    "real_validation": "",
+    "vla_results": "pi0.5 base: Legato 29/30 (73.6 s, 47.3 tasks/h); VLASH 28/30 (43.2/h); temporal smoothing 23/30 (29.4/h); training-time RTC and naive async 19/30; inference-time RTC no higher than 63.3%",
+    "status": "New preprint with open-source framework; single lab, single task",
+    "agreement": "",
+    "note": "Garment folding is not a moving-target task; the timing demand comes from asynchronous execution and throughput scoring. Trials are unpaired and the authors run no significance tests.",
+    "tags": [
+      "Generalist / VLA",
+      "Throughput",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.39822"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/MagiclabRobotics/Inference"
+      },
+      {
+        "label": "Project",
+        "url": "https://embodied.magiclab.top/works/inference/index.html"
+      }
+    ]
+  },
+  {
+    "name": "DynamicManip Benchmark",
+    "group": "simulation",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "Success and end-to-end policy-query latency on five moving-target tasks (tapping, belt picking, object catching, mole whacking, goal blocking), with the simulator advanced by the measured inference time before each action",
+    "improves": "In conventional simulation inference time does not affect execution, so slow policies are not penalised on moving-object tasks",
+    "setup": "RoboTwin 2.0 on SAPIEN with two ARX-X5 arms and a head camera; simulator steps forward round(t_infer / dt_sim) steps before each predicted action is applied, so the scene evolves during inference",
+    "scale": "5 simulated tasks with 200 expert demonstrations each, 100 evaluation trials per task; 4 real tasks with 50 demonstrations each on AgileX Piper arms, 30 trials per task",
+    "real_validation": "Four real tasks (dynamic tapping, belt picking, boat loading, bottle catching) on AgileX Piper arms are evaluated with 30 trials each; no sim-real correlation is reported.",
+    "vla_results": "",
+    "status": "Defined inside a method paper with a project page; code release not confirmed",
+    "agreement": "",
+    "note": "Only point-cloud diffusion policies are evaluated (DP3: 20-78% success at 44-61 ms; the authors' policy: 42-88% at 31-38 ms); no VLA baseline. Object speeds are not stated in the text read.",
+    "tags": [
+      "Dynamic",
+      "Bimanual",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.01452"
+      },
+      {
+        "label": "Project",
+        "url": "https://liaohr9.github.io/DynamicManip/"
+      }
+    ]
+  }
+]

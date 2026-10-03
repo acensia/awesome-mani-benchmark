@@ -1,0 +1,2297 @@
+[
+  {
+    "name": "DOMINO",
+    "year": 2026,
+    "venue": "ECCV 2026",
+    "evaluates": "manipulation of moving objects (interception and tracking) under three levels of motion complexity, scored by success rate and a continuous manipulation score",
+    "improves": "earlier simulation benchmarks assume a static world in which only the robot changes the state, and dynamic manipulation data for training VLAs was scarce",
+    "setup": "SAPIEN; built on RoboTwin 2.0; five embodiments (Aloha-AgileX, Franka Panda, Piper, UR5-WSG, ARX-X5), main experiments on Aloha-AgileX",
+    "scale": "35 tasks; 110K+ expert trajectories; 3 dynamics levels (constant velocity, polynomial, multi-segment with abrupt transitions); speed coefficient alpha",
+    "real_validation": "ACT, RDT-1B, pi0.5 and PUMA were fine-tuned with 50 teleoperated demos per task and tested on 5 DOMINO tasks (20 trials each) on an AgileX Piper (averages 7%, 8%, 24%, 42%); method transfer only, no sim-real correlation reported.",
+    "vla_results": "ACT, OpenVLA, OpenVLA-OFT, RDT-1B, pi0, pi0.5, InternVLA-M1, PUMA; static-trained policies drop below 8% success on dynamic tasks, dynamic fine-tuning adds under 3 points, PUMA reaches 17.2% SR",
+    "status": "Code, dataset and PUMA weights released; no leaderboard; extended by DOMINO-Long (D2-VLA), used in the DSDyn-VLA appendix, cited as prior work by MotionForge; PUMA is a baseline in ReflexBench",
+    "note": "Venue from the arXiv comment and project page. Details taken from an automated extraction of the arXiv HTML opened in this session. The paper's stated 6.3-point gain over baselines could not be reconciled with the extracted table.",
+    "tags": [
+      "Dynamic",
+      "Generalist / VLA",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2603.15620"
+      },
+      {
+        "label": "Project",
+        "url": "https://h-embodvis.github.io/DOMINO/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/H-EmbodVis/DOMINO"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/H-EmbodVis/DOMINO"
+      }
+    ]
+  },
+  {
+    "name": "DOM (Dynamic Object Manipulation benchmark, DynamicVLA)",
+    "year": 2026,
+    "venue": "NeurIPS 2026",
+    "evaluates": "manipulation of objects in motion along nine sub-dimensions of interaction, perception and generalization, including closed-loop reactivity and disturbance robustness",
+    "improves": "robot datasets are mostly static and teleoperation cannot track fast objects; inference latency makes actions stale by execution time",
+    "setup": "Isaac Sim with an automatic demonstrator driven by object pose and velocity; 3D-FRONT scenes and Objaverse objects; Franka Emika Panda and AgileX PiPER",
+    "scale": "200K synthetic episodes; 2.8K scenes; 206 objects; 2K real episodes; 3 dimensions x 3 sub-dimensions",
+    "real_validation": "The benchmark has its own real-robot arm: 16 real tasks on Franka and PiPER, 60 trials per task (960 trials per method); no sim-real correlation statistic is reported.",
+    "vla_results": "Diffusion Policy, ACT, OpenVLA-OFT, pi0.5, SmolVLA, GR00T-N1.5, RTC, VLA-Adapter-Pro, VLASH, DynamicVLA; DynamicVLA 47.06% average success vs 12.33% for the best baseline (VLASH)",
+    "status": "Project page available; DynamicVLA is a baseline in ReflexBench and DynBench, and DOM is cited as prior work by MotionForge; no leaderboard found",
+    "note": "Venue is the arXiv comment field ('NeurIPS 2026'); not checked against the NeurIPS site. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Dynamic",
+      "Generalist / VLA",
+      "Generalization"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2601.22153"
+      },
+      {
+        "label": "Project",
+        "url": "https://haozhexie.com/project/dynamic-vla"
+      }
+    ]
+  },
+  {
+    "name": "DOMINO-Long",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "retaining cues seen early in an episode (object locations, presentation order, colour instructions) while manipulating moving objects over several stages",
+    "improves": "original DOMINO tasks are short-horizon and place weak demands on long-term memory",
+    "setup": "RoboTwin 2.0 / DOMINO; Aloha-AgileX bimanual robot",
+    "scale": "10 multi-stage tasks; 50 demonstrations per task (500 total, 227,208 records); episodes of 201-911 steps",
+    "real_validation": "The proposed D2-VLA was compared with pi0.5 and MemoryVLA on eight long-horizon tasks (four static, four dynamic) on a Unitree G1D; method transfer, no sim-real correlation.",
+    "vla_results": "PUMA 20.6%, pi0.5 35.4%, D2-VLA 60.0% success",
+    "status": "Introduced inside a method paper (D2-VLA); code repository and project page listed; no independent adoption seen",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. Physics engine not stated in the extracted text; inherited from DOMINO.",
+    "tags": [
+      "Dynamic",
+      "Memory",
+      "Long-horizon",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.34792"
+      },
+      {
+        "label": "Project",
+        "url": "https://zijianyy.github.io/Dual-Memory-Dual-Frequency-VLA-Webpage/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/CVMI-Lab/DMDF-VLA"
+      }
+    ]
+  },
+  {
+    "name": "MotionForge",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "long-horizon manipulation of moving objects under factorized domain shifts (object, background, lighting, motion speed) with latency-aware real-time execution",
+    "improves": "existing dynamic benchmarks do not jointly cover diverse motion patterns, long horizons, systematic domain shift and latency-aware evaluation",
+    "setup": "Isaac Sim; positions itself against DOM, DOMINO and PhysMani-Bench; robot embodiment not stated in the extracted text",
+    "scale": "40 tasks in 4 scene families (17 long-horizon); 11 motion patterns; about 20,000 demonstration episodes; 4 shift axes plus joint shift",
+    "real_validation": "",
+    "vla_results": "Diffusion Policy, ACT, SmolVLA, X-VLA, pi0.5, GR00T N1.7, FastWAM; best in-domain result is ACT at 22.2%, best under joint shift 5.85%; freezing the scene adds 21.7-27.5 points",
+    "status": "New preprint; no code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Dynamic",
+      "Long-horizon",
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.25689"
+      }
+    ]
+  },
+  {
+    "name": "ReflexBench",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "reaction-critical manipulation where inference latency separates perception from execution: conveyor pick-and-place, ball catching, interception, throwing, rotating-peg insertion",
+    "improves": "existing dynamic benchmarks evaluate only and do not provide a common framework for studying anticipation together with inference efficiency",
+    "setup": "Simulation with a real-time-factor metric; simulator and simulated robot not stated in the extracted text; real robot is an AgileX Piper",
+    "scale": "6 tasks; 200 demonstrations per task",
+    "real_validation": "Three tasks (conveyor pick-and-place, button pressing, ball catching) were run on an AgileX Piper with ReflexVLA, PUMA and SmolVLA, 20 runs per task; method transfer, no sim-real correlation.",
+    "vla_results": "ReflexVLA 50.4%, PUMA 50.2%, SmolVLA 38.3%, DynamicVLA 37.3%, pi0.5 36.9%, OpenVLA-OFT 36.0%, VLA-Adapter 30.3%",
+    "status": "Introduced inside a method paper (Reflex); project page listed; no independent adoption seen",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. Simulator name could not be confirmed.",
+    "tags": [
+      "Dynamic",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.14379"
+      },
+      {
+        "label": "Project",
+        "url": "https://reflexvla.github.io"
+      }
+    ]
+  },
+  {
+    "name": "DynBench",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "vision-based manipulation of moving objects: conveyor picking and sorting, dropping and stacking onto moving targets, insertion into a moving hole, grasping rolling objects",
+    "improves": "the state-based Kinetix benchmark does not exercise the visual pipeline of a VLA in dynamic scenes",
+    "setup": "MuJoCo; Franka Panda; four real dynamic tasks ported to simulation and expanded",
+    "scale": "9 tasks; 100 rule-generated demonstrations per task",
+    "real_validation": "Four tasks (conveyor picking, dynamic dropping, dynamic stacking, mobile pouring) were run on an AgileX Piper, 50 trials each; method transfer, no sim-real correlation.",
+    "vla_results": "pi0.5 9.7%, RTC 19.4%, VLASH 27.1%, DynamicVLA 34.3%, DSDyn-VLA 48.4% average success",
+    "status": "Introduced inside a method paper (DSDyn-VLA); code promised but no URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Dynamic",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.39198"
+      }
+    ]
+  },
+  {
+    "name": "PhysMani-Bench",
+    "year": 2026,
+    "venue": "ECCV 2026",
+    "evaluates": "manipulation of fast-moving targets (moving belts, rotating racks) at normal and high speed in 3D scenes",
+    "improves": "benchmarks focus on static or quasi-static manipulation and dynamic-target manipulation is little studied",
+    "setup": "Extended from RLBench; Franka Emika Panda in simulation; Astribot S1 for real tests",
+    "scale": "16 tasks (8 groups x 2 speeds); 160 trajectories per task (2,560 total)",
+    "real_validation": "Four dynamic tasks on an Astribot S1 (64 trials per task) compared PhysMani with a baseline; method transfer, no sim-real correlation.",
+    "vla_results": "PhysMani 45.9%, 3DFA 37.8%, 3DDA 35.1%, Act3D 27.1%, ManiGaussian 22.5%, pi0.5 8.3% mean success",
+    "status": "Introduced inside a method paper; code and data repository listed; cited by MotionForge",
+    "note": "Venue from the arXiv comment. Mostly 3D policies; pi0.5 is the only VLA baseline. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Dynamic",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.01938"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/vLAR-group/PhysMani"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-Plus",
+    "year": 2025,
+    "venue": "CVPR 2026",
+    "evaluates": "robustness of LIBERO-trained VLAs to seven controlled perturbation types: object layout, camera viewpoint, robot initial state, language instruction, lighting, background texture, sensor noise",
+    "improves": "near-ceiling LIBERO scores hide brittleness; earlier robustness tests used few scenarios and gave no fine-grained analysis within a perturbation dimension",
+    "setup": "LIBERO (robosuite / MuJoCo); Franka Panda",
+    "scale": "10,030 perturbed test tasks; 7 dimensions with 21 sub-dimensions; 5 difficulty levels; 20K+ training trajectories released",
+    "real_validation": "",
+    "vla_results": "OpenVLA, OpenVLA-OFT (three variants), pi0, pi0-FAST, NORA, WorldVLA, UniVLA, RIPT-VLA; success falls from about 95% to below 30%; camera and initial-state shifts hurt most, language changes least",
+    "status": "Widely reused (LIBERO-MAX, LIBERO-Safety, IndustrialVLA-Bench, RoboTwin 2.0-Plus study); results table maintained in the GitHub README",
+    "note": "arXiv title is 'In-depth Robustness Analysis of Vision-Language-Action Models'; the CVPR 2026 poster page lists it as 'A Progressive Robustness Benchmark for Visual-Language-Action Models'. The CVF open-access page returned 403.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA",
+      "Language"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2510.13626"
+      },
+      {
+        "label": "Project",
+        "url": "https://sylvestf.github.io/LIBERO-plus/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/sylvestf/LIBERO-plus"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-PRO",
+    "year": 2025,
+    "venue": "arXiv 2025-10",
+    "evaluates": "whether LIBERO success reflects memorization, by perturbing object attributes, initial positions, task instructions and environments, alone and in combination",
+    "improves": "the standard LIBERO train and test configuration lets overfitted models score near-perfectly while collapsing under small changes",
+    "setup": "LIBERO (robosuite / MuJoCo)",
+    "scale": "4 perturbation dimensions applied to the LIBERO suites; task count not extracted",
+    "real_validation": "",
+    "vla_results": "OpenVLA, pi0, pi0.5; over 90% on standard LIBERO falls to 0.0% under the generalized setting; pi0.5 retains 0.38 on position changes",
+    "status": "Code released; reused by LIBERO-MAX (2,400 cases) and cited by most later LIBERO variants",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. No venue on the arXiv record.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA",
+      "Generalization"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2510.03827"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/Zxy-MLlab/LIBERO-PRO"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-X",
+    "year": 2026,
+    "venue": "arXiv 2026-02",
+    "evaluates": "robustness under coupled, multi-factor shifts graded in five levels: local spatial, extended spatial, scene topology, visual attributes, semantically equivalent instructions",
+    "improves": "existing benchmarks test isolated shifts, and LIBERO test sets closely mirror low-diversity training data",
+    "setup": "MuJoCo; LIBERO-style environments; single arm with gripper",
+    "scale": "600 tasks in 100 scenes; 2,520 VR-teleoperated demonstrations; 5 perturbation levels; 4 multi-label task attributes",
+    "real_validation": "",
+    "vla_results": "OpenVLA-OFT, pi0, X-VLA, GR00T-N1.5, pi0.5; pi0.5 falls from 65.2% (level 1) to 18.0% (level 5); three-step tasks near zero",
+    "status": "Project page available; no leaderboard or code URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA",
+      "Generalization"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2602.06556"
+      },
+      {
+        "label": "Project",
+        "url": "https://zackhxn.github.io/LIBERO-X/"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-VPro",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "closed-loop visual robustness when the visual evidence itself is corrupted during execution: degradation, camera staleness, cross-view inconsistency, task-relevant scene variation",
+    "improves": "earlier suites perturb scene or task configuration while the observation stream stays temporally coherent and internally consistent",
+    "setup": "LIBERO (40 tasks from four suites); real checks on Franka Research 3",
+    "scale": "40 tasks; 4 dimensions, 12 challenge categories, 96 settings, 3,296 task-condition cases; about 196,000 simulated episodes",
+    "real_validation": "pi0.5 and LaWAM were run on a Franka Research 3 under four of the conditions (10 trials per condition, 200 rollouts); trends were reported as broadly consistent with simulation, without a correlation coefficient.",
+    "vla_results": "OpenVLA-OFT, pi0, pi0.5 and three world-action models (FastWAM, LingBot-VA, LaWAM); nominal 92-99% falls to 56-67% on average; view loss and stale cameras are most disruptive",
+    "status": "Project page available; new preprint",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.24350"
+      },
+      {
+        "label": "Project",
+        "url": "https://huiqiongli.github.io/LIBERO-VPro/"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-Occ",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "robustness to scene-induced occlusion of the manipulated object, the receptacle, or both, at three severity levels",
+    "improves": "VLA benchmarks implicitly assume task-relevant objects are fully visible in the input observation",
+    "setup": "LIBERO (four suites); Franka arm",
+    "scale": "2,000 occluded task instances (500 per suite); 3 occlusion types x 3 severities",
+    "real_validation": "",
+    "vla_results": "OpenVLA-OFT 95.75% to 47.95%, pi0.5 90.00% to 40.55%, UniVLA 88.25% to 57.10%; the proposed VIM reaches 65.05%",
+    "status": "Code repository listed; benchmark-plus-method paper",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. The extraction named PyBullet as the engine, which conflicts with other LIBERO-derived papers (robosuite / MuJoCo); engine left unconfirmed.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.10862"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/litsh/Libero-Occ"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-MAX",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "task completion when the world changes after the policy has begun acting: target or receptacle relocation, camera shift, lighting switch, noise onset, distractors, obstacle insertion",
+    "improves": "existing benchmarks set external conditions at reset, so mid-episode change is untested",
+    "setup": "LIBERO; cases drawn from LIBERO-Plus (5,600) and LIBERO-PRO (2,400)",
+    "scale": "8,000 Base/Dynamic pairs (16,000 rollouts per policy); 8 event types with 1,000 pairs each",
+    "real_validation": "",
+    "vla_results": "14 policies including pi0.5, OpenVLA-OFT, X-VLA, Xiaomi-Robotics-0, MolmoAct2, SmolVLA, GR00T N1.7, VLA-JEPA and five WAMs; every policy loses 11.0-25.7 points; WAMs are not consistently better or worse than VLAs",
+    "status": "Project page available; new preprint",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Dynamic",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.36518"
+      },
+      {
+        "label": "Project",
+        "url": "https://liberomax.github.io"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-RECOVER",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "failure recovery in four difficulty levels: action retry, action adaptation, object-state recovery, environmental recovery",
+    "improves": "benchmarks evaluate completion from predefined initial states and do not assess failure recognition, state recovery or replanning",
+    "setup": "LIBERO (robosuite / MuJoCo); Franka",
+    "scale": "130 subtasks across 4 suites; 2,178 recovery scenarios; 4 recovery levels; 10 trials per scenario",
+    "real_validation": "",
+    "vla_results": "OpenVLA-OFT, GR00T-N1.5, pi0, pi0-FAST, Wan2-Policy, Cosmos-Predict2-Policy; all lose more than half of their performance after failures; recovery success about 40% at level 1 and about 3% at level 4",
+    "status": "Release announced, no URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.05178"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-CTRL",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "compound robustness: whether outcomes under simultaneous perturbations can be predicted from outcomes under each single perturbation on the same matched instance",
+    "improves": "LIBERO-Plus tested selected pairwise combinations but did not link constituent and compound outcomes per evaluation instance",
+    "setup": "LIBERO (four suites)",
+    "scale": "40 tasks; 6 axes (camera, lighting, robot pose, sensor, actuation, language); 3 severity levels; 400 matched configurations; 10,400 rollouts per checkpoint",
+    "real_validation": "",
+    "vla_results": "pi0.5, OpenVLA-OFT, UniVLA, SmolVLA, VLA-JEPA, PredVLA, MINERVA; up to 29.0% of configurations change outcome between single-axis conjunction and the simultaneous condition while the aggregate barely moves",
+    "status": "Code and per-rollout outcomes in a public repository; new preprint",
+    "note": "Paper title is 'Beyond Single-Axis Testing: Paired Evaluation of Compound Robustness in Vision-Language-Action Policies'. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.15940"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/hiroki-oist/LIBERO-ctrl"
+      }
+    ]
+  },
+  {
+    "name": "RoboTwin 2.0-Plus",
+    "year": 2026,
+    "venue": "arXiv 2026-03",
+    "evaluates": "robustness of bimanual policies, comparing world-action models with VLAs, under noise, lighting, camera, robot initial state, background, layout and language perturbations",
+    "improves": "the LIBERO-Plus perturbation protocol existed only for single-arm LIBERO, and WAM-versus-VLA robustness had not been compared",
+    "setup": "RoboTwin 2.0; Aloha-AgileX dual arm; paired with LIBERO-Plus for single-arm results",
+    "scale": "7 perturbation types; task count not extracted",
+    "real_validation": "",
+    "vla_results": "LingBot-VA 74.2%, Fast-WAM 72.7%, MOTUS 71.5%, pi0.5 58.6%, X-VLA 53.1% overall; WAMs hold up under visual perturbations but struggle with camera and robot-state changes",
+    "status": "Evaluation code page listed; introduced inside a study paper",
+    "note": "Paper title is 'Do World Action Models Generalize Better than VLAs? A Robustness Study'. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Bimanual",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2603.22078"
+      },
+      {
+        "label": "Project",
+        "url": "https://robot-robustness.github.io/RoboTwin2.0-Plus/"
+      }
+    ]
+  },
+  {
+    "name": "Eva-VLA",
+    "year": 2025,
+    "venue": "arXiv 2025-09",
+    "evaluates": "worst-case robustness to physically plausible variations found by black-box optimization: 3D object transformations, illumination changes, adversarial patches",
+    "improves": "adversarial-patch studies violate physical plausibility or need gradient access and do not cover the range of real physical variation",
+    "setup": "LIBERO (four suites); real checks on an AgileX Piper",
+    "scale": "40 tasks; 3 variation families with 9 continuous parameters; 500 rollouts per suite",
+    "real_validation": "Three 'put A into B' tasks, one per variation type, were run on an AgileX Piper and failures were reported as consistent with simulation; no correlation statistic.",
+    "vla_results": "OpenVLA, OpenVLA-OFT, UniVLA, pi0.5; failure rates rise to 68-88% under 3D transformations; OpenVLA exceeds 90% failure on LIBERO-Long",
+    "status": "No code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2509.18953"
+      }
+    ]
+  },
+  {
+    "name": "VLATest",
+    "year": 2024,
+    "venue": "FSE 2025",
+    "evaluates": "generation-based fuzz testing of VLAs over target and confounding objects, lighting, camera pose, unseen objects and instruction mutations",
+    "improves": "VLA evaluation relied on small hand-made scene sets, with no automated testing framework",
+    "setup": "ManiSkill2 with visual-matching rendering; tasks follow Open X-Embodiment-trained model setups; robot not specified in the extracted text",
+    "scale": "4 tasks; 18,604 generated scenes; 10 testing operators",
+    "real_validation": "",
+    "vla_results": "RT-1 (three checkpoints), RT-1-X, Octo-small, Octo-base, OpenVLA-7b; average success 12.4%, 6.0%, 1.2% and 0.5% on the four tasks; only 34% of passing cases survive camera mutations",
+    "status": "Code and the 18,604 generated scenes released; LADEV evaluates the same seven models",
+    "note": "Venue from the arXiv comment. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2409.12894"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/ma-labo/VLATest"
+      }
+    ]
+  },
+  {
+    "name": "LADEV",
+    "year": 2024,
+    "venue": "arXiv 2024-10",
+    "evaluates": "automated robustness testing in which scenes are generated from natural-language descriptions and instructions are paraphrased",
+    "improves": "there was no platform for automatically testing and evaluating VLA models",
+    "setup": "SAPIEN / ManiSkill2; extends SimplerEnv",
+    "scale": "4 tasks; 4,000+ generated scenes; multiple paraphrased instructions per scene",
+    "real_validation": "",
+    "vla_results": "RT-1 (three checkpoints), RT-1-X, Octo-small, Octo-base, OpenVLA-7b; success drops 10-30% on unseen objects and 5-15% under paraphrase; put-on and put-in tasks near zero",
+    "status": "Project site available; code release was pending in the paper",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Language",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2410.05191"
+      },
+      {
+        "label": "Project",
+        "url": "https://sites.google.com/view/ladev"
+      }
+    ]
+  },
+  {
+    "name": "PVEP (Manipulation Facing Threats)",
+    "year": 2024,
+    "venue": "arXiv 2024-09",
+    "evaluates": "physical visual threats to VLAs: blur, noise, brightness, typographic visual prompts, and adversarial patches from black-box to white-box",
+    "improves": "no earlier work had evaluated open-source VLA models against physical security threats",
+    "setup": "VIMA simulator and SimplerEnv",
+    "scale": "20 tasks (14 VIMA, 6 SimplerEnv); 4 threat categories",
+    "real_validation": "",
+    "vla_results": "LLaRA and OpenVLA; blur raises failure by about 47 points for both; white-box patches reach 94.5% (LLaRA) and 100% (OpenVLA) failure",
+    "status": "Project page available",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2409.13174"
+      },
+      {
+        "label": "Project",
+        "url": "https://chaducheng.github.io/Manipulate-Facing-Threats/"
+      }
+    ]
+  },
+  {
+    "name": "AttackVLA",
+    "year": 2025,
+    "venue": "arXiv 2025-11",
+    "evaluates": "a common protocol for adversarial and backdoor attacks on VLAs, measuring effectiveness, transferability and targeted long-horizon misbehaviour",
+    "improves": "attacks were evaluated on different models and setups with no unified framework",
+    "setup": "LIBERO (four suites); real tests on a 7-DoF Franka",
+    "scale": "40 tasks; 6 adversarial and 3 backdoor attacks",
+    "real_validation": "TMA, TabVLA and BackdoorVLA were run against pi0-FAST on a Franka arm (attack success 42.5%, 20% and 50%); replication of attacks, no sim-real correlation.",
+    "vla_results": "OpenVLA, SpatialVLA, pi0-FAST; targeted backdoor success 75.35%, 51.63% and 48.23%; pi0-FAST is the most robust to adversarial attacks",
+    "status": "No code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2511.12149"
+      }
+    ]
+  },
+  {
+    "name": "RoboStress",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "robustness to robot execution errors from mechanics: Stribeck friction, gear backlash, joint compliance, gravity-compensation error",
+    "improves": "robustness studies inject synthetic action noise and leave execution errors from the robot itself unexplored",
+    "setup": "MuJoCo 3.7.0 with robosuite 1.4.1; LIBERO (four suites); real tests on AgileX Piper arms",
+    "scale": "40 tasks; 4 error types combined into 7 deployment scenarios",
+    "real_validation": "A self-compensating VLA was tested on two AgileX Piper arms with different wear on four tasks (76% vs 43% for the base policy on one arm); method transfer, no sim-real correlation.",
+    "vla_results": "pi0 and pi0.5 with domain-randomization and RobustVLA baselines; base pi0.5 49.1% and pi0 41.7% under stress; self-compensation raises them to 56.6% and 44.2%",
+    "status": "Code release announced, no URL found",
+    "note": "Paper title is 'Taming VLAs under Robot Execution Errors: Self-Compensation and Stress Testing'. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.37334"
+      }
+    ]
+  },
+  {
+    "name": "RoboTwin-Phys",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "sensitivity to physical-parameter variation: mass, centre of mass, friction, restitution, joint damping, table tilt and height, external force",
+    "improves": "benchmarks randomize appearance and layout but keep physical parameters at nominal values",
+    "setup": "RoboTwin 2.0; bimanual",
+    "scale": "50 tasks; 13 physical dimensions; 5,000+ expert episodes annotated with physical parameters",
+    "real_validation": "",
+    "vla_results": "Fast-WAM 91.88% to 44.24%, Motus 88.66% to 39.60%, FACT 88.40% to 39.14%, Galaxea G0.5 93.70% to 37.82%, pi0.5 82.74% to 31.60% (clean vs physical randomization)",
+    "status": "Technical report; no code URL found",
+    "note": "arXiv comment describes it as a 'technical report for a benchmark'. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Bimanual",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.26292"
+      }
+    ]
+  },
+  {
+    "name": "NEBULA",
+    "year": 2025,
+    "venue": "arXiv 2025-10",
+    "evaluates": "per-capability diagnosis (control, perception, language, dynamic adaptation, spatial reasoning, robustness) plus stress tests of inference frequency, latency, stability and adaptability",
+    "improves": "a single end-task success metric gives no skill diagnosis and no measure of robustness to perturbation; data formats are fragmented",
+    "setup": "SAPIEN / ManiSkill3; single-arm tasks; unified data from ManiSkill, LeRobot and BEHAVIOR-1K formats",
+    "scale": "6 capability families at 3 difficulty levels; 4 stress tests at 3 pressure levels; about 216,000 trajectories",
+    "real_validation": "",
+    "vla_results": "GR00T-N1.5, SpatialVLA, RDT-1B, MT-ACT, Diffusion Policy, ACT; perception and language are strong, spatial reasoning is weak, dynamic adaptation and robustness scores are near zero",
+    "status": "Project page available; no leaderboard or code URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. Task count was not clearly stated in the extracted text.",
+    "tags": [
+      "Robustness",
+      "Dynamic",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2510.16263"
+      },
+      {
+        "label": "Project",
+        "url": "https://vulab-ai.github.io/NEBULA-Alpha/"
+      }
+    ]
+  },
+  {
+    "name": "VLA-Arena",
+    "year": 2025,
+    "venue": "ICML 2026",
+    "evaluates": "structured difficulty along task structure, language and vision, covering safety constraints, distractors, extrapolation to unseen objects and compositions, and long horizons",
+    "improves": "earlier benchmarks are static task collections that do not integrate robustness with extrapolation and overlook safety",
+    "setup": "MuJoCo; LIBERO-style BDDL task definitions; Franka",
+    "scale": "170 tasks in 11 suites under 4 dimensions (Safety, Distractor, Extrapolation, Long Horizon); levels L0-L2; language W0-W4 and vision V0-V4; datasets with 10, 30 or 50 trajectories per task",
+    "real_validation": "Policies were run on a Franka Research 3 on tasks from all four dimensions; degradation with difficulty and failure modes matched simulation qualitatively, with no correlation coefficient.",
+    "vla_results": "OpenVLA, OpenVLA-OFT, pi0, pi0-FAST, UniVLA, SmolVLA; steep degradation from L0 to L2; high success is often reached by violating safety constraints",
+    "status": "Open-source framework with leaderboard on the project site; reused by BeSafe-Bench",
+    "note": "Venue from the arXiv comment. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Safety",
+      "Generalization",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2512.22539"
+      },
+      {
+        "label": "Project",
+        "url": "https://vla-arena.github.io"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/PKU-Alignment/VLA-Arena"
+      },
+      {
+        "label": "Leaderboard",
+        "url": "https://vla-arena.github.io"
+      }
+    ]
+  },
+  {
+    "name": "RoboView-Bias",
+    "year": 2025,
+    "venue": "arXiv 2025-09",
+    "evaluates": "visual bias in grasping agents: how success varies with object colour, camera orientation and pose, distance, shape and initial position",
+    "improves": "benchmarks emphasize generalization and perturbation robustness, with little systematic quantification of visual bias",
+    "setup": "RoboVerse with MuJoCo backend; single arm; grasping only",
+    "scale": "2,127 task instances; factors include 141 colours, 9 camera orientations, 21 camera poses, 9 distance scales",
+    "real_validation": "",
+    "vla_results": "VLM-driven agents MOKA and SimpleAgent (GPT-4o, Qwen-VL-Max) and pi0; pi0 46.53% average success with 53.05% coefficient of variation across factors",
+    "status": "No code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. Only one VLA (pi0) is evaluated.",
+    "tags": [
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2509.22356"
+      }
+    ]
+  },
+  {
+    "name": "GemBench",
+    "year": 2024,
+    "venue": "ICRA 2025",
+    "evaluates": "generalization of vision-language manipulation policies in four levels: new placements, new rigid objects, new articulated objects, unseen long-horizon tasks",
+    "improves": "RLBench-style evaluation tests seen tasks; VIMA-Bench has simple skills and Colosseum targets environment perturbations rather than new tasks",
+    "setup": "RLBench (CoppeliaSim); real tests on a UR5",
+    "scale": "16 training tasks (31 variations, 3,100 demonstrations); 44 test tasks (92 variations) in 4 levels; 7 action primitives",
+    "real_validation": "3D-LOTUS and 3D-LOTUS++ were trained on 20 demos per variation for 7 real variations on a UR5 and tested on 7 seen and 7 unseen variations; method transfer, no sim-real correlation.",
+    "vla_results": "Hiveformer, PolarNet, RVT-2, 3D Diffuser Actor, 3D-LOTUS, 3D-LOTUS++ (no VLA in the original paper); level 1 up to 94.3%, level 4 at most 0.3% except 3D-LOTUS++ at 17.4%",
+    "status": "Code and dataset public; project page maintained by the authors; 3D-LOTUS++ from this paper is a baseline in AGNOSTOS and ArtiBench",
+    "note": "Venue from the arXiv comment. The extraction called RLBench 'PyBullet-based', which conflicts with other RLBench papers (CoppeliaSim).",
+    "tags": [
+      "Generalization",
+      "Long-horizon",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2410.01345"
+      },
+      {
+        "label": "Project",
+        "url": "https://www.di.ens.fr/willow/research/gembench/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/vlc-robot/robot-3dlotus"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/rjgpinel/GEMBench"
+      }
+    ]
+  },
+  {
+    "name": "AGNOSTOS",
+    "year": 2025,
+    "venue": "arXiv 2025-05",
+    "evaluates": "zero-shot cross-task generalization to unseen tasks in two levels: partial semantic overlap with training tasks, and entirely novel scenarios",
+    "improves": "existing benchmarks assess within-task generalization and leave zero-shot cross-task generalization unexplored",
+    "setup": "RLBench; real tests on an xArm7 with DH-Robotics gripper",
+    "scale": "18 seen RLBench tasks (3,600 demonstrations); 23 unseen tasks (13 level-1, 10 level-2)",
+    "real_validation": "The proposed X-ICM was tested zero-shot on five real tasks on an xArm7 (20 executions per task) using demos from other tasks; method transfer, no sim-real correlation.",
+    "vla_results": "PerAct, RVT, RVT-2, Sigma-Agent, Instant Policy, R3M, D4R, OpenVLA, RDT, pi0, LLARVA, SAM2Act, 3D-LOTUS++, VoxPoser, X-ICM; pi0 17.5% on unseen tasks, X-ICM (72B) 30.1%",
+    "status": "Project page and code available; no venue on the arXiv record",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. The extracted margins over pi0 were not mutually consistent, so only the absolute numbers are given.",
+    "tags": [
+      "Generalization",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2505.15660"
+      },
+      {
+        "label": "Project",
+        "url": "https://jiaming-zhou.github.io/AGNOSTOS"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/jiaming-zhou/X-ICM"
+      }
+    ]
+  },
+  {
+    "name": "HiMan-Bench (RoboHiMan)",
+    "year": 2025,
+    "venue": "arXiv 2025-10",
+    "evaluates": "compositional generalization in long-horizon manipulation under perturbation, separating planning failure from execution failure via vanilla, decoupled and coupled evaluation modes",
+    "improves": "existing benchmarks cannot tell whether failures come from planning, execution or sensitivity to environmental perturbation",
+    "setup": "CoppeliaSim / PyRep; extends DeCoBench tasks with Colosseum perturbation factors; Franka Panda",
+    "scale": "258 tasks (114 atomic and 144 compositional, including perturbed versions); 12 perturbation factors; 4 progressive training-data levels",
+    "real_validation": "pi0.5 was run on a Mobile ALOHA arm on 4 atomic and 4 compositional tasks with distractor, position and human-intervention perturbations (vanilla 17.5% to 10%, with rule-based planner 47.5% to 27.5%); qualitative replication only.",
+    "vla_results": "RVT-2, 3D Diffuser Actor, pi0, pi0.5; near-zero on compositional tasks without a planner; with a rule-based planner RVT-2 reaches 39.5%; VLM planners lag rule-based ones",
+    "status": "Project page available; listed as under review",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Generalization",
+      "Long-horizon",
+      "Robustness"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2510.13149"
+      },
+      {
+        "label": "Project",
+        "url": "https://chenyt31.github.io/robo-himan.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "DeCoBench",
+    "year": 2025,
+    "venue": "RA-L 2026",
+    "evaluates": "zero-shot composition of learned atomic skills into unseen long-horizon 3D manipulation sequences",
+    "improves": "multi-task imitation policies trained on atomic tasks fail on longer compositions, and no benchmark isolated this",
+    "setup": "RLBench; Franka Emika Panda",
+    "scale": "10 atomic tasks (50 demonstrations each); 12 compositional long-horizon tasks",
+    "real_validation": "DeCo-augmented policies were trained on 6 real atomic tasks and tested on 9 novel long-horizon tasks (53.33% vs 0% without DeCo); method transfer, no sim-real correlation.",
+    "vla_results": "RVT-2, 3D Diffuser Actor, ARP (3D policies, no VLA); baselines are near 0% on compositional tasks; with DeCo 66.67%, 21.53% and 58.06%",
+    "status": "Project page available; extended by HiMan-Bench",
+    "note": "Venue from the arXiv comment ('RAL 2026'). Introduced inside the DeCo method paper. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Generalization",
+      "Long-horizon",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2505.00527"
+      },
+      {
+        "label": "Project",
+        "url": "https://deco226.github.io"
+      }
+    ]
+  },
+  {
+    "name": "ClevrSkills",
+    "year": 2024,
+    "venue": "NeurIPS 2024 (Datasets and Benchmarks)",
+    "evaluates": "compositional generalization: whether models trained on simple motor skills can compose them for intermediate and complex tasks, including low-level execution",
+    "improves": "VIMA-style benchmarks test high-level planning and not closed-loop plan-and-execute with low-level control",
+    "setup": "ManiSkill2; UFACTORY xArm 6 with vacuum gripper (Franka Panda also available)",
+    "scale": "33 tasks in 3 levels (12 simple, 15 intermediate, 6 complex); about 330K trajectories",
+    "real_validation": "",
+    "vla_results": "JAT, RoboFlamingo, Octo, StreamRoboLM; level-0 success 24-63%; level 1 and level 2 stay at or below about 6% even after fine-tuning",
+    "status": "Code and dataset released by Qualcomm AI Research",
+    "note": "Venue from the arXiv comment. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Generalization",
+      "Reasoning",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2411.09052"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/Qualcomm-AI-research/ClevrSkills"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://www.qualcomm.com/developer/software/clevrskills-dataset"
+      }
+    ]
+  },
+  {
+    "name": "INT-ACT",
+    "year": 2025,
+    "venue": "arXiv 2025-06",
+    "evaluates": "generalization boundaries of VLAs along object diversity, language complexity and vision-language reasoning, separating correct intention from successful execution",
+    "improves": "SimplerEnv has few tasks, and imitation-learning benchmarks lack language variation",
+    "setup": "ManiSkill2 / SimplerEnv (expanded from 4 to 50 BridgeV2 tasks); WidowX",
+    "scale": "50 tasks; 3 categories with 10 sub-categories",
+    "real_validation": "",
+    "vla_results": "pi0 (fine-tuned, from scratch, with rephrasing), SpatialVLA, Magma, Octo; intention is correct in 80-100% of cases while task success drops sharply on out-of-distribution variants",
+    "status": "Project page and code available; arXiv comment says under review",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Generalization",
+      "Language",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2506.09930"
+      },
+      {
+        "label": "Project",
+        "url": "https://ai4ce.github.io/INT-ACT/"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-OOD",
+    "year": 2025,
+    "venue": "arXiv 2025-05",
+    "evaluates": "out-of-distribution recombination of skills seen in training: tasks that require stitching sub-trajectories never shown together",
+    "improves": "there was no benchmark of tasks that VLAs could plausibly complete but currently cannot; standard LIBERO is near ceiling",
+    "setup": "LIBERO; derived from the goal, object and spatial suites",
+    "scale": "20 extrapolated tasks (10 goal-ood, 10 spatial-ood)",
+    "real_validation": "",
+    "vla_results": "pi0 9%, pi0-FAST 15%, OpenVLA-OFT 1%, UniVLA 21%; text-latent interpolation raises pi0 to 83%",
+    "status": "Code released; introduced inside a study paper",
+    "note": "Paper title is 'VLAs are Confined yet Capable of Generalizing to Novel Instructions'. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Generalization",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2505.03500"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/QuanyiLi/pi0-text-latent"
+      }
+    ]
+  },
+  {
+    "name": "GenManip-Bench",
+    "year": 2025,
+    "venue": "arXiv 2025-06",
+    "evaluates": "instruction-following generalization across appearance, spatial relations, common sense and long-horizon instructions, for modular foundation-model systems and end-to-end policies",
+    "improves": "end-to-end policies were tested mostly under spatial variation, and modular systems had no common tabletop testbed",
+    "setup": "Isaac Sim; Franka arm; LLM-driven scenario generation",
+    "scale": "200 human-curated scenarios; 10K rigid object assets and 100 articulated objects",
+    "real_validation": "",
+    "vla_results": "CoPA 23.0% and MOKA 14.0% (with a GPT model); GR-1 and ACT are strong in constrained single-task settings (95.0%, 72.5%) but GR-1 scores 0% on unseen instructions and objects",
+    "status": "Project page available; code release announced",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. No VLA in the usual sense is evaluated; no venue on the arXiv record.",
+    "tags": [
+      "Generalization",
+      "Language",
+      "Reasoning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2506.10966"
+      },
+      {
+        "label": "Project",
+        "url": "https://genmanip.axi404.top/"
+      }
+    ]
+  },
+  {
+    "name": "RoboCAS",
+    "year": 2024,
+    "venue": "arXiv 2024-07",
+    "evaluates": "picking, selecting and searching in scattered, orderly and stacked object arrangements that require obstacle clearance and reasoning about chain reactions",
+    "improves": "embodied models are rarely tested on grasping in complex object arrangements",
+    "setup": "SAPIEN (PhysX); Franka Emika Panda on a mobile base",
+    "scale": "3 tasks; 3 arrangement types; 7,300 trajectory episodes",
+    "real_validation": "",
+    "vla_results": "RT-1 34.2%, 23.3% and 10.2% (scattered, orderly, stacked); RoboFlamingo 15.6%, 13.3% and 0%",
+    "status": "Code and dataset released; little later use seen",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Generalization",
+      "Long-horizon",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2407.06951"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/notFoundThisPerson/RoboCAS-v0"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/zlm898/RoboCAS-v0"
+      }
+    ]
+  },
+  {
+    "name": "ArtiBench",
+    "year": 2025,
+    "venue": "arXiv 2025-11",
+    "evaluates": "articulated-object manipulation in five levels: random placement, novel parts, novel instances, novel categories, long-horizon composition",
+    "improves": "datasets rarely evaluate cross-part, cross-instance or cross-category generalization in sequential articulated interactions",
+    "setup": "CoppeliaSim / PyRep; assets from PartNet-Mobility, RLBench and YCB",
+    "scale": "132 articulated scenes with 449 variations; 5 levels; 50 demonstrations per task",
+    "real_validation": "The proposed ArtiBrain was run on a Franka Research 3 on door, drawer and composed tasks; method transfer, no sim-real correlation.",
+    "vla_results": "3D-LOTUS, 3D-LOTUS++ (35.8% average), AffordDP, ArtiBrain (60.0% on novel parts); only ArtiBrain completes the long-horizon level",
+    "status": "Code and dataset release announced on acceptance",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. No VLA baseline.",
+    "tags": [
+      "Generalization",
+      "Long-horizon",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2511.20330"
+      }
+    ]
+  },
+  {
+    "name": "EBench",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "element-wise diagnosis of mobile manipulation policies along five capability axes (scene, atomic skill, horizon, precision, operating mode) and four generalization dimensions",
+    "improves": "single success-rate scalars and separate suites for tabletop, mobile and dexterous regimes give no interpretable diagnosis",
+    "setup": "Isaac Sim; dual-arm robot on a mobile base with one unified action space",
+    "scale": "26 tasks (10 mobile pick-and-place, 9 long-horizon, 7 dexterous fixed-base); 6,600 episodes (91.4 hours); generalization over background, object, instruction and mixed",
+    "real_validation": "",
+    "vla_results": "pi0.5 41.0%, pi0 34.4%, InternVLA-A1 27.6%, X-VLA 24.7% test success; no model leads on all eleven atomic skills",
+    "status": "Code released; hosted leaderboard",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Generalization",
+      "Mobile",
+      "Bimanual",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.18239"
+      },
+      {
+        "label": "Project",
+        "url": "https://internrobotics.github.io/EBench-home/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/InternRobotics/EBench"
+      },
+      {
+        "label": "Leaderboard",
+        "url": "https://internrobotics.shlab.org.cn/eval/evaluation-list"
+      }
+    ]
+  },
+  {
+    "name": "Behavior-Skill",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "skill-level evaluation inside long-horizon household tasks, locating which constituent skills cause task failure",
+    "improves": "BEHAVIOR-style data is annotated only at task level, so constituent skills cannot be evaluated separately",
+    "setup": "OmniGibson; BEHAVIOR-1K; 23-DoF bimanual mobile manipulator",
+    "scale": "50 household tasks; 235,492 skill instances in 34 skill categories; 10,000 demonstrations; 500 evaluation episodes",
+    "real_validation": "",
+    "vla_results": "pi0.5 42.4% and GR00T N1.7 36.9% task-level score, 48.4% and 42.5% with skill-level conditioning; contact-rich skills (open lid, close door, pour) are persistent bottlenecks",
+    "status": "Code released; new preprint",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Long-horizon",
+      "Mobile",
+      "Bimanual",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.30536"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/nubot-nudt/Behavior-Skill"
+      }
+    ]
+  },
+  {
+    "name": "RoboEval",
+    "year": 2025,
+    "venue": "arXiv 2025-07",
+    "evaluates": "execution quality beyond binary success for bimanual tasks: trajectory smoothness, spatial precision, coordination, task progression and structured failure localization",
+    "improves": "benchmarks report isolated success or robustness measures without a common framework for progression, execution quality and failure modes",
+    "setup": "Bimanual simulation with VR-teleoperated demonstrations; simulator not confirmed in the extracted text",
+    "scale": "8 base tasks with 3-5 variations each; 3,000+ human demonstrations; 14 metrics",
+    "real_validation": "",
+    "vla_results": "ACT, Diffusion Policy, GR00T N1.6, X-VLA, pi0.5; the top-success model leads on only 34 of 104 other metric comparisons",
+    "status": "Project page available",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Bimanual",
+      "Generalist / VLA",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2507.00435"
+      },
+      {
+        "label": "Project",
+        "url": "https://robo-eval.github.io"
+      }
+    ]
+  },
+  {
+    "name": "RoboCerebra",
+    "year": 2025,
+    "venue": "NeurIPS 2025",
+    "evaluates": "deliberative long-horizon manipulation: planning, reflection and memory over episodes of thousands of steps, with disturbances and observation mismatches",
+    "improves": "earlier long-horizon benchmarks involve 2-5 sub-tasks and fewer than 500 action steps",
+    "setup": "LIBERO; household scenes; hierarchical VLM planner plus VLA controller protocol",
+    "scale": "1,000 human-annotated trajectories over 100 task variants; 2,972 steps on average; 6 sub-task types (ideal, memory exploration, memory execution, random disturbance, observation mismatching, mix)",
+    "real_validation": "",
+    "vla_results": "OpenVLA as controller with GPT-4o, Qwen2.5-VL or LLaVA-Next-Video as planner; best VLM planner 16.04% average success, ground-truth plan 25.16%",
+    "status": "Code, dataset and benchmark files released; no leaderboard",
+    "note": "Venue from the arXiv comment. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Long-horizon",
+      "Memory",
+      "Reasoning",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2506.06677"
+      },
+      {
+        "label": "Project",
+        "url": "https://robocerebra.github.io/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/qiuboxiang/RoboCerebra"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/qiukingballball/RoboCerebraBench"
+      }
+    ]
+  },
+  {
+    "name": "MemoryBench (SAM2Act)",
+    "year": 2025,
+    "venue": "arXiv 2025-01",
+    "evaluates": "spatial memory and action recall in tasks built to violate the Markov assumption: identical observations require different actions depending on history",
+    "improves": "RLBench-style tasks do not test memory-dependent behaviour",
+    "setup": "RLBench (CoppeliaSim / PyRep); Franka Emika Panda",
+    "scale": "3 tasks (reopen_drawer, put_block_back, rearrange_block); 100 training and 25 test demonstrations per task",
+    "real_validation": "One real memory task ('push the same button') on a Franka Panda: SAM2Act+ 70% in-distribution vs RVT-2 40%; method transfer, no sim-real correlation.",
+    "vla_results": "RVT-2 54.0%, SAM2Act 55.0%, SAM2Act+ 94.3% (3D keyframe policies, no VLA in the original paper)",
+    "status": "SAM2Act+ is a baseline in later memory benchmarks (RoboMME, HIDE); RMBench criticizes MemoryBench's reproducibility and task design",
+    "note": "Introduced inside the SAM2Act method paper; no venue on the arXiv record. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2501.18564"
+      },
+      {
+        "label": "Project",
+        "url": "https://sam2act.github.io"
+      }
+    ]
+  },
+  {
+    "name": "MIKASA-Robo",
+    "year": 2025,
+    "venue": "ICLR 2026",
+    "evaluates": "memory-dependent tabletop skills in four categories: object memory, spatial memory, sequential memory, memory capacity",
+    "improves": "memory methods were tested on bespoke environments, which fragmented comparison",
+    "setup": "ManiSkill3; tabletop arm; Gymnasium API",
+    "scale": "32 tasks in 12 groups; 1,000 expert trajectories per task for offline learning",
+    "real_validation": "Three tasks were run on an SO-101 arm; results mirrored the simulation ordering, failing once long occlusion is introduced; no correlation statistic.",
+    "vla_results": "RL baselines (PPO-MLP, PPO-LSTM, SAC, TD-MPC2, Decision Transformer, RATE, Diffusion Policy) and VLAs Octo, OpenVLA, pi0, SpatialVLA; success falls to near zero as memory demands grow",
+    "status": "pip-installable; code and datasets public; extended by MIKASA-Robo-VLA",
+    "note": "Venue from the project page. Details taken from an automated extraction of the arXiv HTML opened in this session. Built for RL first; VLA results were added in later versions.",
+    "tags": [
+      "Memory",
+      "Reinforcement learning",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2502.10550"
+      },
+      {
+        "label": "Project",
+        "url": "https://sites.google.com/view/memorybenchrobots/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/CognitiveAISystems/MIKASA-Robo"
+      }
+    ]
+  },
+  {
+    "name": "MIKASA-Robo-VLA",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "what a language-conditioned policy must remember and for how long, over ten memory types including temporal, negative, procedural, prospective and tracking",
+    "improves": "CALVIN and LIBERO stress skill composition without controlling memory content or duration, and memory suites cover few memory types",
+    "setup": "ManiSkill3; extends MIKASA-Robo; arm with gripper at 10 Hz",
+    "scale": "90 language-conditioned tasks in 26 families; 10 memory types; 22,500 oracle episodes (6.3M frames)",
+    "real_validation": "",
+    "vla_results": "pi0.5 fine-tuned on a 14-task subset: 0.211 mean success, 0.017 on long-split tasks; OpenVLA and muVLA numbers are cited from other work",
+    "status": "Code and RLDS / LeRobot datasets released; new preprint",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Long-horizon",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2610.00604"
+      },
+      {
+        "label": "Project",
+        "url": "https://mikasarobo.github.io/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/CognitiveAISystems/MIKASA-Robo"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/mikasa-robo/mikasa-robo-vla-lerobot"
+      }
+    ]
+  },
+  {
+    "name": "RoboMME",
+    "year": 2026,
+    "venue": "ICML 2026",
+    "evaluates": "four kinds of memory in manipulation: temporal (counting, ordering), spatial (tracking under occlusion), object (referential identity), procedural (reproducing motions)",
+    "improves": "existing benchmarks neither capture realistic memory demands nor provide a standard testbed for memory-augmented policies",
+    "setup": "ManiSkill; Franka Panda; front and wrist cameras",
+    "scale": "16 tasks in 4 suites (Counting, Permanence, Reference, Imitation); 1,600 demonstrations (770K timesteps)",
+    "real_validation": "Four real tasks mirroring the simulated ones were run with two memory variants (25/40 and 19/40 successes); patterns were reported as similar to simulation, without a correlation coefficient.",
+    "vla_results": "14 memory variants built on pi0.5, plus pi0.5, SAM2Act+ and MemER; best learned variant 44.51%, oracle symbolic memory 84.08%; no single memory design wins on all tasks",
+    "status": "Project page available; extended by RoboMME-Interference and RoboIRGBench; memory module reused in MEMOBench",
+    "note": "Venue from the arXiv comment. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2603.04639"
+      },
+      {
+        "label": "Project",
+        "url": "https://robomme.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "RoboMME-Interference",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "long-context robot memory when irrelevant earlier sessions sit between the relevant demonstration and the query",
+    "improves": "robot-memory benchmarks measure single episodes or short contexts, not cross-session interference",
+    "setup": "Extends RoboMME (ManiSkill)",
+    "scale": "9 task families; 0, 1, 3 or 7 distractor sessions",
+    "real_validation": "",
+    "vla_results": "12 memory systems built on pi0.5; one variant falls from a 27.1-point gain to 19.3% with 7 distractors; a retrieval-based variant stays at 44.7-44.9%",
+    "status": "Project site listed; new preprint",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.22338"
+      },
+      {
+        "label": "Project",
+        "url": "https://robotmemorybench.com"
+      }
+    ]
+  },
+  {
+    "name": "RMBench",
+    "year": 2026,
+    "venue": "arXiv 2026-03",
+    "evaluates": "memory-dependent bimanual manipulation graded by how many past observations must be retained: one (M(1)) or several (M(n))",
+    "improves": "MemoryBench is hard to reproduce, MIKASA targets RL, and LIBERO-Long tasks need no memory because all information stays visible",
+    "setup": "SAPIEN; RoboTwin 2.0 platform (also implemented on Isaac Lab-Arena); dual arm",
+    "scale": "9 tasks (5 M(1), 4 M(n)); 50 demonstrations per task",
+    "real_validation": "Three tasks were run on an X-One dual-arm platform with 100 demonstrations (Mem-0 22.5%, pi0.5 5.83%, ACT 0%); method transfer, no sim-real correlation.",
+    "vla_results": "Diffusion Policy, ACT, pi0.5, X-VLA, Mem-0; best baseline X-VLA 11.8% on M(1) and 7.3% on M(n); Mem-0 42.0% overall",
+    "status": "Hosted under the RoboTwin platform organization; code public",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Bimanual",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2603.01229"
+      },
+      {
+        "label": "Project",
+        "url": "https://rmbench.github.io/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/robotwin-Platform/rmbench"
+      }
+    ]
+  },
+  {
+    "name": "RoboMemArena",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "memory in long, partially observable tasks: transferring, occlusion, counting and sequence, with keyframe-level annotations of what must be remembered",
+    "improves": "earlier memory benchmarks lack annotations for memory formation, have limited task coverage and stay in simulation",
+    "setup": "Simulation plus matching real tasks; dual-arm AgileX Cobot Mobile ALOHA for the real set",
+    "scale": "26 simulated tasks and 5 real tasks; 1,076 steps per task on average; 2,600 demonstrations; 68.9% of subtasks memory-dependent",
+    "real_validation": "Five real tasks with 10 rollouts each: pi0.5 20%, MemER 40%, PrediMem 52%; these extend the benchmark to hardware, and no sim-real correlation is reported.",
+    "vla_results": "pi0.5 21.5%, HiF-VLA 16.9%, MemoryVLA 15.0%, MemER 27.3%, PrediMem 38.5% task success; frozen Qwen3-VL and GPT-5.4 planners 6.0% and 8.7%",
+    "status": "Project page with leaderboard, code, dataset and weights listed",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. The simulator was not named explicitly in the extracted text.",
+    "tags": [
+      "Memory",
+      "Long-horizon",
+      "Bimanual",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2605.10921"
+      },
+      {
+        "label": "Project",
+        "url": "https://robomemarena.github.io"
+      }
+    ]
+  },
+  {
+    "name": "MEMOBench",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "process-level memory operations (storage, update, compression) measured at executable checkpoints, separately from task success",
+    "improves": "final task success conflates forgetting with manipulation failure, which makes memory errors hard to diagnose",
+    "setup": "LIBERO / robosuite (MuJoCo) with BDDL task definitions",
+    "scale": "30 history-dependent tasks; 1,500 demonstrations; 84 checkpoint templates giving 4,200 instances",
+    "real_validation": "",
+    "vla_results": "pi0 11.2%, pi0.5 30.4%, OpenVLA-OFT 10.0%, MemoryVLA 17.2%, HiF-VLA 21.0%, pi0.5 with RoboMME memory module 31.9% success; storage rates are high while update and compression rates stay low",
+    "status": "Code and annotations released",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.07047"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/Collab-Gen/MEMOBench"
+      }
+    ]
+  },
+  {
+    "name": "HIDE",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "skill-level memory at decision points where similar observations need different actions: repetition counting, historical-state recall, execution-progress tracking",
+    "improves": "benchmarks stress completion and generalization and do not isolate the historical information a decision needs",
+    "setup": "RLBench (CoppeliaSim / PyRep); Franka Emika Panda; 4 RGB-D cameras",
+    "scale": "15 tasks (5 per category); 100 demonstrations and 25 test episodes per task",
+    "real_validation": "Four real tasks on a Franka Panda with 25 trials each: SEEK 89%, SAM2Act+ 47%, pi0.5 13%; method transfer, no sim-real correlation.",
+    "vla_results": "OpenVLA 1.6%, pi0 22.1%, GR00T-N1.7 26.4%, RVT 35.7%, RVT-2 42.9%, SAM2Act 42.7%, SAM2Act+ 51.2%, SEEK 62.9%",
+    "status": "Project page available; benchmark-plus-method paper",
+    "note": "Paper title is 'Benchmarking and Enhancing Skill-Level Memory for Partially Observable Robotic Manipulation'. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Generalist / VLA",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.38886"
+      },
+      {
+        "label": "Project",
+        "url": "https://nanamma.github.io/HIDE-SEEK/"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-Mem",
+    "year": 2025,
+    "venue": "AAAI 2026",
+    "evaluates": "object-level memory under partial observability: tracking interaction history across visually identical objects, object permanence and order",
+    "improves": "RLBench, LIBERO and RoboCasa focus on short-horizon or atomic tasks and overlook non-Markovian settings",
+    "setup": "LIBERO; extends LIBERO-Goal",
+    "scale": "10 tasks over four memory dimensions; 120 trajectories per task; 200-700 frames per task",
+    "real_validation": "",
+    "vla_results": "pi0 and SlotVLA baselines average about 5.0% subgoal completion; the proposed Embodied-SlotSSM reaches 14.8%",
+    "status": "Dataset on Hugging Face; code repositories listed",
+    "note": "Venue from the arXiv comment. Introduced inside a method paper ('Rethinking Progression of Memory State in Robotic Manipulation'). Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2511.11478"
+      },
+      {
+        "label": "Project",
+        "url": "https://libero-mem.github.io"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/libero-mem/libero-mem"
+      },
+      {
+        "label": "Dataset",
+        "url": "https://huggingface.co/datasets/libero-mem/LIBERO-Mem"
+      }
+    ]
+  },
+  {
+    "name": "RuleSafe",
+    "year": 2026,
+    "venue": "arXiv 2026-03",
+    "evaluates": "long-horizon, non-Markovian articulated manipulation: opening safes whose locks follow multi-step rules with dependencies between joints",
+    "improves": "simulation benchmarks are mostly short-horizon and lack multi-joint dependencies",
+    "setup": "SAPIEN; built on HumanoidGen; Unitree H1-2 with Inspire hands",
+    "scale": "20 lock rules; 10 safe instances; 1,000 trajectories (638 frames on average)",
+    "real_validation": "",
+    "vla_results": "DP3 45.0%, RDT 35.0%, CogACT 20.0%, pi0 80.0% on the simplest rule; multi-task pi0 gains 31.3 points with the proposed VQ-Memory",
+    "status": "Project page available; introduced inside a method paper",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Long-horizon",
+      "Humanoid",
+      "Dexterous hand"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2603.09513"
+      },
+      {
+        "label": "Project",
+        "url": "https://vqmemory.github.io"
+      }
+    ]
+  },
+  {
+    "name": "COIN",
+    "year": 2026,
+    "venue": "arXiv 2026-04",
+    "evaluates": "interactive reasoning under partial observability: acting to gather information, updating beliefs and adapting the plan",
+    "improves": "existing benchmarks do not systematically evaluate reasoning that depends on continued interaction with the environment",
+    "setup": "ManiSkill3; Franka Emika Panda",
+    "scale": "90 tasks (50 interactive, 20 primitive, 20 composition); 1,000+ demonstrations for primitives",
+    "real_validation": "",
+    "vla_results": "Hierarchical GPT-4o or Gemini 2.0 Flash planners with GR00T N1, pi0 or CogACT: 1.5-2.2% on COIN-50; ReKep 3.26%; end-to-end VLAs 16-19% on primitives; human teleoperation 40%",
+    "status": "No code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Reasoning",
+      "Long-horizon",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2604.16886"
+      }
+    ]
+  },
+  {
+    "name": "BiCoord",
+    "year": 2026,
+    "venue": "arXiv 2026-04",
+    "evaluates": "long-horizon bimanual tasks with tight spatial-temporal coupling between arms, with metrics for simultaneous movement and relative distance",
+    "improves": "bimanual benchmarks use short tasks with loosely coordinated arms",
+    "setup": "RoboTwin 2.0; dual arm with head and wrist cameras",
+    "scale": "18 tasks; 100 trajectories per task; 9 metrics including stage-wise success",
+    "real_validation": "",
+    "vla_results": "Diffusion Policy 33.1%, RDT 39.5%, OpenVLA-OFT 40.5%, pi0 46.4% single-task; multi-task training lowers pi0 to 27.2%",
+    "status": "Project page with data and code",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. The extraction named MuJoCo as the engine, which conflicts with other RoboTwin 2.0 papers (SAPIEN); engine left unconfirmed.",
+    "tags": [
+      "Bimanual",
+      "Long-horizon",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2604.05831"
+      },
+      {
+        "label": "Project",
+        "url": "https://buaa-colalab.github.io/BiCoord/"
+      }
+    ]
+  },
+  {
+    "name": "RoboSPA",
+    "year": 2026,
+    "venue": "EMNLP 2026",
+    "evaluates": "fine-grained spatial reasoning and long-horizon procedural planning at five difficulty levels of rising spatial ambiguity and procedural complexity",
+    "improves": "benchmarks measure completion under fixed settings and say little about reasoning as spatial and procedural complexity grows",
+    "setup": "RoboTwin 2.0 framework (SAPIEN with CuRobo); five embodiments (Aloha-AgileX, ARX-X5, Piper, Franka, UR5)",
+    "scale": "56 base tasks in 10 categories x 5 levels = 280 variants; 527K trajectories",
+    "real_validation": "",
+    "vla_results": "Four VLA models (names not extracted) in single-task settings on Aloha-AgileX; all stay below 25% overall success at the highest level",
+    "status": "Code and dataset on GitHub and Hugging Face",
+    "note": "Venue from the arXiv comment. The arXiv HTML returned 404; details come from the abstract and the GitHub README.",
+    "tags": [
+      "Reasoning",
+      "Long-horizon",
+      "Generalist / VLA",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.05324"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/fanzhenxuan/RoboSPA"
+      }
+    ]
+  },
+  {
+    "name": "ActiveArena",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "active perception: moving head and torso or interacting with objects to obtain missing evidence, and retaining it across views",
+    "improves": "benchmarks do not require seeking missing evidence or selectively keeping information as observations accumulate",
+    "setup": "Own simulator extending RoboTwin 2.0 (PhysX); Astribot S1 dual-arm humanoid with controllable head and torso",
+    "scale": "35 tasks in 2 families and 5 categories; 100 trajectories per task; 50 seeds per task for in- and out-of-distribution evaluation",
+    "real_validation": "Eight tasks on a physical Astribot with 20 trials per policy per task; ordering was consistent with simulation (best variant 55.6%, MemER 34.4%, pi0.5 23.8%), without a correlation coefficient.",
+    "vla_results": "FAST-WAM, pi0.5, SaPaVe, HiF-VLA, MemER, MemoryVLA and 13 in-house variants; best 62.97% in-distribution and 47.60% out-of-distribution; MemER 35.31% and 23.43%",
+    "status": "Project page with code; results table in the paper",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Memory",
+      "Humanoid",
+      "Bimanual",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.24124"
+      },
+      {
+        "label": "Project",
+        "url": "https://leeibo.github.io/ActiveArena"
+      }
+    ]
+  },
+  {
+    "name": "BAVO-Bench",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "recovering from unexpected, externally caused occlusion by moving an active camera arm during bimanual manipulation",
+    "improves": "active-vision work studied viewpoint needs set by task geometry, not recovery from unexpected visibility loss",
+    "setup": "AV-ALOHA simulation platform; manipulation arm plus camera arm",
+    "scale": "5 multi-stage tasks; 100 VR demonstrations per task; 3 visibility conditions (clean, stage occlusion, random-time occlusion)",
+    "real_validation": "A representative rollout of the proposed A-FAR on a Piper arm with a camera arm; demonstration only, no quantitative sim-real comparison.",
+    "vla_results": "ACT, ManiFlow, pi0.5, A-FAR; under random-time occlusion A-FAR 18.7% vs ManiFlow 15.0%; pi0.5 falls from 42% to 4.0%",
+    "status": "Project page available",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Robustness",
+      "Bimanual",
+      "Imitation learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.37292"
+      },
+      {
+        "label": "Project",
+        "url": "https://hcplab-sysu.github.io/BAVO-Bench"
+      }
+    ]
+  },
+  {
+    "name": "VLABench",
+    "year": 2024,
+    "venue": "ICCV 2025",
+    "evaluates": "language-conditioned manipulation that needs world knowledge, implicit-intent instructions, spatial and physical understanding and multi-step reasoning",
+    "improves": "RLBench, CALVIN and LIBERO use templated instructions and do not test knowledge transfer or long-horizon reasoning in VLAs",
+    "setup": "MuJoCo with dm_control; Franka Emika Panda by default",
+    "scale": "100 task categories (60 primitive, 40 composite); 2,164 objects in 163 categories; 6 evaluation dimensions",
+    "real_validation": "",
+    "vla_results": "OpenVLA 11.74% seen and 7.93% unseen, Octo 1.34% and 0.77%, RDT-1B 15.37% and 9.08%; VoxPoser and CoPA workflows and seven VLMs also tested",
+    "status": "Used as an evaluation suite by later VLA papers and as the base of HazardArena; standard evaluation tracks in the repository",
+    "note": "Venue from the GitHub README. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Reasoning",
+      "Long-horizon",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2412.18194"
+      },
+      {
+        "label": "Project",
+        "url": "https://vlabench.github.io/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/OpenMOSS/VLABench"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-Para",
+    "year": 2026,
+    "venue": "EMNLP 2026",
+    "evaluates": "paraphrase robustness with action expressions and object references varied independently, scored by a difficulty-weighted index (PRIDE)",
+    "improves": "earlier tests treat paraphrasing as unstructured sentence-level variation or mix it with changes of task semantics",
+    "setup": "LIBERO-Goal (with a cross-check on CALVIN)",
+    "scale": "4,092 paraphrases of 10 instructions; 43 paraphrase-type combinations on 2 axes",
+    "real_validation": "",
+    "vla_results": "OpenVLA-OFT, pi0.5, Xiaomi-Robotics-0, X-VLA, VLA-Adapter (7 configurations); success drops 22.8-51.9 points; object-level lexical variation hurts most; 79.5-95.5% of failures are planning-level",
+    "status": "Code and benchmark public; reused by IndustrialVLA-Bench",
+    "note": "Venue from the arXiv comment (main conference, oral). Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Robustness",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2603.28301"
+      },
+      {
+        "label": "Project",
+        "url": "https://cau-hai-lab.github.io/LIBERO-Para/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/cau-hai-lab/LIBERO-Para"
+      }
+    ]
+  },
+  {
+    "name": "LangGap",
+    "year": 2026,
+    "venue": "arXiv 2026-02",
+    "evaluates": "whether policies read the instruction: several semantically different tasks share one tabletop layout",
+    "improves": "LIBERO assigns one task per layout, so tasks can be solved by visual memorization without language",
+    "setup": "LIBERO (robosuite)",
+    "scale": "99 tasks (40 original, 59 added) over 4 perturbation dimensions: object category, target location, spatial description, drawer action",
+    "real_validation": "",
+    "vla_results": "pi0.5, pi0, pi0-FAST, SmolVLA; pi0.5 falls from 93.8% to 21.4% on the added tasks and to 0% on changed target location",
+    "status": "Code repository listed",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2603.00592"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/YC11Hou/langgap"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-CF",
+    "year": 2026,
+    "venue": "arXiv 2026-02",
+    "evaluates": "counterfactual instruction following: visually plausible but linguistically different instructions in familiar LIBERO layouts",
+    "improves": "no systematic benchmark separated language following from scene-specific visual shortcuts",
+    "setup": "LIBERO; real tests on Franka Research 3 with Robotiq 2F-85",
+    "scale": "50 tasks in 4 suites (CF-Spatial 15, CF-Object 10, CF-Long 10, CF-OOD 15)",
+    "real_validation": "pi0.5 with and without the proposed guidance was tested on a Franka Research 3 over five dimensions, 10 trials per instruction; method test, no sim-real correlation.",
+    "vla_results": "OpenVLA-OFT 0.4%, pi0 9.6%, pi0.5 13.2%, X-VLA 13.8% success on counterfactual tasks, against 65-97% in-domain",
+    "status": "Project page available; no venue on the arXiv record",
+    "note": "Paper title is 'When Vision Overrides Language: Evaluating and Mitigating Counterfactual Failures in VLAs'. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2602.17659"
+      },
+      {
+        "label": "Project",
+        "url": "https://vla-cf.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "SimplerEnv-Instruct",
+    "year": 2025,
+    "venue": "arXiv 2025-07",
+    "evaluates": "zero-shot instruction following and situated reasoning with closed-loop control, in task-aggregation and situated-reasoning splits",
+    "improves": "manipulation benchmarks focus on atomic commands and low-level control and neglect contextual reasoning",
+    "setup": "SimplerEnv; Google Robot and WidowX",
+    "scale": "80 tasks (50 task aggregation, 30 situated reasoning); 1.1K trials",
+    "real_validation": "The InstructVLA paper also reports zero-shot WidowX-250 and few-shot Franka Research 3 experiments for the method; these do not validate the benchmark.",
+    "vla_results": "InstructVLA 46.2%, OpenVLA with fine-tuning and GPT 35.6%, Magma 23.8%, SpatialVLA 16.5%, pi0 12.0%",
+    "status": "Introduced inside the InstructVLA paper; project page available",
+    "note": "No venue on the arXiv record (comment field: '48 pages'). Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Reasoning",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2507.17520"
+      },
+      {
+        "label": "Project",
+        "url": "https://yangs03.github.io/InstructVLA_Home/"
+      }
+    ]
+  },
+  {
+    "name": "InstructMove",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "instruction following where language is required to choose among visually and physically plausible distractors; counterfactual tests with absent targets or empty instructions",
+    "improves": "benchmarks rarely contain episodes in which the instruction is indispensable for selecting the target",
+    "setup": "Isaac Lab / Isaac Sim; dual-arm PiperX and single-arm Franka",
+    "scale": "4 task families (category, attribute, spatial, compositional pick-place); 1,757 objects in 103 categories; 100 training and 100 held-out episodes per task",
+    "real_validation": "pi0.5 was tested on a dual-arm PiperX with 5 real objects; adding 2,000 simulated demos to 200 real ones raised reach from 26/50 to 34/50; sim-to-real co-training study, no correlation.",
+    "vla_results": "pi0.5, GR00T N1.7, pi0, Motus; pi0.5 0.82 reach and 0.57 lift on category picking; with an absent target it still reaches some object 99% of the time",
+    "status": "No code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Generalist / VLA",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.22990"
+      }
+    ]
+  },
+  {
+    "name": "ConflictVLA-Bench",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "whether a VLA stops acting when the task premise is invalid: instruction-internal, object-grounding, spatial-relation and physical-feasibility conflicts",
+    "improves": "evaluation looks at terminal outcomes only; task failure does not show that the policy disengaged from an invalid goal",
+    "setup": "LIBERO with controlled conflict injection",
+    "scale": "2,826 conflict tasks; 4 conflict types; 4 structural levels; 14,530 rollouts per model",
+    "real_validation": "",
+    "vla_results": "OpenVLA, OpenVLA-OFT, pi0, pi0-FAST, pi0.5, GR00T N1.7, VLA-JEPA, UniVLA; policies keep approaching the original target (approach ratios 0.586-0.741); premise-checking prompts do not help consistently",
+    "status": "Code repository listed",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.31792"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/EmbodiedAISurvey/ConflictVLA-Bench"
+      }
+    ]
+  },
+  {
+    "name": "RoboIRGBench",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "implicit referential grounding: identifying task-relevant entities named only through pronouns, spatial references, context or reasoning",
+    "improves": "RLBench, CALVIN, LIBERO and RoboCasa instructions name targets explicitly",
+    "setup": "Built on the RoboMME simulator (ManiSkill); real tests on Franka Research 3",
+    "scale": "40 variants of 11 tasks; 4 grounding categories; 3 difficulty levels",
+    "real_validation": "pi0.5 and one memory variant were run on two tasks with 10 trials per condition on a Franka Research 3: 70-85% with explicit references, 5-10% with reasoning-mediated ones; small replication, no correlation.",
+    "vla_results": "pi0.5, FrameSamp-Modul, TTT-Expert, GroundSG-QwenVL, MemER; one variant falls from 45.82% (explicit) to 16.85% (reasoning-mediated)",
+    "status": "Project page available",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Reasoning",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.34384"
+      },
+      {
+        "label": "Project",
+        "url": "https://aernar.github.io/RoboIRGBench/"
+      }
+    ]
+  },
+  {
+    "name": "RoboSemanticBench",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "whether instruction semantics reach the action: the robot answers multiple-choice maths and knowledge questions by picking the correct block",
+    "improves": "templated commands cannot show whether the semantic competence of the pretrained backbone survives robot fine-tuning",
+    "setup": "Tabletop simulation with Aloha-AgileX dual arm; simulator not named in the extracted text",
+    "scale": "3 question domains (500, 7,473 and 10,000 questions), each in 4-choice and 10-choice form (6 suites)",
+    "real_validation": "",
+    "vla_results": "OpenVLA-OFT, GO1, DexVLA, TinyVLA, PD-VLA, pi0, pi0.5, GR00T N1.7, QwenGR00T; grasp success 85-99% while task success sits near chance; best is pi0.5 at 21.8%",
+    "status": "Code repository listed",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Reasoning",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.02277"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/ZGC-EmbodyAI/RoboSemanticBench"
+      }
+    ]
+  },
+  {
+    "name": "BeTTER",
+    "year": 2026,
+    "venue": "arXiv 2026-04",
+    "evaluates": "embodied reasoning under causal interventions: spatial layout shifts, primitive recomposition, adversarial distractor objects, temporal extrapolation",
+    "improves": "evaluation rewards behavioural competence without checking the underlying reasoning, and static assets limit systematic variation of task semantics",
+    "setup": "Simulation (engine not named in the extracted text); real checks on an SO-101",
+    "scale": "10 base tasks expanded to 60 variations; 4 perturbation types",
+    "real_validation": "Short- and long-horizon tasks with target-absence and phase-conflict interventions were run on an SO-101; simulation findings were reported to persist, without a correlation statistic.",
+    "vla_results": "pi0.5, GR00T-N1.6, Being-H0.5; GR00T-N1.6 follows 100% of spatial but 5% of semantic instructions; 52.5% drop on unseen subgoal compositions",
+    "status": "Project page available",
+    "note": "Paper title is 'Unmasking the Illusion of Embodied Reasoning in Vision-Language-Action Models'. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Reasoning",
+      "Language",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2604.18000"
+      },
+      {
+        "label": "Project",
+        "url": "https://research.beingbeyond.com/better"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-VIFO",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "following authorized visual cues placed in the scene (text, symbols, ghost trajectories, gestures, signage, codes) while ignoring unauthorized ones",
+    "improves": "earlier cue-following tests covered few cue forms, scored only final success and treated every cue as authorized",
+    "setup": "LIBERO (MuJoCo); real check on an AgileX PiPER",
+    "scale": "40 tasks; 8 cue families; 1,347 cue instances; 5,388 companion VQA questions",
+    "real_validation": "pi0.5 was run on a cup-stacking task on an AgileX PiPER with authorized and conflicting cues; single-task replication, no correlation.",
+    "vla_results": "OpenVLA-OFT, pi0.5, MolmoAct2, Action-Sketcher, InstructVLA, InternVLA-A1.5, Xiaomi-Robotics-0; full-chain accuracy at most 17.6%; unauthorized cues induce actions in 32.2-60.1% of cases without language",
+    "status": "No code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Language",
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.17600"
+      }
+    ]
+  },
+  {
+    "name": "KinDER",
+    "year": 2026,
+    "venue": "RSS 2026",
+    "evaluates": "physical reasoning isolated from perception and language: spatial relations, nonprehensile multi-object manipulation, tool use, combinatorial geometric constraints, dynamic constraints",
+    "improves": "physical-reasoning ability is entangled with perception and language in existing benchmarks, and there is no agreed state of the art",
+    "setup": "Four backends (pure Python 2D, Pymunk, PyBullet, MuJoCo); 3D robot is a TidyBot++ with Kinova Gen3 arm",
+    "scale": "25 procedurally generated environments (10 in 2D, 15 in 3D); demonstrations for 10 environments",
+    "real_validation": "A real-to-sim-to-real demonstration on a TidyBot++ planned in the simulator and executed on hardware; no policy benchmark on real robots and no correlation.",
+    "vla_results": "13 baselines: bilevel planning 0.57, LLM and VLM in-context 0.43, fine-tuned pi0.5 0.32, Diffusion Policy 0.24, PPO 0.13, SAC 0.02 average success",
+    "status": "Open-source site with code",
+    "note": "Venue from the arXiv comment. Targets planning and learning methods broadly; pi0.5 is the only VLA.",
+    "tags": [
+      "Reasoning",
+      "Mobile",
+      "Reinforcement learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2604.25788"
+      },
+      {
+        "label": "Project",
+        "url": "https://prpl-group.com/kinder-site/"
+      }
+    ]
+  },
+  {
+    "name": "IMBench",
+    "year": 2026,
+    "venue": "RSS 2026 workshop (SemRob)",
+    "evaluates": "intuitive physical manipulation in three stages (constraint understanding, action proposal, closed-loop execution): geometry, dynamics, causal chains, tool use, hidden state, replanning, stability",
+    "improves": "benchmarks test physical reasoning separately from execution, or measure policies without requiring reasoning",
+    "setup": "robosuite (MuJoCo); single-arm and bimanual Franka with parallel-jaw and suction grippers",
+    "scale": "35 tasks in 7 categories; about 14K trajectories",
+    "real_validation": "",
+    "vla_results": "Diffusion Policy 0.24, pi0.5 0.15 and GR00T N1.5 0.02 mean success after fine-tuning (zero-shot at most 0.02); a GPT-based agent reaches 11.3% with vision",
+    "status": "Project site available; full data and code release pending",
+    "note": "Venue from the arXiv comment (workshop paper). Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Reasoning",
+      "Generalist / VLA",
+      "Bimanual"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.15641"
+      },
+      {
+        "label": "Project",
+        "url": "https://imbench.org/"
+      }
+    ]
+  },
+  {
+    "name": "SafeVLA-Bench",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "the gap between success and safe success: excessive contact, disturbing bystander objects, destabilizing held objects and self-contact, checked post hoc with temporal-logic specifications",
+    "improves": "VLA benchmarks record binary completion and miss safety-relevant behaviour along the trajectory",
+    "setup": "MuJoCo; wraps LIBERO and RoboCasa-365; Franka and Panda-with-Omron setups",
+    "scale": "58 tasks (40 LIBERO, 18 RoboCasa-365 families); 8 constraint families; about 18,000 episodes; metrics include success-but-unsafe rate and violation severity index",
+    "real_validation": "A pilot on an SO-101 arm with video-labelled checks of two constraint families found 4 unsafe successes among 26 successful rollouts; pilot only, no correlation.",
+    "vla_results": "18 policies on LIBERO and 9 on RoboCasa-365, including OpenVLA, pi0, pi0.5, GR00T N1.6/N1.7, X-VLA, SmolVLA, Cosmos-Policy; policies above 90% success still have 18-28% unsafe episodes; 38-56% of RoboCasa-365 successes violate a constraint",
+    "status": "Project site available; code and data release announced",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.00773"
+      },
+      {
+        "label": "Project",
+        "url": "https://safevla.org"
+      }
+    ]
+  },
+  {
+    "name": "LIBERO-Safety",
+    "year": 2026,
+    "venue": "ECCV 2026",
+    "evaluates": "physical and semantic safety: affordance-aware grasping, human-robot interaction, tabletop avoidance, free-space hand and object avoidance, semantic safety reasoning",
+    "improves": "safety methods are tested under inconsistent protocols in static scenes with simple tabletop obstacles",
+    "setup": "Extends LIBERO-Plus; Panda arm; collision-free demonstrations from a CuRobo keypose pipeline",
+    "scale": "75 tasks (5 suites x 5 tasks x 3 levels); 19,664 collision-free demonstrations",
+    "real_validation": "",
+    "vla_results": "OpenVLA, OpenVLA-OFT, pi0, pi0.5, UniVLA, VLA-JEPA, GR00T N1.5 and N1.6, plus RoboBrain2.0 and RynnBrain-CoP for refusal; pi0.5 is best at 35-88% across suites",
+    "status": "Project page available",
+    "note": "Venue from the arXiv comment. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Generalist / VLA",
+      "Robustness"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.23686"
+      },
+      {
+        "label": "Project",
+        "url": "https://libero-safety.github.io/"
+      }
+    ]
+  },
+  {
+    "name": "SafeLIBERO",
+    "year": 2025,
+    "venue": "IROS 2026",
+    "evaluates": "collision avoidance while completing LIBERO tasks, with obstacles placed near the target or across the motion path",
+    "improves": "objects rarely collide with the arm in the original LIBERO, so it contains no safety-critical scenarios",
+    "setup": "robosuite; LIBERO; Franka Emika Panda",
+    "scale": "16 tasks; 32 scenarios (2 obstacle levels per task); 1,600 episodes",
+    "real_validation": "Two tasks at two safety levels were run on a Franka Panda with pi0.5-DROID and the proposed safety layer; method transfer, no sim-real correlation.",
+    "vla_results": "pi0.5 18.7% collision avoidance and 50.9% success; OpenVLA-OFT 15.1% and 22.8%; AEGIS 77.9% and 68.1%",
+    "status": "Introduced inside the VLSA / AEGIS method paper; code and project page public",
+    "note": "Venue from the arXiv comment. Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2512.11891"
+      },
+      {
+        "label": "Project",
+        "url": "https://vlsa-aegis.github.io/"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/THU-RCSCT/vlsa-aegis"
+      }
+    ]
+  },
+  {
+    "name": "Safety-CHORES",
+    "year": 2025,
+    "venue": "NeurIPS 2025",
+    "evaluates": "safety constraints in mobile manipulation: corners, blind spots, fragile collections, critical points and dangerous equipment",
+    "improves": "safe-RL benchmarks use simplified dynamics and VLA benchmarks measure success without built-in safety constraints",
+    "setup": "AI2-THOR with ProcTHOR scenes and Objaverse assets; mobile robot with arm",
+    "scale": "3 task types (Safety-ObjNav, Safety-PickUp, Safety-Fetch); 150K procedurally generated scenes; 5 safety-critical component types",
+    "real_validation": "The aligned policy was deployed for Safety-PickUp on a platform with dual Realman RM75-6F arms; method transfer, no sim-real correlation.",
+    "vla_results": "SPOC variants, EmbCLIP, Embodied-Codebook, FLaRe, PoliFormer and the proposed ISA; ISA cuts safety cost by 83.58% while keeping task performance",
+    "status": "Introduced inside the SafeVLA method paper; project page with data and models",
+    "note": "Venue from the arXiv comment (spotlight). Navigation-heavy mobile manipulation; baselines are SPOC-style policies, not tabletop VLAs.",
+    "tags": [
+      "Safety",
+      "Mobile",
+      "Reinforcement learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2503.03480"
+      },
+      {
+        "label": "Project",
+        "url": "https://pku-safevla.github.io"
+      }
+    ]
+  },
+  {
+    "name": "HazardArena",
+    "year": 2026,
+    "venue": "arXiv 2026-04",
+    "evaluates": "semantic safety: whether a policy withholds an action that is motorically identical to a safe one but unsafe in its visual-linguistic context",
+    "improves": "evaluation measures completion and not whether the action was permissible in context",
+    "setup": "MuJoCo; built on the VLABench task framework; Franka Panda",
+    "scale": "51 risk scenarios with safe and unsafe twins (10-task main suite); 7 hazard categories; 1,000 safe demonstrations",
+    "real_validation": "Five task families were run on a Franka Panda with 100 trials per condition using mitigated props: safe-only fine-tuning gave 46.0% safe and 39.6% unsafe success; refusal-augmented training cut unsafe success to 0.4%.",
+    "vla_results": "OpenVLA-OFT, VLA-Adapter, NORA, pi0; safe-only fine-tuning raises unsafe-twin execution together with safe success (pi0: 0.47 safe, 0.44 unsafe)",
+    "status": "No code or project URL found; listed as submitted",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Language",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2604.12447"
+      }
+    ]
+  },
+  {
+    "name": "ForesightSafety-VLA",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "process-level safety across physical interaction (force, thermal, spatial boundary, collaboration, sequencing), instruction-side and perception-side hazards",
+    "improves": "safety is absent from VLA benchmarks, reduced to sparse collision checks, or mixed with generic task failure",
+    "setup": "RoboTwin assets and task primitives; five embodiments",
+    "scale": "66 safety-augmented scenarios; 13 categories in three families; structure levels L0-L2, language W0-W4, vision V0-V4",
+    "real_validation": "",
+    "vla_results": "OpenVLA-OFT, RDT, Diffusion Policy, ACT with full metrics (safe success 0.42, 0.30, 0.24, 0.20); pi0.5, pi0, DexVLA and others in partial runs; no baseline is fully safe",
+    "status": "No code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Bimanual",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.27079"
+      }
+    ]
+  },
+  {
+    "name": "SafeManip",
+    "year": 2026,
+    "venue": "arXiv 2026-05",
+    "evaluates": "temporal safety properties monitored on low-level rollouts: collision and contact, grasp and release stability, cross-contamination, action onset, mechanism, containment, enclosure",
+    "improves": "benchmarks cover either physical consequences or the semantic structure of safe behaviour, not temporal specifications on executed motion",
+    "setup": "RoboCasa365 and LIBERO",
+    "scale": "90 tasks (50 RoboCasa365, 40 LIBERO); 8 property categories; 50 rollouts per task",
+    "real_validation": "",
+    "vla_results": "pi0, pi0.5, GR00T N1.5 and N1.6, RLDX-1, Cosmos Policy, OpenVLA; on RoboCasa365 more capable policies violate more (r = +0.66), on LIBERO the reverse (r = -0.99)",
+    "status": "Code repository listed",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2605.12386"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/chengyuehuang511/SafeManip"
+      }
+    ]
+  },
+  {
+    "name": "SafeStage",
+    "year": 2026,
+    "venue": "arXiv 2026-09",
+    "evaluates": "unsafe success across the task lifecycle: hazards present in the initial state, during execution, and left in the final state",
+    "improves": "benchmarks do not check relation-dependent preconditions, execution-time interactions or post-completion physical states",
+    "setup": "Isaac Sim (PhysX); simulated DROID setup with Franka Panda and Robotiq gripper",
+    "scale": "97 scenarios (27 initial-state, 40 execution-time, 30 final-state); 3 prompt conditions",
+    "real_validation": "",
+    "vla_results": "pi0.5, GR00T N1.7, DreamZero, Cosmos3 Nano Policy without fine-tuning; aggregate success 33.74% but safe success 9.84%; about 71% of successful rollouts are unsafe",
+    "status": "Code repository listed",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2609.21223"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/JinzhuLuo/SafeStage"
+      }
+    ]
+  },
+  {
+    "name": "OopsieVerse",
+    "year": 2026,
+    "venue": "arXiv 2026-06",
+    "evaluates": "damage caused during household manipulation: mechanical (impact, compression, tension), thermal and fluid damage measured by a simulator plugin",
+    "improves": "simulators do not detect or quantify the damage that unsafe interactions would cause",
+    "setup": "DamageSim plugin on OmniGibson (BEHAVIOR-1K) and MuJoCo (RoboCasa); Franka Panda for real tests",
+    "scale": "32 tasks (21 unique designs across two simulators); 450 demonstrations for learning experiments",
+    "real_validation": "Shelving and pouring were run on a Franka Panda: damage-aware policies reached 65% safe completion vs 5% for the baseline; method transfer, damage agreement described qualitatively.",
+    "vla_results": "GR00T: 8-92% completion but 0-8% safe completion on OmniGibson tasks; pi0: 17.5% completion and 0% safe completion on RoboCasa tasks; imitation and RL baselines with health feedback also tested",
+    "status": "Project site with code",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Generalist / VLA",
+      "Reinforcement learning"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2606.31993"
+      },
+      {
+        "label": "Project",
+        "url": "https://robin-lab.cs.utexas.edu/oopsieverse/"
+      }
+    ]
+  },
+  {
+    "name": "ManiGuard-Bench",
+    "year": 2026,
+    "venue": "arXiv 2026-08",
+    "evaluates": "specification-grounded safety: LTLf spatial invariants and temporal ordering constraints monitored during contact-rich tabletop tasks, in- and out-of-distribution",
+    "improves": "manipulation benchmarks do not define or monitor safety during execution, and formal-specification benchmarks lack contact-rich trajectories and safety-annotated data",
+    "setup": "Isaac Sim / OmniGibson (PhysX); BDDL predicates; Franka Panda",
+    "scale": "200 base tasks expanded to 1,000 scenarios (1 in-distribution and 4 shifted conditions each); 6 task families; 8,000 demonstrations",
+    "real_validation": "Three fine-tuned policies were run on a physical Franka on two task families (30 rollouts per cell); sim-real correlation is reported: r = 0.91 for success, 0.88 for safe success, 0.09 for violation rate.",
+    "vla_results": "pi0.5, pi0, SmolVLA, GR00T N1.6; zero-shot safe success 0.0-1.8%, fine-tuned 7.5-29.8%; a large share of successful rollouts violate a specification",
+    "status": "Project page, code and Hugging Face collection listed",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. The only entry in this slice with a numeric sim-real correlation.",
+    "tags": [
+      "Safety",
+      "Generalization",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2608.17386"
+      },
+      {
+        "label": "Project",
+        "url": "https://nu-ideas-lab.github.io/ManiGuard"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/NU-IDEAS-Lab/ManiGuard"
+      }
+    ]
+  },
+  {
+    "name": "BeSafe-Bench (BSB-EmbodiedVLA)",
+    "year": 2026,
+    "venue": "arXiv 2026-03",
+    "evaluates": "operational safety of a VLA during LIBERO manipulation, reported as success, safety and success-and-safe rates",
+    "improves": "agent-safety benchmarks rarely execute actions in functional environments, and embodied evaluation ignores behavioural safety",
+    "setup": "LIBERO-90 tasks extended through VLA-Arena; 7-DoF arm",
+    "scale": "One of four tracks in a 1,312-task agent-safety benchmark; the size of the VLA track was not extracted",
+    "real_validation": "",
+    "vla_results": "OpenVLA 49.81% success and 30% success-and-safe; OpenVLA-OFT 56.85% and 35.19%; pi0.5 23.89% and 13.89%",
+    "status": "No code or project URL found",
+    "note": "Details taken from an automated extraction of the arXiv HTML opened in this session. Mainly a web, mobile and LLM-agent benchmark; the VLA track is a small part. The arXiv ID is 2603.25747 while the API lists a first-version date of 2026-01-30.",
+    "tags": [
+      "Safety",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2603.25747"
+      }
+    ]
+  },
+  {
+    "name": "SoftVTBench",
+    "year": 2026,
+    "venue": "ECCV 2026 workshop",
+    "evaluates": "safe handling of deformable objects: a rollout counts as safe only without drops and with peak deformation below a calibrated threshold",
+    "improves": "success-only evaluation overstates performance because many goal-completing rollouts violate physical safety limits",
+    "setup": "Isaac Sim 4.5.0 with PhysX 5 FEM soft bodies; Franka Panda with GelSight Mini tactile sensors",
+    "scale": "40 tasks in 4 matched suites; 2,000 demonstration episodes; 33 assets (19 rigid, 14 deformable)",
+    "real_validation": "",
+    "vla_results": "pi0.5 vision-only: 70.4% goal success and 21.4% safety success on the soft-object suite; pi0.5 visuo-tactile: 71.8% and 35.6%",
+    "status": "Project page available; described as an early version",
+    "note": "Venue from the arXiv comment ('Accepted by ECCVW'). Details taken from an automated extraction of the arXiv HTML opened in this session.",
+    "tags": [
+      "Safety",
+      "Deformable",
+      "Tactile",
+      "Generalist / VLA"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://arxiv.org/abs/2607.04234"
+      },
+      {
+        "label": "Project",
+        "url": "https://softvtbench.github.io"
+      }
+    ]
+  }
+]
