@@ -121,7 +121,22 @@ button, input, select { font: inherit; color: inherit; }
 
 /* Sections and grid */
 main { padding-block: 22px 40px; display: grid; gap: 30px; }
-.section { display: grid; gap: 12px; }
+.section { display: grid; gap: 12px; scroll-margin-top: calc(var(--bar-h, 200px) + 14px); }
+.anchor { font-family: var(--font-mono); font-size: 15px; color: var(--muted); text-decoration: none; padding-inline: 2px; }
+.anchor:hover, .anchor:focus-visible { color: var(--accent); }
+
+/* Section index */
+.toc { display: grid; gap: 5px; padding-block: 0 18px; font-size: 13.5px; }
+.toc .row { display: grid; grid-template-columns: 172px minmax(0, 1fr); gap: 2px 12px; align-items: baseline; }
+.toc .links { display: flex; flex-wrap: wrap; gap: 3px 14px; min-width: 0; }
+.toc .g {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--g);
+}
+.toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+.toc a:hover, .toc a:focus-visible { border-bottom-color: var(--g); }
+.toc a span { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-left: 5px; font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .toc .row { grid-template-columns: 1fr; } }
 .section > header { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; border-bottom: 2px solid var(--ink); padding-bottom: 6px; }
 .section h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; margin: 0; }
 .section header .eyebrow { margin-left: auto; }
@@ -202,6 +217,8 @@ footer.fine p { margin: 0 0 6px; max-width: 80ch; }
 
 <div class="wrap groups" id="groups"></div>
 
+<nav class="wrap toc" id="toc" aria-label="Sections"></nav>
+
 <div class="bar">
   <div class="wrap">
     <div class="search"><input id="q" type="search" placeholder="Search name, task, robot, venue…" aria-label="Search benchmarks"></div>
@@ -255,6 +272,7 @@ const I18N = {
     policies: "Policies evaluated", realCheck: "Real-robot check", status: "Status", timing: "Inference latency",
     realYes: "Included; see details", realNo: "None; simulation only",
     details: "Details", close: "Close", noFigure: "No figure",
+    sections: "Sections", sectionLink: name => `Link to the section ${name}`,
     openDetails: name => `Open details for ${name}`,
     figureAlt: name => `Figure from ${name}`,
     foot1: "Figures come from each work's paper or project page and remain the property of their authors; the detail view links to the source of every image.",
@@ -291,6 +309,7 @@ const I18N = {
     policies: "평가된 정책", realCheck: "실로봇 검증", status: "현황", timing: "추론 latency 처리",
     realYes: "있음. 자세히 보기 참고", realNo: "없음. 시뮬레이션만",
     details: "자세히", close: "닫기", noFigure: "그림 없음",
+    sections: "섹션", sectionLink: name => `${name} 섹션 링크`,
     openDetails: name => `${name} 상세 보기`,
     figureAlt: name => `${name}의 그림`,
     foot1: "그림은 각 연구의 논문이나 project page에서 가져왔으며 저작권은 원저자에게 있습니다. 상세 보기에서 각 그림의 출처로 연결됩니다.",
@@ -408,9 +427,51 @@ function card(e) {
   </article>`;
 }
 
+// Sections are addressable: #sec-precision-and-dexterity scrolls to that section,
+// and #sec-simulation to the first section of a category.
+const secId = sub => "sec-" + sub.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+function sectionsOf(list) {
+  const out = [];
+  for (const gid of GROUP_IDS) {
+    const inGroup = list.filter(e => e.group === gid);
+    const subs = [...new Set(inGroup.map(e => e.sub))].sort((a, b) => subRank(a) - subRank(b));
+    for (const sub of subs) out.push({ gid, sub, id: secId(sub), items: inGroup.filter(e => e.sub === sub) });
+  }
+  return out;
+}
+const ALL_SECTIONS = sectionsOf(DATA);
+
+function renderToc() {
+  $("toc").setAttribute("aria-label", T().sections);
+  $("toc").innerHTML = GROUP_IDS.map(gid => {
+    const links = ALL_SECTIONS.filter(s => s.gid === gid).map(s =>
+      `<a href="#${s.id}" data-sec="${s.id}">${esc(subName(s.sub))}<span>${s.items.length}</span></a>`).join("");
+    return `<div class="row" data-g="${gid}"><span class="g">${esc(groupTitle(gid))}</span><span class="links">${links}</span></div>`;
+  }).join("");
+}
+
+function goToSection(id) {
+  const target = ALL_SECTIONS.find(s => s.id === id) || ALL_SECTIONS.find(s => "sec-" + s.gid === id);
+  if (!target) return false;
+  state.sort = "grouped";
+  $("sort").value = "grouped";
+  // If the current filters hide that section, clear them so the link always lands.
+  if (!visible().some(e => e.sub === target.sub)) {
+    Object.assign(state, { group: "", tag: "", q: "", lenses: [] });
+    $("q").value = "";
+    renderStatic(); renderGroups(); renderTags();
+  }
+  render();
+  const el = document.getElementById(target.id);
+  if (el) el.scrollIntoView({ block: "start" });
+  try { history.replaceState(null, "", "#" + id); } catch (err) {}
+  return true;
+}
+
 function render() {
   const t = T();
   const list = visible();
+  document.documentElement.style.setProperty("--bar-h", document.querySelector(".bar").offsetHeight + "px");
   $("count").textContent = t.count(list.length, DATA.length);
   const main = $("main");
   if (!list.length) {
@@ -418,18 +479,11 @@ function render() {
     return;
   }
   if (state.sort === "grouped") {
-    const sections = [];
-    for (const gid of GROUP_IDS) {
-      const inGroup = list.filter(e => e.group === gid);
-      const subs = [...new Set(inGroup.map(e => e.sub))].sort((a, b) => subRank(a) - subRank(b));
-      for (const sub of subs) {
-        const items = inGroup.filter(e => e.sub === sub);
-        const single = sub === "Platforms" || sub === "Competitions";
-        const title = single ? groupTitle(gid) : `${groupTitle(gid)}: ${subName(sub)}`;
-        sections.push(`<section class="section"><header><h2>${esc(title)}</h2><span class="eyebrow">${esc(t.entries(items.length))}</span><span class="lede">${esc(groupLede(gid))}</span></header><div class="grid">${items.map(card).join("")}</div></section>`);
-      }
-    }
-    main.innerHTML = sections.join("");
+    main.innerHTML = sectionsOf(list).map(({ gid, sub, id, items }) => {
+      const single = sub === "Platforms" || sub === "Competitions";
+      const title = single ? groupTitle(gid) : `${groupTitle(gid)}: ${subName(sub)}`;
+      return `<section class="section" id="${id}"><header><h2>${esc(title)} <a class="anchor" href="#${id}" data-sec="${id}" aria-label="${esc(t.sectionLink(subName(sub)))}">#</a></h2><span class="eyebrow">${esc(t.entries(items.length))}</span><span class="lede">${esc(groupLede(gid))}</span></header><div class="grid">${items.map(card).join("")}</div></section>`;
+    }).join("");
   } else {
     const sorted = [...list].sort((a, b) =>
       state.sort === "az" ? a.name.localeCompare(b.name)
@@ -507,6 +561,7 @@ function setLang(lang) {
   try { localStorage.setItem("lang", lang); } catch (err) {}
   renderStatic();
   renderGroups();
+  renderToc();
   renderTags();
   render();
   if ($("detail").open) renderDetail();
@@ -528,6 +583,8 @@ document.addEventListener("click", ev => {
     state.lenses = state.lenses.includes(id) ? state.lenses.filter(x => x !== id) : [...state.lenses, id];
     renderStatic(); render(); return;
   }
+  const sec = ev.target.closest("[data-sec]");
+  if (sec) { ev.preventDefault(); goToSection(sec.dataset.sec); return; }
   const open = ev.target.closest("[data-open]");
   if (open) { openDetail(open.dataset.open); return; }
   const grp = ev.target.closest(".group");
@@ -542,7 +599,19 @@ renderStatic();
 renderGroups();
 renderTags();
 render();
-const initial = location.hash.slice(1);
-if (LENSES[initial]) { state.lenses = [initial]; renderStatic(); render(); }
-else if (initial) openDetail(initial);
+renderToc();
+function followHash() {
+  const hash = location.hash.slice(1);
+  if (!hash) return;
+  if (hash.startsWith("sec-")) {
+    if (goToSection(hash) && document.fonts && document.fonts.ready) {
+      // Web fonts can shift the layout after the first scroll; land again once they are in.
+      document.fonts.ready.then(() => { const el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView({ block: "start" }); });
+    }
+  } else if (LENSES[hash]) { state.lenses = [hash]; renderStatic(); render(); }
+  else openDetail(hash);
+}
+followHash();
+window.addEventListener("hashchange", followHash);
+window.addEventListener("resize", () => document.documentElement.style.setProperty("--bar-h", document.querySelector(".bar").offsetHeight + "px"));
 </script>
