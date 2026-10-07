@@ -119,6 +119,13 @@ button, input, select { font: inherit; color: inherit; }
 .lenses .lab { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
 .count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 100%; min-width: 0; }
+/* Fold button: hides the search, order, focus and tag controls, leaving the count */
+.fold {
+  margin-left: auto; cursor: pointer; background: var(--surface); border: 1px solid var(--line); border-radius: 2px;
+  color: var(--muted); font-size: 11px; line-height: 1; padding: 7px 10px;
+}
+.fold:hover { color: var(--ink); border-color: var(--ink); }
+.bar.folded .wrap { padding-block: 6px; }
 .chip {
   cursor: pointer; background: transparent; border: 1px solid var(--line); border-radius: 999px;
   padding: 2px 10px; font-size: 12.5px; color: var(--muted);
@@ -238,6 +245,7 @@ footer.fine p { margin: 0 0 6px; max-width: 80ch; }
       </select>
     </label>
     <span class="count" id="count"></span>
+    <button type="button" class="fold" id="fold" aria-controls="lenses tags q sort"></button>
     <div class="lenses" id="lenses"></div>
     <div class="tags" id="tags"></div>
   </div>
@@ -280,6 +288,7 @@ const I18N = {
     realYes: "Included; see details", realNo: "None; simulation only",
     details: "Details", close: "Close", noFigure: "No figure",
     sections: "Sections", sectionLink: name => `Link to the section ${name}`,
+    hideFilters: "Hide search and filters", showFilters: "Show search and filters",
     openDetails: name => `Open details for ${name}`,
     figureAlt: name => `Figure from ${name}`,
     foot1: "Figures come from each work's paper or project page and remain the property of their authors; the detail view links to the source of every image.",
@@ -317,6 +326,7 @@ const I18N = {
     realYes: "있음. 자세히 보기 참고", realNo: "없음. 시뮬레이션만",
     details: "자세히", close: "닫기", noFigure: "그림 없음",
     sections: "섹션", sectionLink: name => `${name} 섹션 링크`,
+    hideFilters: "검색과 필터 접기", showFilters: "검색과 필터 펼치기",
     openDetails: name => `${name} 상세 보기`,
     figureAlt: name => `${name}의 그림`,
     foot1: "그림은 각 연구의 논문이나 project page에서 가져왔으며 저작권은 원저자에게 있습니다. 상세 보기에서 각 그림의 출처로 연결됩니다.",
@@ -378,7 +388,13 @@ const LENSES = {
   dynamism: e => (e.focus || []).includes("dynamism"),
   real: e => REAL_GROUPS.includes(e.group),
 };
-const state = { group: "", tag: "", q: "", sort: "grouped", lang: "en", open: "", lenses: [] };
+const state = { group: "", tag: "", q: "", sort: "grouped", lang: "en", open: "", lenses: [], folded: false };
+// On a phone the open toolbar fills most of the screen, so it starts folded there unless the viewer chose otherwise.
+state.folded = window.matchMedia("(max-width: 640px)").matches;
+try {
+  const savedFold = localStorage.getItem("filtersFolded");
+  if (savedFold !== null) state.folded = savedFold === "1";
+} catch (err) {}
 try {
   // ?lang=ko on a plain web link wins over the remembered choice.
   const asked = new URLSearchParams(location.search).get("lang");
@@ -478,7 +494,7 @@ function goToSection(id) {
 function render() {
   const t = T();
   const list = visible();
-  document.documentElement.style.setProperty("--bar-h", document.querySelector(".bar").offsetHeight + "px");
+  syncBarHeight();
   $("count").textContent = t.count(list.length, DATA.length);
   const main = $("main");
   if (!list.length) {
@@ -514,6 +530,25 @@ function renderTags() {
   $("tags").innerHTML = top.map(t => `<button class="chip" data-tag="${esc(t)}" aria-pressed="${state.tag === t}">${esc(tagName(t))}</button>`).join("");
 }
 
+function syncBarHeight() {
+  document.documentElement.style.setProperty("--bar-h", document.querySelector(".bar").offsetHeight + "px");
+}
+
+// The toolbar folds down to its count line; the triangle points the way it will move.
+function renderFold() {
+  const t = T();
+  const bar = document.querySelector(".bar");
+  bar.classList.toggle("folded", state.folded);
+  [bar.querySelector(".search"), bar.querySelector("label.sort"), $("lenses"), $("tags")].forEach(el => { el.hidden = state.folded; });
+  const btn = $("fold");
+  const label = state.folded ? t.showFilters : t.hideFilters;
+  btn.textContent = state.folded ? "\u25BC" : "\u25B2";
+  btn.title = label;
+  btn.setAttribute("aria-label", label);
+  btn.setAttribute("aria-expanded", String(!state.folded));
+  syncBarHeight();
+}
+
 function renderStatic() {
   const t = T();
   document.documentElement.lang = state.lang;
@@ -523,6 +558,7 @@ function renderStatic() {
   $("q").placeholder = t.search;
   $("q").setAttribute("aria-label", t.searchLabel);
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)));
+  renderFold();
 }
 
 function renderDetail() {
@@ -590,6 +626,12 @@ document.addEventListener("click", ev => {
     state.lenses = state.lenses.includes(id) ? state.lenses.filter(x => x !== id) : [...state.lenses, id];
     renderStatic(); render(); return;
   }
+  if (ev.target.closest("#fold")) {
+    state.folded = !state.folded;
+    try { localStorage.setItem("filtersFolded", state.folded ? "1" : "0"); } catch (err) {}
+    renderFold();
+    return;
+  }
   const sec = ev.target.closest("[data-sec]");
   if (sec) { ev.preventDefault(); goToSection(sec.dataset.sec); return; }
   const open = ev.target.closest("[data-open]");
@@ -620,7 +662,7 @@ function followHash() {
 }
 followHash();
 window.addEventListener("hashchange", followHash);
-window.addEventListener("resize", () => document.documentElement.style.setProperty("--bar-h", document.querySelector(".bar").offsetHeight + "px"));
+window.addEventListener("resize", syncBarHeight);
 </script>
 </body>
 </html>
